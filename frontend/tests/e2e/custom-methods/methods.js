@@ -64,7 +64,8 @@ const showMouse = (browser) => {
 const login = (browser, username, password, mouse = false) => {
   logMessage(browser, `Log in with ${username}:${password}`)
 
-  browser.url(process.env.VUE_DEV_SERVER_URL)
+  browser
+    .url(process.env.VUE_DEV_SERVER_URL)
     .useCss()
     .waitForElementVisible('#id_username', 20000)
     .setValue('#id_username', username)
@@ -82,7 +83,8 @@ const login = (browser, username, password, mouse = false) => {
 
 const logout = (browser) => {
   logMessage(browser, 'Log out', false)
-  browser.useCss()
+  browser
+    .useCss()
     .waitForElementVisible('header.app-header .navbar-nav a.dropdown-toggle', 20000)
     .moveToElement('header.app-header .navbar-nav a.dropdown-toggle', undefined, undefined)
     .pause(500)
@@ -110,7 +112,6 @@ const setMultiSelector = (browser, selector_id, option, singleSelectWithText = t
     .useXpath()
     /* Check if multiselect is visible */
     .waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`, 20000)
-
     .element('xpath', multiselectSingle, (result) => {
       if (result.status === -1) {
         browser
@@ -161,7 +162,8 @@ const createSubmission = (browser, obligation, period, party, edit_party = false
     .waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission added successfully.')]", 30000, false)
 
   if (back_to_dashboard === true) {
-    browser.useXpath()
+    browser
+      .useXpath()
       .pause(500)
       .waitForElementVisible("//a[@href='/reporting/dashboard']", 20000)
       .moveToElement("//a[@href='/reporting/dashboard']", undefined, undefined)
@@ -220,7 +222,8 @@ const deleteSubmission = (browser) => {
 const saveSubmission = (browser, tabs = []) => {
   logMessage(browser, 'Saving submission')
 
-  browser.useXpath()
+  browser
+    .useXpath()
     /* Click Save and continue button */
     .execute('window.scrollTo(0,document.body.scrollHeight);')
     .waitForElementVisible("//footer[@class='app-footer']//button[@id='save-button']", 20000)
@@ -247,6 +250,7 @@ const selectTab = (browser, tab) => {
 const datePickerValue = (browser) => {
   const day = "//div[@id='date']//div[contains(@class, 'vdp-datepicker__calendar')][1]//span[contains(@class, 'cell day') and text()='1']"
   browser
+    .moveToElement("//div[@id='date']//div[@class =  'vdp-datepicker']", undefined, undefined)
     .waitForElementVisible("//div[@id='date']//input", 20000)
     .click("//div[@id='date']//input")
     .pause(1000)
@@ -258,27 +262,20 @@ const datePickerValue = (browser) => {
 
 const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) => {
   logMessage(browser, 'Filling submission information')
-
   const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email']
-  
   /* Open Submission Info tab */
   selectTab(browser, 'Submission Information')
+  hideFixedElements(browser)
   browser
     .useXpath()
-    /* Hide app-footer */
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
-    .pause(500)
     .execute('window.scrollTo(0,document.body.scrollHeight);')
     .waitForElementVisible("//input[@id='reporting_officer']", 20000)
     .pause(500)
-    
-
   fields.forEach(field => {
     /* Check if submissionInfo has missing fields */
     if (!submissionInfo.hasOwnProperty(field) && autocomplet) {
       submissionInfo[field] = ''
     }
-
     if (submissionInfo.hasOwnProperty(field)) {
       /* Add submissionInfo in input fields */
       if (field === 'postal_address') {
@@ -304,10 +301,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
   }
   /* Add date (special case) */
   datePickerValue(browser)
-  /* Show app-footer */
-  browser
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
-    .pause(500)
+  showFixedElements(browser)
 }
 
 /**
@@ -357,7 +351,8 @@ const openLookupTable = (browser, page) => {
 }
 
 const openDashboard = (browser) => {
-  browser.useXpath()
+  browser
+    .useXpath()
     .waitForElementVisible("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']", 20000)
     .moveToElement("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']", 0, 0)
     .pause(500)
@@ -371,7 +366,8 @@ const openDashboard = (browser) => {
 
 const openGeneralInstructions = (browser) => {
   logMessage(browser, 'Opening General Instructions')
-  browser.useXpath()
+  browser
+    .useXpath()
     .waitForElementVisible("//button/i[contains(@class, 'fa-info')]", 20000)
     .click("//button/i[contains(@class, 'fa-info')]")
     .pause(500)
@@ -535,7 +531,8 @@ const checkSumbissionInfoFlags = (browser) => {
   selectTab(browser, 'Submission Information')
   /* Check all flags */
   flags.forEach(flag => {
-    browser.useCss()
+    browser
+      .useCss()
       .getAttribute(`#${flag}`, 'checked', (result) => {
         if (result.value !== 'true') {
           browser
@@ -552,6 +549,7 @@ const checkSumbissionInfoFlags = (browser) => {
 
 const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
   logMessage(browser, `Clicking questionnaire radios: ${fields}`)
+  hideFixedElements(browser)
 
   let restrictedFields = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions']
   const tabs = {
@@ -599,11 +597,11 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
       .moveToElement(`.field-wrapper #${restrictedField} .custom-control:nth-of-type(2) label`, undefined, undefined)
       .click(`.field-wrapper #${restrictedField} .custom-control:nth-of-type(2) label`)
   }
+  showFixedElements(browser)
 }
 
-const addEntity = (browser, tab, entity, options, order = undefined, check = false) => {
-  logMessage(browser, `Adding entity ${entity}: ['${options[0]}', '${options[1]}']`)
-
+const addEntity = (browser, tab, entity, type, options, order = undefined, check = false) => {
+  logMessage(browser, `Adding entity ${entity}: ${type} [${options}]`)
   const selectors = []
   /**
    * 	Entity structure
@@ -616,7 +614,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   }
   /* Special case */
   // TODO: find a dynamic way
-  if (options[0] === 'F I/II Hydrofluorocarbons (HFCs)') {
+  if (type === 'F I/II Hydrofluorocarbons (HFCs)') {
     entities.substance.pop()
     entities.substance.push('fii-table')
   }
@@ -646,18 +644,22 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
     .waitForElementVisible(`${aside_nav}//span[contains(text(), '${entities[entity][0]}')]`, 20000)
     .click(`${aside_nav}//span[contains(text(), '${entities[entity][0]}')]`)
     .pause(500)
-  selectors.forEach((selector, index) => {
+  /* Add options type */
+  browser
+    .waitForElementVisible(selectors[0], 20000)
+    .click(selectors[0])
+    .waitForElementVisible(`${selectors[0]}//div[@class='multiselect__content-wrapper']`, 20000)
+    .click(`${selectors[0]}//div[@class='multiselect__content-wrapper']//ul//li//span//span[text() = '${type}']`)
+  options.forEach(opt => {
     browser
       /* Add option */
-      .waitForElementVisible(selector, 20000)
-      .click(selector)
-      .pause(500)
-      .waitForElementVisible(`${selector}//div[@class='multiselect__content-wrapper']`, 20000)
-      .click(`${selector}//div[@class='multiselect__content-wrapper']//ul//li//span//span[text() = '${options[index]}']`)
+      .waitForElementVisible(selectors[1], 20000)
+      .click(selectors[1])
+      .waitForElementVisible(`${selectors[1]}//div[@class='multiselect__content-wrapper']`, 20000)
+      .click(`${selectors[1]}//div[@class='multiselect__content-wrapper']//ul//li//span//span[text() = '${opt}']`)
       /* Close selector */
       .pause(100)
-      .keys(browser.Keys.ESCAPE)
-      .pause(500)
+      .sendKeys(`${selectors[1]}//div[@class='multiselect__content-wrapper']`, browser.Keys.ESCAPE)
   })
   /* Submit entity */
   browser
@@ -668,24 +670,18 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   closeAsideMenu(browser, tab)
 
   if (check === true) {
+    hideFixedElements(browser)
     browser
       /* Check if entity was added and status is invalid */
       .waitForElementVisible(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`, 20000)
       .moveToElement(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`, undefined, undefined)
-
-      .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
-      .pause(500)
-
       .click(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`)
-      .pause(500)
-
-      .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
       .pause(500)
       /* Check if Validation tab is opened and has a warrning */
       .waitForElementVisible(`${aside_menu}//div[@class='validation-tab']`, 20000)
       .waitForElementVisible(`${aside_nav}//span[contains(@class, 'badge-danger')]`, 20000)
       .execute('window.scrollTo(0,0)')
-
+    showFixedElements(browser)
     closeAsideMenu(browser, tab)
   }
 }
@@ -693,18 +689,17 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
 const addFacility = (browser, table, tab, row, row_values, check = false) => {
   /* Open desired tab */
   selectTab(browser, 'Emissions')
+  hideFixedElements(browser)
   browser
     .useCss()
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
-    .pause(500)
     .click('#add-facility-button')
+    .pause(200)
 
   if (check === true) {
     browser
       .useXpath()
       .click(`//div[@id='has_emissions_tab']//table[@id='facility-table']//tbody//tr[${row}]//i[contains(@class, 'fa-exclamation-circle')]`)
       .pause(500)
-
     closeAsideMenu(browser, 'has_emissions_tab')
   }
 
@@ -722,20 +717,12 @@ const addFacility = (browser, table, tab, row, row_values, check = false) => {
         }
       })
   }
-
-  browser
-    .pause(500)
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
-    .pause(500)
+  showFixedElements(browser)
 }
 
 const addValues = (browser, table, tab, row, row_values, modal_values) => {
   logMessage(browser, 'Adding values to entity')
-  /* Hide app-footer */
-  browser
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
-    .pause(500)
-
+  hideFixedElements(browser)
   if (Object.entries(row_values).length > 0) {
     browser
       .useCss()
@@ -780,10 +767,7 @@ const addValues = (browser, table, tab, row, row_values, modal_values) => {
       .click('#edit_modal .modal-dialog button span[data-msgid="Close"]')
       .pause(500)
   }
-  /* Show app-footer */
-  browser
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
-    .pause(500)
+  showFixedElements(browser)
 }
 
 const addComment = (browser, tab, comment) => {
@@ -797,11 +781,8 @@ const addComment = (browser, tab, comment) => {
 
 // eslint-disable-next-line no-unused-vars
 const rowIsEmpty = (browser, table, tab, row, row_values, modal_values, start_column = 1) => {
+  hideFixedElements(browser)
   browser
-    .useXpath()
-    /* Hide app-footer	*/
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
-    .pause(500)
     .useCss()
     .moveTo(`#${tab} #${table} tbody tr:nth-child(${row})`)
   /* Check if row is empty */
@@ -843,16 +824,12 @@ const rowIsEmpty = (browser, table, tab, row, row_values, modal_values, start_co
     .click('#edit_modal .modal-dialog .close')
     .pause(500)
     .execute(`document.querySelector("#${tab} #${table} tbody tr:nth-child(${row})").classList.remove("hovered")`, () => {})
-    /* Show app-footer */
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
-    .pause(500)
+  showFixedElements(browser)
 }
 
 const toggleMixtureDetails = (browser, table, tab, row) => {
+  hideFixedElements(browser)
   browser
-    /* Hide app-footer	*/
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
-    .pause(500)
     .useCss()
     .waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .substance-blend-cell`, 20000)
     .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .substance-blend-cell`)
@@ -860,9 +837,7 @@ const toggleMixtureDetails = (browser, table, tab, row) => {
     .waitForElementVisible(`#${tab} #${table} tr:nth-child(${row + 1}).b-table-details`, 20000)
     .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .substance-blend-cell`)
     .pause(500)
-    /* Show app-footer */
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
-    .pause(500)
+  showFixedElements(browser)
 }
 
 const uploadeFile = (browser, filename, filepath) => {
@@ -872,7 +847,6 @@ const uploadeFile = (browser, filename, filepath) => {
   const find_root = require('find-root')
   const root = find_root(path.resolve(__dirname))
   const file = path.resolve(root + filename + filepath)
-  console.log(file)
   browser
     .useCss()
     .waitForElementVisible('#choose-files-button__BV_file_outer_', 20000)
@@ -883,6 +857,21 @@ const uploadeFile = (browser, filename, filepath) => {
     })
     .pause(1000)
 }
+
+const hideFixedElements = (browser) => {
+  browser
+    .execute('document.querySelector(\'header.app-header\').style.display = \'none\'')
+    .execute('document.querySelector(\'footer.app-footer\').style.display = \'none\'')
+    .pause(100)
+}
+
+const showFixedElements = (browser) => {
+  browser
+    .execute('document.querySelector(\'header.app-header\').style.display = \'inherit\'')
+    .execute('document.querySelector(\'footer.app-footer\').style.display = \'inherit\'')
+    .pause(100)
+}
+
 
 module.exports = {
   logMessage,

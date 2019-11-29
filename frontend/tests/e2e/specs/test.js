@@ -82,32 +82,32 @@ module.exports = {
     deleteSubmission(browser)
     logout(browser)
   },
-//  BU_003: browser => {
-//    const data = {
-//      submissionInfo: {
-//        designation: 'test designation',
-//        organization: 'test organisation',
-//        postal_address: 'test address',
-//        country: 'France',
-//        phone: '+490000000',
-//        email: 'john.doe@gmail.com'
-//      },
-//      reporting_officer: 'test name'
-//    }
-//
-//    const autocomplet = false
-//
-//    logMessage(browser, 'Testing the edit of Article 7', true)
-//    login(browser, 'p_ro', 'p_ro')
-//    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-//    openDashboard(browser)
-//    editSubmission(browser, 1)
-//    saveAndFail(browser, data.submissionInfo)
-//    fillSubmissionInfo(browser, data, autocomplet)
-//    clickQuestionnaireRadios(browser)
-//    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
-//    logout(browser)
-//  },
+  BU_003: browser => {
+    const data = {
+      submissionInfo: {
+        designation: 'test designation',
+        organization: 'test organisation',
+        postal_address: 'test address',
+        country: 'France',
+        phone: '+490000000',
+        email: 'john.doe@gmail.com'
+      },
+      reporting_officer: 'test name'
+    }
+
+    const autocomplet = false
+
+    logMessage(browser, 'Testing the edit of Article 7', true)
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+    openDashboard(browser)
+    editSubmission(browser, 1)
+    saveAndFail(browser, data.submissionInfo)
+    fillSubmissionInfo(browser, data, autocomplet)
+    clickQuestionnaireRadios(browser)
+    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
+    logout(browser)
+  },
   BU_004: browser => {
     const submissionInfo = {
       reporting_officer: 'test name',
@@ -177,10 +177,10 @@ module.exports = {
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_imports'])
-    addEntity(browser, 'has_imports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'])
+    addEntity(browser, 'has_imports_tab', 'substance', 'A/I Chlorofluorocarbons (CFCs)', ['CFC-11'])
     addValues(browser, 'substance-table', 'has_imports_tab', 1, row_values, modal_values)
 
-    addEntity(browser, 'has_imports_tab', 'blend', ['Zeotrope', 'R-401B'])
+    addEntity(browser, 'has_imports_tab', 'blend', 'Zeotrope', ['R-401B'])
     addValues(browser, 'blend-table', 'has_imports_tab', 1, row_values, modal_values)
 
     saveSubmission(browser, ['Questionnaire', 'Imports'])
@@ -210,10 +210,10 @@ module.exports = {
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_exports'])
 
-    addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1, true)
+    addEntity(browser, 'has_exports_tab', 'substance', 'A/I Chlorofluorocarbons (CFCs)', ['CFC-11'], 1, true)
     addValues(browser, 'substance-table', 'has_exports_tab', 1, row_values, modal_values)
 
-    addEntity(browser, 'has_exports_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
+    addEntity(browser, 'has_exports_tab', 'blend', 'Zeotrope', ['R-401A'], 1, true)
     addValues(browser, 'blend-table', 'has_exports_tab', 1, row_values, modal_values)
 
     addComment(browser, 'has_exports_tab', 'Hakuna Matata')
@@ -244,10 +244,10 @@ module.exports = {
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_produced'])
 
-    addEntity(browser, 'has_produced_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1, true)
+    addEntity(browser, 'has_produced_tab', 'substance', 'A/I Chlorofluorocarbons (CFCs)', ['CFC-11'], 1, true)
     addValues(browser, 'substance-table', 'has_produced_tab', 1, row_values, modal_values)
 
-    addEntity(browser, 'has_produced_tab', 'substance', ['F I/II Hydrofluorocarbons (HFCs)', 'HFC-23'], 1, true)
+    addEntity(browser, 'has_produced_tab', 'substance', 'F I/II Hydrofluorocarbons (HFCs)', ['HFC-23'], 1, true)
     addValues(browser, 'fii-table', 'has_produced_tab', 1, row_values, modal_values)
 
     addComment(browser, 'has_produced_tab', 'Hakuna Matata')
@@ -274,49 +274,49 @@ module.exports = {
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_destroyed'])
 
-    addEntity(browser, 'has_destroyed_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1, true)
+    addEntity(browser, 'has_destroyed_tab', 'substance', 'A/I Chlorofluorocarbons (CFCs)', ['CFC-11'], 1, true)
     addValues(browser, 'substance-table', 'has_destroyed_tab', 1, row_values, modal_values)
 
-    addEntity(browser, 'has_destroyed_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
+    addEntity(browser, 'has_destroyed_tab', 'blend', 'Zeotrope', ['R-401A'], 1, true)
     addValues(browser, 'blend-table', 'has_destroyed_tab', 1, row_values, modal_values)
 
     addComment(browser, 'has_destroyed_tab', 'Hakuna Matata')
     saveSubmission(browser, ['Questionnaire', 'Destruction'])
   },
-//  BU_010: browser => {
-//    const row_values = {
-//      quantity_import_new: 0.12,
-//      quantity_import_recovered: 0.12
-//    }
-//    const modal_values = {
-//      quantity_export_new: 0.05,
-//      quantity_export_recovered: 0.01
-//    }
-//    const submissionInfo = {
-//      reporting_officer: 'test name',
-//      designation: 'test designation',
-//      organization: 'test organisation',
-//      postal_address: 'test address',
-//      country: 'France',
-//      phone: '+490000000',
-//      email: 'john.doe@gmail.com'
-//    }
-//
-//    logMessage(browser, 'Testing the edit of Non-Party tab', true)
-//    login(browser, 'p_ro', 'p_ro')
-//    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-//    fillSubmissionInfo(browser, submissionInfo)
-//    clickQuestionnaireRadios(browser, ['has_nonparty'])
-//
-//    addEntity(browser, 'has_nonparty_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1, true)
-//    addValues(browser, 'substance-table', 'has_nonparty_tab', 1, row_values, modal_values)
-//
-//    addEntity(browser, 'has_nonparty_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
-//    addValues(browser, 'blend-table', 'has_nonparty_tab', 1, row_values, modal_values)
-//
-//    addComment(browser, 'has_nonparty_tab', 'Hakuna Matata')
-//    saveSubmission(browser, ['Questionnaire', 'Non-Party'])
-//  },
+  BU_010: browser => {
+    const row_values = {
+      quantity_import_new: 0.12,
+      quantity_import_recovered: 0.12
+    }
+    const modal_values = {
+      quantity_export_new: 0.05,
+      quantity_export_recovered: 0.01
+    }
+    const submissionInfo = {
+      reporting_officer: 'test name',
+      designation: 'test designation',
+      organization: 'test organisation',
+      postal_address: 'test address',
+      country: 'France',
+      phone: '+490000000',
+      email: 'john.doe@gmail.com'
+    }
+
+    logMessage(browser, 'Testing the edit of Non-Party tab', true)
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+    fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser, ['has_nonparty'])
+
+    addEntity(browser, 'has_nonparty_tab', 'substance', 'A/I Chlorofluorocarbons (CFCs)', ['CFC-11'], 1, true)
+    addValues(browser, 'substance-table', 'has_nonparty_tab', 1, row_values, modal_values)
+
+    addEntity(browser, 'has_nonparty_tab', 'blend', 'Zeotrope', ['R-401A'], 1, true)
+    addValues(browser, 'blend-table', 'has_nonparty_tab', 1, row_values, modal_values)
+
+    addComment(browser, 'has_nonparty_tab', 'Hakuna Matata')
+    saveSubmission(browser, ['Questionnaire', 'Non-Party'])
+  },
   BU_011: browser => {
     const row_values = {
       facility_name: 'CCT Facility',
@@ -339,9 +339,7 @@ module.exports = {
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_emissions'])
-
     addFacility(browser, 'facility-table', 'has_emissions_tab', 1, row_values, true)
-
     addComment(browser, 'has_emissions_tab', 'Hakuna Matata')
     saveSubmission(browser, ['Questionnaire', 'Emissions'])
   },
@@ -365,34 +363,34 @@ module.exports = {
     uploadeFile(browser, 'hello.pdf', '../../../../')
     saveSubmission(browser, ['Submission Information', 'Questionnaire'])
   },
-  //BU_013: browser => {
-  //  login(browser, 'p_ro', 'p_ro')
-  //  createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018')
-  //  deleteSubmission(browser)
-  //},
-  // BU_014: browser => {
-  //   login(browser, 'p_ro', 'p_ro')
-  //   createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018')
-  //   deleteSubmission(browser)
-  // },
-  //BU_015: browser => {
-  //  const submissionInfo = {
-  //    reporting_officer: 'test name',
-  //    designation: 'test designation',
-  //    organization: 'test organisation',
-  //    postal_address: 'test address',
-  //    country: 'France',
-  //    phone: '+490000000',
-  //    email: 'john.doe@gmail.com'
-  //  }
-  //
-  //  login(browser, 'p_ro', 'p_ro')
-  //  createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018', '')
-  //  fillSubmissionInfo(browser, submissionInfo)
-  //  saveSubmission(browser, ['Submission Info'])
-  //  saveSubmission(browser, ['Submission Info'])
-  //  logout(browser)
-  //},
+  BU_013: browser => {
+   login(browser, 'p_ro', 'p_ro')
+   createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018')
+   deleteSubmission(browser)
+  },
+  BU_014: browser => {
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018')
+    deleteSubmission(browser)
+  },
+  BU_015: browser => {
+   const submissionInfo = {
+     reporting_officer: 'test name',
+     designation: 'test designation',
+     organization: 'test organisation',
+     postal_address: 'test address',
+     country: 'France',
+     phone: '+490000000',
+     email: 'john.doe@gmail.com'
+   }
+  
+   login(browser, 'p_ro', 'p_ro')
+   createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018', '')
+   fillSubmissionInfo(browser, submissionInfo)
+   saveSubmission(browser, ['Submission Info'])
+   saveSubmission(browser, ['Submission Info'])
+   logout(browser)
+  },
   BU_019: browser => {
     const group = 'A/I Chlorofluorocarbons (CFCs)'
     const name = 'CFC-11'
@@ -420,6 +418,7 @@ module.exports = {
     filterEntity(browser, 'parties', [name])
     logout(browser)
   },
+
   // BU_022: browser => {
   //   const submissions = [
   //     {
@@ -512,6 +511,7 @@ module.exports = {
   //   logout(browser)
   //   browser.end()
   // },
+
   BU_023: browser => {
     const row_values = {
       quantity_total_new: 0.12
@@ -535,15 +535,12 @@ module.exports = {
     createSubmission(browser, 'Article 7 - Data Reporting', '2018')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_exports'])
-
-    addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1)
+    addEntity(browser, 'has_exports_tab', 'substance', 'A/I Chlorofluorocarbons (CFCs)', ['CFC-11'], 1)
     addValues(browser, 'substance-table', 'has_exports_tab', 1, row_values, modal_values)
-
-    addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-12'], 1)
+    addEntity(browser, 'has_exports_tab', 'substance', 'A/I Chlorofluorocarbons (CFCs)', ['CFC-12'], 1)
     rowIsEmpty(browser, 'substance-table', 'has_exports_tab', 2, row_values, modal_values)
     addValues(browser, 'substance-table', 'has_exports_tab', 2, row_values, modal_values)
     saveSubmission(browser, ['Submission Info'])
-
     logout(browser)
   },
   BU_024: browser => {
@@ -570,10 +567,8 @@ module.exports = {
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_exports'])
-
-    addEntity(browser, 'has_exports_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
+    addEntity(browser, 'has_exports_tab', 'blend', 'Zeotrope', ['R-401A'], 1, true)
     addValues(browser, 'blend-table', 'has_exports_tab', 1, row_values, modal_values)
-
     toggleMixtureDetails(browser, 'blend-table', 'has_exports_tab', 1)
   },
 }
