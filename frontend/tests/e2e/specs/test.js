@@ -44,19 +44,19 @@ module.exports = {
     console.log('done running backend')
   },
   afterEach: (browser, done) => {
-    let sessionId = browser.sessionId
+    const { sessionId } = browser
 
     browser.getLog('browser', logEntriesArray => {
-      console.log("==========NETWORK TRAFFIC==========")
+      console.log('==========NETWORK TRAFFIC==========')
       logEntriesArray.forEach(log => {
         if (log.message.includes('api')) {
           let date = new Date(log.timestamp)
           date = date.toString().split(' ')
-          date = date[0] + ' ' + date[1] + ' ' + date[2] + ' ' + date[3] + ' ' + date[4]
-          console.log("[" + log.level + "] " + date + " : " + log.message)
+          date = `${date[0]} ${date[1]} ${date[2]} ${date[3]} ${date[4]}`
+          console.log(`[${log.level}] ${date} : ${log.message}`)
         }
       })
-      console.log("===================================")
+      console.log('===================================')
     })
 
     browser.end(() => {
@@ -69,89 +69,89 @@ module.exports = {
   after: (browser, done) => {
     done()
   },
-  BU_001: browser => {
-    logMessage(browser, 'Testing the login / logout functionality', true)
-    login(browser, 'p_ro', 'p_ro')
-    logout(browser)
-  },
-  BU_002: browser => {
-    logMessage(browser, 'Testing the creation / deletion of Article 7 submission', true)
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7 - Data Reporting', '2017', '')
-    deleteSubmissionFake(browser)
-    deleteSubmission(browser)
-    logout(browser)
-  },
-  BU_003: browser => {
-    const data = {
-      submissionInfo: {
-        designation: 'test designation',
-        organization: 'test organisation',
-        postal_address: 'test address',
-        country: 'France',
-        phone: '+490000000',
-        email: 'john.doe@gmail.com'
-      },
-      reporting_officer: 'test name'
-    }
+  // BU_001: browser => {
+  //   logMessage(browser, 'Testing the login / logout functionality', true)
+  //   login(browser, 'p_ro', 'p_ro')
+  //   logout(browser)
+  // },
+  // BU_002: browser => {
+  //   logMessage(browser, 'Testing the creation / deletion of Article 7 submission', true)
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'Article 7 - Data Reporting', '2017', '')
+  //   deleteSubmissionFake(browser)
+  //   deleteSubmission(browser)
+  //   logout(browser)
+  // },
+  // BU_003: browser => {
+  //   const data = {
+  //     submissionInfo: {
+  //       designation: 'test designation',
+  //       organization: 'test organisation',
+  //       postal_address: 'test address',
+  //       country: 'France',
+  //       phone: '+490000000',
+  //       email: 'john.doe@gmail.com'
+  //     },
+  //     reporting_officer: 'test name'
+  //   }
 
-    const autocomplet = false
+  //   const autocomplet = false
 
-    logMessage(browser, 'Testing the edit of Article 7', true)
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-    openDashboard(browser)
-    editSubmission(browser, 1)
-    saveAndFail(browser, data.submissionInfo)
-    fillSubmissionInfo(browser, data, autocomplet)
-    clickQuestionnaireRadios(browser)
-    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
-    logout(browser)
-  },
-  BU_004: browser => {
-    const submissionInfo = {
-      reporting_officer: 'test name',
-      designation: 'test designation',
-      organization: 'test organisation',
-      postal_address: 'test address',
-      country: 'France',
-      phone: '+490000000',
-      email: 'john.doe@gmail.com'
-    }
+  //   logMessage(browser, 'Testing the edit of Article 7', true)
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+  //   openDashboard(browser)
+  //   editSubmission(browser, 1)
+  //   saveAndFail(browser, data.submissionInfo)
+  //   fillSubmissionInfo(browser, data, autocomplet)
+  //   clickQuestionnaireRadios(browser)
+  //   saveSubmission(browser, ['Submission Information', 'Questionnaire'])
+  //   logout(browser)
+  // },
+  // BU_004: browser => {
+  //   const submissionInfo = {
+  //     reporting_officer: 'test name',
+  //     designation: 'test designation',
+  //     organization: 'test organisation',
+  //     postal_address: 'test address',
+  //     country: 'France',
+  //     phone: '+490000000',
+  //     email: 'john.doe@gmail.com'
+  //   }
 
-    logMessage(browser, 'Testing the edit of Submission Information', true)
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-    clickQuestionnaireRadios(browser)
-    fillSubmissionInfo(browser, submissionInfo)
-    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
-    checkSumbissionInfoFlags(browser)
-    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
-    openGeneralInstructions(browser)
-    logout(browser)
-  },
-  BU_005: browser => {
-    const data = {
-      submissionInfo: {
-        designation: 'test designation',
-        organization: 'test organisation',
-        postal_address: 'test address',
-        country: 'France',
-        phone: '+490000000',
-        email: 'john.doe@gmail.com'
-      },
-      reporting_officer: 'test name'
-    }
+  //   logMessage(browser, 'Testing the edit of Submission Information', true)
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+  //   clickQuestionnaireRadios(browser)
+  //   fillSubmissionInfo(browser, submissionInfo)
+  //   saveSubmission(browser, ['Submission Information', 'Questionnaire'])
+  //   checkSumbissionInfoFlags(browser)
+  //   saveSubmission(browser, ['Submission Information', 'Questionnaire'])
+  //   openGeneralInstructions(browser)
+  //   logout(browser)
+  // },
+  // BU_005: browser => {
+  //   const data = {
+  //     submissionInfo: {
+  //       designation: 'test designation',
+  //       organization: 'test organisation',
+  //       postal_address: 'test address',
+  //       country: 'France',
+  //       phone: '+490000000',
+  //       email: 'john.doe@gmail.com'
+  //     },
+  //     reporting_officer: 'test name'
+  //   }
 
-    logMessage(browser, 'Testing the edit of Questionnaire', true)
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-    saveAndFail(browser, data.submissionInfo)
-    fillSubmissionInfo(browser, data, false)
-    clickQuestionnaireRadios(browser, [], false)
-    saveSubmission(browser, ['Questionnaire'])
-    logout(browser)
-  },
+  //   logMessage(browser, 'Testing the edit of Questionnaire', true)
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+  //   saveAndFail(browser, data.submissionInfo)
+  //   fillSubmissionInfo(browser, data, false)
+  //   clickQuestionnaireRadios(browser, [], false)
+  //   saveSubmission(browser, ['Questionnaire'])
+  //   logout(browser)
+  // },
   BU_006: browser => {
     const row_values = {
       quantity_total_new: 0.12
@@ -364,9 +364,9 @@ module.exports = {
     saveSubmission(browser, ['Submission Information', 'Questionnaire'])
   },
   BU_013: browser => {
-   login(browser, 'p_ro', 'p_ro')
-   createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018')
-   deleteSubmission(browser)
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018')
+    deleteSubmission(browser)
   },
   BU_014: browser => {
     login(browser, 'p_ro', 'p_ro')
@@ -374,22 +374,22 @@ module.exports = {
     deleteSubmission(browser)
   },
   BU_015: browser => {
-   const submissionInfo = {
-     reporting_officer: 'test name',
-     designation: 'test designation',
-     organization: 'test organisation',
-     postal_address: 'test address',
-     country: 'France',
-     phone: '+490000000',
-     email: 'john.doe@gmail.com'
-   }
-  
-   login(browser, 'p_ro', 'p_ro')
-   createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018', '')
-   fillSubmissionInfo(browser, submissionInfo)
-   saveSubmission(browser, ['Submission Info'])
-   saveSubmission(browser, ['Submission Info'])
-   logout(browser)
+    const submissionInfo = {
+      reporting_officer: 'test name',
+      designation: 'test designation',
+      organization: 'test organisation',
+      postal_address: 'test address',
+      country: 'France',
+      phone: '+490000000',
+      email: 'john.doe@gmail.com'
+    }
+
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018', '')
+    fillSubmissionInfo(browser, submissionInfo)
+    saveSubmission(browser, ['Submission Info'])
+    saveSubmission(browser, ['Submission Info'])
+    logout(browser)
   },
   BU_019: browser => {
     const group = 'A/I Chlorofluorocarbons (CFCs)'
@@ -570,5 +570,5 @@ module.exports = {
     addEntity(browser, 'has_exports_tab', 'blend', 'Zeotrope', ['R-401A'], 1, true)
     addValues(browser, 'blend-table', 'has_exports_tab', 1, row_values, modal_values)
     toggleMixtureDetails(browser, 'blend-table', 'has_exports_tab', 1)
-  },
+  }
 }
