@@ -96,6 +96,7 @@ const login = (browser, username, password, mouse = false) => {
     .pause(eventDelay)
     .click('//input[@type="submit"]')
     .pause(eventDelay)
+    .waitForElementNotPresent('//div[@class="api-action-display"]', 2 * elementVisibleTimeout)
     .waitForElementVisible('//div[contains(@class,"dashboard-page")]', elementVisibleTimeout)
     .assert.urlContains('/reporting/dashboard')
 
@@ -179,16 +180,15 @@ const createSubmission = (browser, obligation, period, party, edit_party = false
     .click('//div[contains(@class,"create-submission")]//button')
     .pause(eventDelay)
     .waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission added successfully.')]", elementVisibleTimeout, false)
+    .waitForElementNotPresent('//div[@class="api-action-display"]', 2 * elementVisibleTimeout)
+    .waitForElementVisible("//div[@class='submission-info-tab']", 2 * elementVisibleTimeout)
   if (back_to_dashboard === true) {
     browser
-      .waitForElementVisible("//a[@href='/reporting/dashboard']", 2 * elementVisibleTimeout)
-      .moveToElement("//a[@href='/reporting/dashboard']", undefined, undefined)
+      .waitForElementVisible("//a[@href='/reporting/dashboard' and contains(@class, 'nav-link')]", 2 * elementVisibleTimeout)
+      .moveToElement("//a[@href='/reporting/dashboard' and contains(@class, 'nav-link')]", undefined, undefined)
       .pause(moveToElementDelay)
-      .click("//a[@href='/reporting/dashboard']")
+      .click("//a[@href='/reporting/dashboard' and contains(@class, 'nav-link')]")
       .pause(eventDelay)
-  } else {
-    browser
-      .waitForElementVisible("//a[@href='/reporting/dashboard']", 2 * elementVisibleTimeout)
   }
 }
 
@@ -255,6 +255,7 @@ const saveSubmission = (browser, tabs = []) => {
 }
 
 const selectTab = (browser, tab) => {
+  hideFixedElements(browser)
   browser
     .useXpath()
     .execute('window.scrollTo(0,0)')
@@ -262,15 +263,16 @@ const selectTab = (browser, tab) => {
     .waitForElementVisible(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`, elementVisibleTimeout)
     .click(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`)
     .pause(eventDelay)
+  showFixedElements(browser)
 }
 
 const datePickerValue = (browser) => {
   const day = "//div[@id='date']//div[contains(@class, 'vdp-datepicker__calendar')][1]//span[contains(@class, 'cell day') and text()='1']"
   browser
-    .moveToElement("//div[@id='date']//div[@class =  'vdp-datepicker']", undefined, undefined)
+    .moveToElement("//div[@id='date']//div[@class =  'vdp-datepicker']//input", undefined, undefined)
     .pause(moveToElementDelay)
-    .waitForElementVisible("//div[@id='date']//input", elementVisibleTimeout)
-    .click("//div[@id='date']//input")
+    .waitForElementVisible("//div[@id='date']//div[@class =  'vdp-datepicker']//input", elementVisibleTimeout)
+    .click("//div[@id='date']//div[@class =  'vdp-datepicker']//input")
     .pause(eventDelay)
     .waitForElementVisible(day, elementVisibleTimeout)
     .moveToElement(day, undefined, undefined)
@@ -372,19 +374,30 @@ const openLookupTable = (browser, page) => {
         .waitForElementVisible('//div[contains(@class,"lookup-tables-page")]', 2 * elementVisibleTimeout)
         .moveToElement('//header[contains(@class, "app-header navbar")]//h3', 0, 0)
         .assert.urlContains('/reporting/lookup-tables')
+        .waitForElementNotPresent('//div[@class="api-action-display"]', 2 * elementVisibleTimeout)
     })
 }
 
 const openDashboard = (browser) => {
+  logMessage(browser, 'Opening Dashboard')
+  let marginChanged = false
+  browser.execute('window.getComputedStyle(document.querySelector("div.sidebar")).marginLeft === "-200px"', () => {
+    browser.execute('document.querySelector("div.sidebar").style.marginLeft = "0"')
+    marginChanged = true
+  })
   browser
     .useXpath()
-    .waitForElementVisible("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']", elementVisibleTimeout)
-    .moveToElement("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']", 0, 0)
+    .waitForElementVisible("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard' and contains(@class, 'nav-link')]", elementVisibleTimeout)
+    .moveToElement("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard' and contains(@class, 'nav-link')]", undefined, undefined)
     .pause(moveToElementDelay)
-    .click("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']")
+    .click("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard' and contains(@class, 'nav-link')]")
     .pause(eventDelay)
+    .waitForElementNotPresent('//div[@class="api-action-display"]', 2 * elementVisibleTimeout)
     .waitForElementVisible('//div[contains(@class,"dashboard-page")]', 2 * elementVisibleTimeout)
     .assert.urlContains('/reporting/dashboard')
+  if (marginChanged) {
+    browser.execute('document.querySelector("div.sidebar").style.marginLeft = ""')
+  }
 }
 
 const openGeneralInstructions = (browser) => {
@@ -524,10 +537,12 @@ const filterEntity = (browser, tab, filters) => {
             .pause(eventDelay)
             .keys(browser.Keys.ESCAPE)
             .pause(eventDelay)
+            .waitForElementNotPresent('//div[@class="api-action-display"]', 2 * elementVisibleTimeout)
         } else {
           browser
             .setValue(`input#${field}`, filters[index])
             .pause(eventDelay)
+            .waitForElementNotPresent('//div[@class="api-action-display"]', 2 * elementVisibleTimeout)
         }
       })
   })
@@ -572,7 +587,6 @@ const checkSumbissionInfoFlags = (browser) => {
 
 const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
   logMessage(browser, `Clicking questionnaire radios: ${fields}`)
-  hideFixedElements(browser)
   let restrictedFields = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions']
   const tabs = {
     has_imports: 'Imports',
@@ -596,6 +610,7 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
       .waitForElementVisible(`//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//a[contains(@class, 'disabled')]//div[contains(text(), '${tabs[tab]}')]`, elementVisibleTimeout)
   }
   selectTab(browser, 'Questionnaire')
+  hideFixedElements(browser)
   browser
     .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Questionnaire')]", elementVisibleTimeout)
     .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Files')]", elementVisibleTimeout)
