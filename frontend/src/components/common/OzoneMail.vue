@@ -39,13 +39,22 @@
                     <b-input-group class="mb-1" prepend="Subject">
                       <b-input v-model="mail.subject"></b-input>
                     </b-input-group>
+                    <h4 v-if="attachmentsOptions.length > 0">Attachments</h4>
+                    <b-form-checkbox
+                      v-for="(option, index) in attachmentsOptions"
+                      v-model="mail.attachments"
+                      :key="`_${index}_${option.source}`"
+                      :options="attachmentsOptions"
+                      :value="option"
+                      inline
+                    >{{ option.title }}</b-form-checkbox>
                     <textarea style="height: 300px;" v-model="mail.body" class="form-control mail-input"></textarea>
                     <b-btn @click="sendMail" variant="primary" class="mt-2">Send message</b-btn>
                 </b-col>
                 <b-col>
                   <h4>Templates</h4>
                   <b-list-group class="templates">
-                    <b-list-group-item @click="mail.body = template.description; mail.subject = template.subject" class="template-item" v-for="(template, template_index) in templates" :key="template_index">
+                    <b-list-group-item @click="applyTemplate(template)" class="template-item" v-for="(template, template_index) in templates" :key="template_index">
                       <b>Template {{ template.name }} </b>
                       <br>
                       {{ template.subject }}
@@ -60,7 +69,8 @@
                 <h4>{{ entry.subject }}</h4>
                 <small><b>From:</b> {{entry.from_email}}</small> <br>
                 <small><b>To:</b> {{entry.to.join(', ')}} </small><br>
-                <small><b>Cc:</b> {{entry.cc.join(', ')}}</small>
+                <small><b>Cc:</b> {{entry.cc.join(', ')}}</small><br>
+                <small><b>Files:</b> {{entry.attachments.map(att => att.filename).join(' ')}}</small>
                 <div class="correspondence-body mt-2">{{entry.body}}</div>
                 <hr>
             </div>
@@ -88,10 +98,12 @@ export default {
       tabIndex: 0,
       ccList: [],
       toList: [],
+      attachmentsOptions: [],
       mail: {
         to: [],
         cc: [],
         subject: null,
+        attachments: [],
         body: null
       },
       templates: this.$store.state.emailTemplates,
@@ -133,6 +145,34 @@ export default {
       this.mail.to.push(tag.value)
     },
 
+    addAttachment(newAttachment, selected = false) {
+      this.attachmentsOptions.push({
+        id: newAttachment.id,
+        source: newAttachment.source,
+        title: newAttachment.title,
+      })
+      if (selected) {
+        this.mail.attachments.push({
+          id: newAttachment.id,
+          source: newAttachment.source,
+          title: newAttachment.title,
+        })
+      }
+    },
+
+    applyTemplate(template) {
+      this.mail.attachments = []
+      this.attachmentsOptions = []
+      template.generated_attachments.forEach(attachment => {
+        this.addAttachment(attachment, true)
+      })
+      template.attachments.forEach(attachment => {
+        this.addAttachment(attachment)
+      })
+      this.mail.body = template.description
+      this.mail.subject = template.subject
+    },
+
     async sendMail() {
       if (this.mail.to !== null && this.mail.to.length > 0) {
         const currentMail = this.mail
@@ -147,8 +187,10 @@ export default {
           to: null,
           cc: [],
           subject: null,
+          attachments: [],
           body: null
         }
+        this.attachmentsOptions = []
         this.getMail().then(() => {
           this.tabIndex = 1
         })
