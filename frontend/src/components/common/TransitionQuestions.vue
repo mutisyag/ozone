@@ -69,7 +69,7 @@ export default {
   methods: {
     doTransition() {
       // console.log(this.transition)
-      if(this.transition === 'finalize') {
+      if (this.transition === 'finalize') {
         this.$store.commit('setTabStatus', { tab: 'flags', value: true })
       }
       this.$store.dispatch('triggerSave', { action: 'doSubmissionTransition', data: { $gettext: this.$gettext, submission: this.submission, transition: this.transition, noModal: true, backToDashboard: !this.noForwardToDashboard.includes(this.transition) } })
