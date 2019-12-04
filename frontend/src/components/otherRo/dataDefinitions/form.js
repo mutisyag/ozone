@@ -107,32 +107,36 @@ const getFormOtherRo = ($gettext, formName) => {
         get input_fields() {
           return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
         },
-        section_subheaders: [{
-          label: `(1) <br> ${$gettext('Substance')}`,
-          name: 'application_substance'
-        }, {
-          label: `(2) <br> ${$gettext('Process agent application')}`,
-          name: 'application'
-        }, {
-          label: `(3)<br>${$gettext('Make-up or consumption')}`,
-          name: 'makeup_quantity',
-          class: 'text-right'
-        }, {
-          label: `(4)<br>${$gettext('Maximum emissions')}`,
-          name: 'emissions',
-          class: 'text-right'
-        }, {
-          label: `(5)<br>${$gettext('Unit')}`,
-          name: 'units'
-        }, {
-          label: `(5)<br> ${$gettext('Containment technologies used to minimize emissions')}`,
-          name: 'contain_technologies',
-          class: ['text-left', 'brake-row']
-        }, {
-          label: `(6)<br>${$gettext('Remarks')}`,
-          name: 'remark',
-          class: 'text-left'
-        }
+        section_subheaders: [
+          {
+            label: `(1) <br> ${$gettext('Substance')}`,
+            name: 'application_substance'
+          }, {
+            label: `(2) <br> ${$gettext('Process agent application')}`,
+            name: 'application'
+          }, {
+            label: `(3) <br> ${$gettext('Decision')}`,
+            name: 'decision'
+          }, {
+            label: `(4)<br>${$gettext('Make-up or consumption')}`,
+            name: 'makeup_quantity',
+            class: 'text-right'
+          }, {
+            label: `(5)<br>${$gettext('Maximum emissions')}`,
+            name: 'emissions',
+            class: 'text-right'
+          }, {
+            label: `(6)<br>${$gettext('Unit')}`,
+            name: 'units'
+          }, {
+            label: `(7)<br> ${$gettext('Containment technologies used to minimize emissions')}`,
+            name: 'contain_technologies',
+            class: ['text-left', 'brake-row']
+          }, {
+            label: `(8)<br>${$gettext('Remarks')}`,
+            name: 'remark',
+            class: 'text-left'
+          }
         ],
 
         section_headers: [{
@@ -142,6 +146,7 @@ const getFormOtherRo = ($gettext, formName) => {
         default_properties: {
           'application_substance': '',
           'application': '',
+          'decision': '',
           'makeup_quantity': '',
           'emissions': '',
           'contain_technologies': [],
