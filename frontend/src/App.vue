@@ -141,6 +141,13 @@ export default {
   },
   created() {
     this.$store.dispatch('getMyCurrentUser')
+      .then(() => {
+        if (process.env.NODE_ENV !== 'development') {
+          Sentry.configureScope((scope) => {
+            scope.setUser({ 'username': this.$store.state.currentUser.username })
+          })
+        }
+      })
     loadPollyfills()
     api.interceptors.request.use((config) => {
       if (!config.hideLoader) {
