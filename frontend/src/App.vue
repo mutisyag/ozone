@@ -140,6 +140,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('getMyCurrentUser')
     loadPollyfills()
     api.interceptors.request.use((config) => {
       if (!config.hideLoader) {

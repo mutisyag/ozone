@@ -320,7 +320,6 @@ export default {
     document.querySelector('body').classList.remove('aside-menu-lg-show')
     this.$store.dispatch('getDashboardParties')
     this.$store.dispatch('getDashboardObligations')
-    this.$store.dispatch('getMyCurrentUser')
 
     await this.$store.dispatch('getDashboardPeriods')
     const submissionDefaultValues = await this.$store.dispatch('getSubmissionDefaultValues')
