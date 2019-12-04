@@ -9,6 +9,7 @@ const getFormLetter = ($gettext) => {
       dataNeeded: [
         'initialData.countryOptions',
         'initialData.countryOptionsSubInfo',
+        'initialData.reportingChannel',
         'initialData.display.countries'
       ]
     },

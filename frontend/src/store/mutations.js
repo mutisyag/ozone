@@ -313,6 +313,10 @@ const mutations = {
     state.initialData.display.blends = data
   },
 
+  updateReportingChannel(state, data) {
+    state.initialData.reportingChannel = data
+  },
+
   setBlendComponentRowVariant(state, data) {
     data.component._rowVariant = data.value
   },

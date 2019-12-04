@@ -15,6 +15,7 @@ const getFormArt7 = ($gettext) => {
         'initialData.display.substances',
         'initialData.display.blends',
         'initialData.display.countries',
+        'initialData.reportingChannel',
         'initialData.countryOptionsSubInfo',
         'currentUser',
         'initialData.submissionFormats',

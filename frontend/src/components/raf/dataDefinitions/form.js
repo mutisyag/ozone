@@ -14,6 +14,7 @@ const getFormRaf = ($gettext) => {
       dataNeeded: [
         'initialData.countryOptions',
         'initialData.countryOptionsSubInfo',
+        'initialData.reportingChannel',
         'initialData.substances',
         'initialData.blends',
         'current_submission',

@@ -10,6 +10,7 @@ const getFormExemption = ($gettext) => {
         'initialData.countryOptions',
         'initialData.countryOptionsSubInfo',
         'initialData.substances',
+        'initialData.reportingChannel',
         'current_submission',
         'initialData.display.substances',
         'initialData.display.countries',

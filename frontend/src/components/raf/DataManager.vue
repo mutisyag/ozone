@@ -7,10 +7,6 @@
 <script>
 import tabsManager from '@/components/raf/TabsManager'
 import dataManagerMixin from '@/components/common/mixins/DataManagerMixin'
-import {
-  isObject,
-  getPropertyValue
-} from '@/components/common/services/utilsService'
 
 export default {
   name: 'DataManager',
@@ -18,52 +14,5 @@ export default {
     tabsmanager: tabsManager
   },
   mixins: [dataManagerMixin],
-
-  computed: {
-    initialDataReady() {
-      this.$store.commit('setPreventLeaveConfirm', false)
-      if (!this.form) {
-        return false
-      }
-      for (const propertyPath of this.form.formDetails.dataNeeded) {
-        // eslint-disable-next-line no-unused-vars
-        const propValue = getPropertyValue(this.$store.state, propertyPath)
-        if (propertyPath === 'submissionDefaultValues.submission_format') {
-          // eslint-disable-next-line no-continue
-          continue
-        }
-      }
-
-      const { dataNeeded } = this.form.formDetails
-      Object.values(this.form.tabs).forEach(tab => {
-        if (isObject(tab.form_fields)) {
-          for (const formFieldPropName in tab.form_fields) {
-            const formField = tab.form_fields[formFieldPropName]
-            if (formField.optionsStatePropertyPath) {
-              for (const propertyPath of dataNeeded) {
-                if (formField.optionsStatePropertyPath === propertyPath) {
-                  const propValue = getPropertyValue(this.$store.state, propertyPath)
-                  formField.options = propValue
-                  break
-                }
-              }
-            }
-            if (formField.selectedPropertyPath) {
-              for (const propertyPath of dataNeeded) {
-                if (formField.selectedPropertyPath === propertyPath) {
-                  const propValue = getPropertyValue(this.$store.state, propertyPath)
-                  if (formField.selected !== propValue) {
-                    formField.selected = propValue
-                  }
-                  break
-                }
-              }
-            }
-          }
-        }
-      })
-      return this.prefilled
-    }
-  }
 }
 </script>

@@ -10,6 +10,7 @@ const getFormHat = ($gettext) => {
         'initialData.countryOptions',
         'initialData.countryOptionsSubInfo',
         'initialData.substances',
+        'initialData.reportingChannel',
         'initialData.blends',
         'current_submission',
         'initialData.display.substances',

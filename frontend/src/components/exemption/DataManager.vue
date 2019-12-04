@@ -13,6 +13,6 @@ export default {
   components: {
     tabsmanager: tabsManager
   },
-  mixins: [dataManagerMixin]
+  mixins: [dataManagerMixin],
 }
 </script>

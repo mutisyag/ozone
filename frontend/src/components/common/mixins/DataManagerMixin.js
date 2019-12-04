@@ -47,12 +47,12 @@ export default {
         return false
       }
       for (const propertyPath of this.form.formDetails.dataNeeded) {
+        // eslint-disable-next-line no-unused-vars
         const propValue = getPropertyValue(this.$store.state, propertyPath)
         if (propertyPath === 'submissionDefaultValues.submission_format') {
           // eslint-disable-next-line no-continue
           continue
         }
-        if (!propValue) return false
       }
 
       const { dataNeeded } = this.form.formDetails
@@ -83,10 +83,8 @@ export default {
           }
         }
       })
-
       return this.prefilled
     },
-
     form() {
       return this.$store.state.form
     }
