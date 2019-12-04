@@ -383,10 +383,10 @@ const actions = {
     await context.dispatch('getSubmissionData', { submission, $gettext }).then(async (reporting_period) => {
       context.dispatch('getCurrentUserForm').then(currentUser => {
         if (Array.isArray(currentUser)) {
-          if (currentUser[0].is_secretariat) {
+          if (currentUser[0].is_secretariat && formName === 'art7') {
             context.dispatch('getEmailTemplates')
           }
-        } else if (currentUser && !Array.isArray(currentUser) && currentUser.is_secretariat) {
+        } else if (currentUser && !Array.isArray(currentUser) && currentUser.is_secretariat && formName === 'art7') {
           context.dispatch('getEmailTemplates')
         }
       })
