@@ -69,7 +69,8 @@
                 <h4>{{ entry.subject }}</h4>
                 <small><b>From:</b> {{entry.from_email}}</small> <br>
                 <small><b>To:</b> {{entry.to.join(', ')}} </small><br>
-                <small><b>Cc:</b> {{entry.cc.join(', ')}}</small>
+                <small><b>Cc:</b> {{entry.cc.join(', ')}}</small><br>
+                <small><b>Files:</b> {{entry.attachments.map(att => att.filename).join(' ')}}</small>
                 <div class="correspondence-body mt-2">{{entry.body}}</div>
                 <hr>
             </div>
