@@ -149,13 +149,13 @@ export default {
       this.attachmentsOptions.push({
         id: newAttachment.id,
         source: newAttachment.source,
-        title: newAttachment.title,
+        title: newAttachment.title
       })
       if (selected) {
         this.mail.attachments.push({
           id: newAttachment.id,
           source: newAttachment.source,
-          title: newAttachment.title,
+          title: newAttachment.title
         })
       }
     },

@@ -69,6 +69,7 @@
 
 <script>
 
+import * as Sentry from '@sentry/browser'
 import { getNav } from '@/_nav'
 import {
   Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav
