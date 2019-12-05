@@ -3,6 +3,8 @@
 from django.core.management import call_command
 from django.db import migrations, models
 
+from ozone.core.models import ReportingChannel
+
 
 class Migration(migrations.Migration):
 
@@ -11,7 +13,9 @@ class Migration(migrations.Migration):
     ]
 
     def loadfixtures(apps, schema_editor):
-        call_command('loaddata', 'data/fixtures/reporting_channels.json'),
+        if ReportingChannel.objects.count() > 0:
+            # fixtures must not be present when running backend tests
+            call_command('loaddata', 'data/fixtures/reporting_channels.json'),
 
     operations = [
         migrations.RemoveField(
