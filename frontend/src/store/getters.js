@@ -1,5 +1,5 @@
-import { doSum, valueConverter } from '@/components/common/services/utilsService'
 import { Decimal } from 'decimal.js'
+import { doSum, valueConverter } from '@/components/common/services/utilsService'
 
 const sumBiggerThanParts = (state, tab, partyField) => {
   if (!state.form.tabs[tab].form_fields.length) return {}

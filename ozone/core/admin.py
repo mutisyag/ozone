@@ -506,7 +506,9 @@ class SubmissionInfoAdmin(admin.ModelAdmin):
 class ReportingChannelAdmin(admin.ModelAdmin):
     list_display = (
         'name', 'description',
-        'is_default_party', 'is_default_secretariat', 'is_default_for_cloning',
+        'is_party', 'is_default_party',
+        'is_secretariat', 'is_default_secretariat',
+        'is_default_for_cloning',
     )
 
 

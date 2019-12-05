@@ -1,5 +1,5 @@
 <template>
-  <div class="container pt-3">
+  <div class="lookup-tables-page container pt-3">
     <b-row class="mb-2">
       <b-col>
         <b-input-group :prepend="$gettext('Search')">

@@ -720,6 +720,16 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
             'party__subregion__region'
         )
 
+    @action(methods=["get",], detail=False)
+    def last_updated(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.exclude(updated_at=None)
+        updated = None if not queryset else queryset.latest(
+            'updated_at'
+        ).updated_at
+
+        return Response({'last_updated': updated})
+
     def list_aggregated_data(
         self, queryset, aggregates, groupings, substance_to_group=False
     ):
@@ -1049,6 +1059,15 @@ class AggregationDestructionViewSet(AggregationViewSet):
                             if value['party'] == party
                         ]
                         if entries:
+                            if not groupings:
+                                # If there is no grouping, since the only
+                                # aggregation performed here is by group,
+                                # it is OK to use the values found
+                                # in the first entry for article5, eu_member
+                                # and region.
+                                for key in params_dict.keys():
+                                    value = entries[0][grouping_mapping[key]]
+                                    params_dict[key] = value
                             aggregation = dict({
                                 'party': party,
                                 'reporting_period': period,
@@ -1605,26 +1624,9 @@ class GetReportingChannelsViewSet(ReadOnlyMixin, generics.ListAPIView):
     Get the available options for the reporting channel.
     """
 
-    queryset = ReportingChannel.objects.filter(
-        is_reserved_system=False,
-    )
+    queryset = ReportingChannel.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ReportingChannelSerializer
-
-    def get_queryset(self):
-        qs = ReportingChannel.objects.filter(
-            # Filter out Legacy and API
-            is_reserved_system=False,
-        )
-        if self.request.user.is_secretariat:
-            """
-            Secretariat shouldn't need to choose `Web form`
-            when entering data on behalf of parties
-            """
-            qs = qs.filter(
-                is_default_party=False,
-            )
-        return qs
 
 
 class SubmissionFlagsViewSet(
@@ -2829,6 +2831,16 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
             'submission__party', 'submission__reporting_period',
             'substance__group', 'submission__party__subregion__region'
         )
+
+    @action(methods=["get",], detail=False)
+    def last_updated(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.exclude(submission__submitted_at=None)
+        updated = None if not queryset else queryset.latest(
+            'submission__submitted_at'
+        ).submission.submitted_at
+
+        return Response({'last_updated': updated})
 
     def list(self, request, *args, **kwargs):
         # First filter queryset according to params
