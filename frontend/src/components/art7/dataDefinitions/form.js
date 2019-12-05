@@ -20,6 +20,7 @@ const getFormArt7 = ($gettext) => {
         'currentUser',
         'initialData.submissionFormats',
         'permissions.form',
+        'submissionDefaultValues.reporting_channel',
         'submissionDefaultValues.submission_format'
       ],
       comments_default_properties: {

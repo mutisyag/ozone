@@ -18,7 +18,8 @@ const getFormOtherRo = ($gettext, formName) => {
         'initialData.display.substances',
         'initialData.display.countries',
         'currentUser',
-        'permissions.form'
+        'permissions.form',
+        'submissionDefaultValues.reporting_channel'
       ]
     },
     tabs: {

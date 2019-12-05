@@ -73,7 +73,8 @@ export default {
               for (const propertyPath of dataNeeded) {
                 if (formField.selectedPropertyPath === propertyPath) {
                   const propValue = getPropertyValue(this.$store.state, propertyPath)
-                  if (formField.selected !== propValue && !formField.selected) {
+                  if ((!formField.selected && formField.selected !== propValue)
+                  || (formField.selected && formField.options && formField.options.filter(opt => opt.text === formField.selected).length === 0)) {
                     formField.selected = propValue
                   }
                   break

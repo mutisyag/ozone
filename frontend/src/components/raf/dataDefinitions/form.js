@@ -23,6 +23,7 @@ const getFormRaf = ($gettext) => {
         'initialData.display.countries',
         'currentUser',
         'permissions.form',
+        'submissionDefaultValues.reporting_channel',
         'initialData.approvedExemptionsList',
         'initialData.criticalUseCategoryList'
       ],

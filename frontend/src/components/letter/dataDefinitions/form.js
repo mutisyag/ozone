@@ -10,7 +10,8 @@ const getFormLetter = ($gettext) => {
         'initialData.countryOptions',
         'initialData.countryOptionsSubInfo',
         'initialData.reportingChannel',
-        'initialData.display.countries'
+        'initialData.display.countries',
+        'submissionDefaultValues.reporting_channel'
       ]
     },
     tabs: {
