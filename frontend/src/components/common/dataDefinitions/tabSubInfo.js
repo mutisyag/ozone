@@ -37,14 +37,10 @@ const getTabSubInfo = ($gettext) => {
       },
       reporting_channel: {
         type: 'select',
-        options: [
-          { text: $gettext('Web form'), value: 'Web form' },
-          { text: $gettext('Email'), value: 'Email' },
-          { text: $gettext('Legacy'), value: 'Legacy' },
-          { text: $gettext('Paper'), value: 'Paper' },
-          { text: $gettext('API'), value: 'API' }
-        ],
-        selected: 'Web form'
+        selected: '',
+        optionsStatePropertyPath: 'initialData.reportingChannel',
+        selectedPropertyPath: 'submissionDefaultValues.reporting_channel',
+        options: []
       },
       reporting_officer: {
         type: 'text',

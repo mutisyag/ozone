@@ -24,6 +24,7 @@ import {
   getControlledGroups,
   getApprovedExemptionsList,
   getReports,
+  getReportingChannel,
   getEmailTemplates,
   getCriticalUseCategoryList
 } from '@/components/common/services/api'
@@ -392,6 +393,7 @@ const actions = {
       await context.dispatch('getCountries')
       await context.dispatch('getSubstances')
       await context.dispatch('getSubmissionDefaultValues')
+      await context.dispatch('getReportingChannel')
       // Filter custom blends by the submission's party, because the API will
       // by default show all custom blends for secretariat users.
       // This way, even secretariat users will only see the correct available
@@ -485,6 +487,13 @@ const actions = {
   async getReportsList() {
     const reports = await getReports()
     return reports.data.map(r => ({ value: r.name, text: r.display_name, original: r }))
+  },
+
+  getReportingChannel(context) {
+    getReportingChannel().then(response => {
+      const reportingChannel = response.data.map(channel => ({ text: channel.name, value: channel.name, is_secretariat: channel.is_secretariat, is_party: channel.is_party }))
+      context.commit('updateReportingChannel', reportingChannel)
+    })
   },
 
   getCountries(context) {

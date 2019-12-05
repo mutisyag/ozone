@@ -15,10 +15,12 @@ const getFormArt7 = ($gettext) => {
         'initialData.display.substances',
         'initialData.display.blends',
         'initialData.display.countries',
+        'initialData.reportingChannel',
         'initialData.countryOptionsSubInfo',
         'currentUser',
         'initialData.submissionFormats',
         'permissions.form',
+        'submissionDefaultValues.reporting_channel',
         'submissionDefaultValues.submission_format'
       ],
       comments_default_properties: {

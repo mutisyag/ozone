@@ -14,6 +14,7 @@ const getFormRaf = ($gettext) => {
       dataNeeded: [
         'initialData.countryOptions',
         'initialData.countryOptionsSubInfo',
+        'initialData.reportingChannel',
         'initialData.substances',
         'initialData.blends',
         'current_submission',
@@ -22,6 +23,7 @@ const getFormRaf = ($gettext) => {
         'initialData.display.countries',
         'currentUser',
         'permissions.form',
+        'submissionDefaultValues.reporting_channel',
         'initialData.approvedExemptionsList',
         'initialData.criticalUseCategoryList'
       ],
