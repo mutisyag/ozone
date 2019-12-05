@@ -1,6 +1,26 @@
 import fromExponential from 'from-exponential/dist/index.min.js'
 import { Decimal } from 'decimal.js'
 
+const getObjectValue = (path, obj) => {
+  const result = path.split('.').reduce((prev, curr, index) => {
+    if (Array.isArray(prev)) {
+      const newObj = {}
+      newObj[prev] = []
+      prev.forEach(pr => {
+        if (path.split('.').length - 1 === index) {
+          newObj[prev] = pr[curr]
+        } else {
+          newObj[prev].push(pr[curr])
+        }
+      })
+      return prev ? newObj[prev] : undefined
+    }
+    return prev ? prev[curr] : undefined
+  }, obj || self)
+
+  return result
+}
+
 const getLevel2PropertyValue = (obj, level2PropertyKey) => {
   if (!obj || !level2PropertyKey) {
     return undefined
@@ -60,9 +80,8 @@ const getPropertyValue = (obj, propertyPath) => {
   if (!isObject(obj)) {
     return undefined
   }
-  const [prop, propName] = propertyPath.split('.')
-  const propValue = obj[prop] ? obj[prop][propName] : undefined
-  return propValue
+
+  return getObjectValue(propertyPath, obj)
 }
 
 const isNumber = (n) => !isNaN(parseFloat(n)) && isFinite(n)
@@ -139,6 +158,7 @@ const valueConverter = (item) => {
 const doSum = (sumItems) => sumItems.reduce((sum, item) => Decimal.add(valueConverter(item), valueConverter(sum)).toNumber())
 
 export {
+  getObjectValue,
   getLevel2PropertyValue,
   isObject,
   pushUnique,
