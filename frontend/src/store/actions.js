@@ -491,7 +491,7 @@ const actions = {
 
   getReportingChannel(context) {
     getReportingChannel().then(response => {
-      const reportingChannel = response.data.map(channel => ({ text: channel.name, value: channel.name, is_secretariat: channel.is_default_secretariat, is_party: channel.is_default_party }))
+      const reportingChannel = response.data.map(channel => ({ text: channel.name, value: channel.name, is_secretariat: channel.is_secretariat, is_party: channel.is_party }))
       context.commit('updateReportingChannel', reportingChannel)
     })
   },

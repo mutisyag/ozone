@@ -60,8 +60,8 @@ const getPropertyValue = (obj, propertyPath) => {
   if (!isObject(obj)) {
     return undefined
   }
-  const propNames = propertyPath.split('.')
-  const propValue = propNames.reduce((prop, propName) => prop[propName], obj)
+  const [prop, propName] = propertyPath.split('.')
+  const propValue = obj[prop] ? obj[prop][propName] : undefined
   return propValue
 }
 

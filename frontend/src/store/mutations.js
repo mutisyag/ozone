@@ -314,7 +314,12 @@ const mutations = {
   },
 
   updateReportingChannel(state, data) {
-    state.initialData.reportingChannel = data
+    state.initialData.reportingChannel = []
+    data.forEach(channel => {
+      if ((state.currentUser.is_secretariat && channel.is_secretariat) || (state.currentUser.is_party && channel.is_party)) {
+        state.initialData.reportingChannel.push(channel)
+      }
+    })
   },
 
   setBlendComponentRowVariant(state, data) {
