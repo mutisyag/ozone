@@ -73,7 +73,7 @@ export default {
               for (const propertyPath of dataNeeded) {
                 if (formField.selectedPropertyPath === propertyPath) {
                   const propValue = getPropertyValue(this.$store.state, propertyPath)
-                  if (formField.selected !== propValue) {
+                  if (formField.selected !== propValue && !formField.selected) {
                     formField.selected = propValue
                   }
                   break
@@ -145,7 +145,6 @@ export default {
           // })
         }
       })
-
       Promise.all(endpoints,).then((responses) => {
         const prefillData = responses.map((r, index) => (this.prefill({ tabName: tabsList[index], data: r.data })))
         Promise.all(prefillData).then(() => {
