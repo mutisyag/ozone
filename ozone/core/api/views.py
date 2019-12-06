@@ -984,19 +984,6 @@ class AggregationDestructionViewSet(AggregationViewSet):
             'region': 'party__subregion__region'
         }
 
-        queryset = self.filter_queryset(self.get_queryset())
-
-        # Using `distinct()` does not work because this queryset is
-        # ordered by fields from related models, which makes similar
-        # values seem distinct.
-        periods = set(queryset.values_list('reporting_period', flat=True))
-        parties = set(queryset.values_list('party', flat=True))
-        all_values = queryset.values(
-            'destroyed', 'party', 'reporting_period',
-            self.group_or_substance,
-            *grouping_mapping.values()
-        )
-
         # Handle aggregation. In this case we always aggregate by group, since
         # only the total destructions sum per party/period is public.
         aggregates = request.query_params.get('aggregation', None)
@@ -1009,6 +996,27 @@ class AggregationDestructionViewSet(AggregationViewSet):
         grouping_fields = [
             value for key, value in grouping_mapping.items() if key in groupings
         ]
+
+        # Filter queryset
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # When performing aggregations by party, do not use data reported
+        # the European Union "party".
+        # Since grouping is also a form of aggregation, also exclude data
+        # European Union data in that case.
+        if (aggregates and 'party' in aggregates) or grouping_fields:
+            queryset = queryset.exclude(party__abbr='EU')
+
+        # Using `distinct()` does not work because this queryset is
+        # ordered by fields from related models, which makes similar
+        # values seem distinct.
+        periods = set(queryset.values_list('reporting_period', flat=True))
+        parties = set(queryset.values_list('party', flat=True))
+        all_values = queryset.values(
+            'destroyed', 'party', 'reporting_period',
+            self.group_or_substance,
+            *grouping_mapping.values()
+        )
 
         # Use a dictionary of list of dictionaries for in-memory storage to
         # optimize DB queries.
