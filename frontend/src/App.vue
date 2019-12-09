@@ -145,7 +145,8 @@ export default {
       .then(() => {
         if (process.env.NODE_ENV !== 'development') {
           Sentry.configureScope((scope) => {
-            scope.setUser({ 'username': this.$store.state.currentUser.username })
+            const username = this.$store.state.currentUser ? this.$store.state.currentUser.username : undefined
+            scope.setUser({ 'username': username })
           })
         }
       })
