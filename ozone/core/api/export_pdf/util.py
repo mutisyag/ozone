@@ -467,9 +467,10 @@ def get_date_of_reporting_str(submission):
 
 class TableBuilder:
 
-    def __init__(self, styles, column_widths):
+    def __init__(self, styles, column_widths, repeat_rows=None):
         self.styles = list(styles)
         self.column_widths = column_widths
+        self.repeat_rows = repeat_rows
         self.rows = []
 
     @property
@@ -484,9 +485,13 @@ class TableBuilder:
         self.styles.append(('SPAN', (0, self.current_row), (-1, self.current_row)))
 
     def done(self):
-        return Table(
-            self.rows,
+        kwargs = dict(
             colWidths=self.column_widths,
             style=self.styles,
-            hAlign='LEFT'
+            hAlign='LEFT',
         )
+
+        if self.repeat_rows:
+            kwargs['repeatRows'] = self.repeat_rows
+
+        return Table(self.rows, **kwargs)

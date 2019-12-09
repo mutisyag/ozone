@@ -76,7 +76,7 @@ class RecoveredImportExportTable:
     def begin_table(self):
         styles = list(SINGLE_HEADER_TABLE_STYLES)
         column_widths = col_widths([10, 2, 3, 3])
-        builder = TableBuilder(styles, column_widths)
+        builder = TableBuilder(styles, column_widths, repeat_rows=1)
 
         builder.add_row([
             "Substance Name",
