@@ -1,5 +1,5 @@
 <template>
-  <div class="app flex-row align-items-top">
+  <div class="app lookup-tables-page flex-row align-items-top">
     <div class="w-100 pt-3">
 
       <b-row class="mb-2">
@@ -91,6 +91,12 @@ export default {
         {
           key: 'name',
           label: this.$gettext('Name'),
+          sortable: true,
+          class: 'text-left'
+        },
+        {
+          key: 'description',
+          label: this.$gettext('Description'),
           sortable: true,
           class: 'text-left'
         },

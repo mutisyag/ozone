@@ -1,62 +1,62 @@
 [
   {
+    "model": "core.reportingchannel",
+    "pk": 1,
     "fields": {
       "name": "Web form",
       "description": "",
       "is_default_party": true,
       "is_default_secretariat": false,
-      "is_default_for_cloning": true,
-      "is_reserved_system": false
-    },
-    "model": "core.reportingchannel",
-    "pk": 1
+      "is_party": true,
+      "is_secretariat": false
+    }
   },
   {
+    "model": "core.reportingchannel",
+    "pk": 2,
     "fields": {
       "name": "Email",
       "description": "",
       "is_default_party": false,
       "is_default_secretariat": true,
-      "is_default_for_cloning": false,
-      "is_reserved_system": false
-    },
-    "model": "core.reportingchannel",
-    "pk": 2
+      "is_party": false,
+      "is_secretariat": true
+    }
   },
   {
+    "model": "core.reportingchannel",
+    "pk": 3,
     "fields": {
       "name": "Legacy",
       "description": "",
       "is_default_party": false,
       "is_default_secretariat": false,
-      "is_default_for_cloning": false,
-      "is_reserved_system": true
-    },
-    "model": "core.reportingchannel",
-    "pk": 3
+      "is_party": false,
+      "is_secretariat": false
+    }
   },
   {
+    "model": "core.reportingchannel",
+    "pk": 4,
     "fields": {
       "name": "Paper",
       "description": "",
       "is_default_party": false,
       "is_default_secretariat": false,
-      "is_default_for_cloning": false,
-      "is_reserved_system": false
-    },
-    "model": "core.reportingchannel",
-    "pk": 4
+      "is_party": false,
+      "is_secretariat": true
+    }
   },
   {
+    "model": "core.reportingchannel",
+    "pk": 5,
     "fields": {
       "name": "API",
       "description": "",
       "is_default_party": false,
       "is_default_secretariat": false,
-      "is_default_for_cloning": false,
-      "is_reserved_system": true
-    },
-    "model": "core.reportingchannel",
-    "pk": 5
+      "is_party": false,
+      "is_secretariat": false
+    }
   }
 ]

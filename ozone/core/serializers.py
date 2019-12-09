@@ -1157,9 +1157,7 @@ class ReportingChannelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReportingChannel
-        fields = ('name',
-                  'is_default_party',
-                  'is_default_secretariat')
+        fields = '__all__'
 
 
 class PerTypeFieldsMixIn(object):

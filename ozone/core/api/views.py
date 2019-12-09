@@ -1625,26 +1625,9 @@ class GetReportingChannelsViewSet(ReadOnlyMixin, generics.ListAPIView):
     Get the available options for the reporting channel.
     """
 
-    queryset = ReportingChannel.objects.filter(
-        is_reserved_system=False,
-    )
+    queryset = ReportingChannel.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ReportingChannelSerializer
-
-    def get_queryset(self):
-        qs = ReportingChannel.objects.filter(
-            # Filter out Legacy and API
-            is_reserved_system=False,
-        )
-        if self.request.user.is_secretariat:
-            """
-            Secretariat shouldn't need to choose `Web form`
-            when entering data on behalf of parties
-            """
-            qs = qs.filter(
-                is_default_party=False,
-            )
-        return qs
 
 
 class SubmissionFlagsViewSet(

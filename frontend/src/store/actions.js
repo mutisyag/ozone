@@ -24,6 +24,7 @@ import {
   getControlledGroups,
   getApprovedExemptionsList,
   getReports,
+  getReportingChannel,
   getEmailTemplates,
   getCriticalUseCategoryList
 } from '@/components/common/services/api'
@@ -382,17 +383,17 @@ const actions = {
     console.log('----------------', formName)
     await context.dispatch('getSubmissionData', { submission, $gettext }).then(async (reporting_period) => {
       context.dispatch('getCurrentUserForm').then(currentUser => {
-        if (Array.isArray(currentUser)) {
-          if (currentUser[0].is_secretariat) {
-            context.dispatch('getEmailTemplates')
-          }
-        } else if (currentUser && !Array.isArray(currentUser) && currentUser.is_secretariat) {
+        if (formName === 'art7'
+          && ((Array.isArray(currentUser) && currentUser[0].is_secretariat)
+          || (!Array.isArray(currentUser) && currentUser && currentUser.is_secretariat))
+        ) {
           context.dispatch('getEmailTemplates')
         }
       })
       await context.dispatch('getCountries')
       await context.dispatch('getSubstances')
       await context.dispatch('getSubmissionDefaultValues')
+      await context.dispatch('getReportingChannel')
       // Filter custom blends by the submission's party, because the API will
       // by default show all custom blends for secretariat users.
       // This way, even secretariat users will only see the correct available
@@ -486,6 +487,13 @@ const actions = {
   async getReportsList() {
     const reports = await getReports()
     return reports.data.map(r => ({ value: r.name, text: r.display_name, original: r }))
+  },
+
+  getReportingChannel(context) {
+    getReportingChannel().then(response => {
+      const reportingChannel = response.data.map(channel => ({ text: channel.name, value: channel.name, is_secretariat: channel.is_secretariat, is_party: channel.is_party }))
+      context.commit('updateReportingChannel', reportingChannel)
+    })
   },
 
   getCountries(context) {

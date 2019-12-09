@@ -7,7 +7,7 @@ Article 7 - Data reporting forms
 .. index:: Article 7 data reporting
 
 
-The Article 7 data reporting forms have nine main sections. :guilabel:`Submission Info` and :guilabel:`Files` are explained in the general :ref:`Data entry forms` chapter. The rest of the tabs are described below.
+The Article 7 data reporting forms have nine main sections. :guilabel:`Submission Information` and :guilabel:`Files` are explained in the general :ref:`Data entry forms` chapter. The rest of the tabs are described below.
 
 .. hint::
   Each form has its own detailed instructions on data reporting, displayed when clicking on the |icon-info| icon in the upper-left area of the page.
@@ -20,10 +20,10 @@ The questionnaire
 
 .. index:: Questionnaire
 
-In the :guilabel:`Questionnaire` tab you must answer a set of six questions, each corresponding to one of the remaining tabs of the Article 7 form: :guilabel:`Imports`, :guilabel:`Exports`, :guilabel:`Production`, :guilabel:`Destruction`, :guilabel:`Non-party`, :guilabel:`Emissions`.
+In the :guilabel:`Questionnaire` tab you can answer a set of six questions, each corresponding to one of the remaining tabs of the Article 7 form: :guilabel:`Imports`, :guilabel:`Exports`, :guilabel:`Production`, :guilabel:`Destruction`, :guilabel:`Non-party`, :guilabel:`Emissions`.
 Each tab will be automatically enabled once the corresponding question is answered.
 
-You are allowed to :guilabel:`Save and continue` before choosing `Yes` or `No` for all questions, but you must fill-in the entire questionnaire before submitting.
+You can choose not to answer any of the questions when the question is not relevant for the reported data. You are allowed to :guilabel:`Save and continue` and :guilabel:`Submit` without choosing `Yes` or `No`.
 
 
 .. caution::
@@ -44,7 +44,7 @@ The `Imports` and `Exports` tabs are similar in layout and structure. After addi
 - select one or more countries/regions/territories, in case you are able to report amounts differentiated by importing/exporting party
 - proceed directly to entering amounts in metric tonnes for all importing/exporting parties together.
 
-To select importing/exporting parties, first add one or more substances or blends in the main table as described in :ref:`Adding substances`/`Adding blends`_,
+To select importing/exporting parties, first add one or more substances or mixtures in the main table as described in :ref:`Adding substances`/`Adding mixtures`_,
 then click on the |icon-countries| multiple select widget and pick one or more values from the list:
 
 .. |icon-countries| image:: images/form_input_countries.png
@@ -103,9 +103,9 @@ In addition to the exempted amounts, some substances allow entering additional a
   The total quantity imported/exported for all uses should be equal or higher than the sum of feedstock, exempted uses, QPS amounts, etc.
   Otherwise, an error message will be shown in the :guilabel:`Validation` tab (see :ref:`Data validation` chapter for more details)
 
-.. _Adding blends:
+.. _Adding mixtures:
 
-Adding blends (mixtures)
+Adding mixtures (blends)
 ========================
 
 .. index:: Blends, Mixtures
@@ -116,15 +116,15 @@ Four of the Article 7 data submission forms allow entering mixtures (blends): :g
 Standard mixtures
 ^^^^^^^^^^^^^^^^^
 
-All standard mixtures (as listed in section 11) are defined in the reporting system and they can be selected from the :guilabel:`Blends` tab, in the right sidebar, near the :guilabel:`Substances` add form. It is possible to filter blends by type (`Azeotrope`, `Zeotrope`, etc.):
+All standard mixtures (as listed in section 11) are defined in the reporting system and they can be selected from the :guilabel:`Mixtures` tab, in the right sidebar, near the :guilabel:`Substances` add form. It is possible to filter mixtures by type (`Azeotrope`, `Zeotrope`, etc.):
 
 .. image:: images/form_blends.png
 
-It is possible to select one or more blends from the list and add the to the second table in the main form. While selecting blends, their composition is displayed:
+It is possible to select one or more mixtures from the list and add the to the second table in the main form. While selecting mixtures, their composition is displayed:
 
 .. image:: images/form_blends_composition.png
 
-When added in the main table, blends behave similar to substances. It is possible to click on the second column (blend name) to view the amounts broken down by blend components:
+When added in the main table, mixtures behave similar to substances. It is possible to click on the second column (mixture name) to view the amounts broken down by components:
 
 .. image:: images/form_blends_expanded.png
 
@@ -133,17 +133,17 @@ Non-standard mixtures
 
 .. index:: Non-standard mixtures
 
-To report amounts for a mixture which is not defined in the system, use the :guilabel:`Add new blend` function.
-To do so, enter a suggestive name for the new blend in the :guilabel:`Blend name` field, pick the substances from the select lists and enter the percentages for each substance in the :guilabel:`%` input field:
+To report amounts for a mixture which is not defined in the system, use the :guilabel:`Add new mixture` function.
+To do so, enter an appropriate name for the new mixture in the :guilabel:`Mixture name` field, pick the substances from the select lists and enter the percentages for each substance in the :guilabel:`%` input field:
 
 .. image:: images/form_blends_custom.png
 
 If your mixture has less than three components, you will have to remove the last empty row by pressing the |icon-delete-alt| delete icon.
-Press the :guilabel:`Add row` button to add the custom blend in the form, or the :guilabel:`Cancel` button to start over.
+Press the :guilabel:`Add row` button to add the custom mixture in the form, or the :guilabel:`Cancel` button to start over.
 
 .. |icon-delete-alt| image:: images/icon-delete-alt.png
 
-Once created, a non-standard mixture can be reused in other forms or submissions, under the ``Custom`` blend type:
+Once created, a non-standard mixture can be reused in other forms or submissions, under the ``Custom`` mixture type:
 
 .. image:: images/form_blends_custom2.png
 
@@ -159,7 +159,7 @@ Production
 The production tab is similar to the :guilabel:`Imports` and :guilabel:`Exports` tabs, except for:
 
 - the form does not include an exporting/destionation party column;
-- blends cannot be added in the `Production` table;
+- mixtures cannot be added in the `Production` table;
 - there is an additional column called :guilabel:`Production for BDN for A5 parties`, to report production for supply to Article 5 countries in accordance with articles 2A, 2H and 5;
 - HFC-23 amounts are grouped under a dedicated table, having a slightly different structure. Please note the `Captured` labels (instead of `Produced`) for all uses and for feedstock uses. There is also an additional column :guilabel:`Captured for destruction`:
 
@@ -170,7 +170,7 @@ Destruction
 
 .. index:: Destruction
 
-The :guilabel:`Destruction` tab allows adding both substances and blends, together with the amount destroyed. 
+The :guilabel:`Destruction` tab allows adding both substances and mixtures, together with the amount destroyed. 
 As this table has less columns, the remarks can be entered directly in the column.
 
 Non-party trade
@@ -181,14 +181,14 @@ Non-party trade
 The :guilabel:`Non-party` tab allows to report imports from and/or exports to non-parties.
 Please check the |icon-info| detailed instructions to see what non party means for the purpose of this data form.
 
-For each substance or blend you can optionally (on a voluntary basis) mention the Exporting/destination party.
+For each substance or mixture you can optionally (on a voluntary basis) mention the Exporting/destination party.
 Please note that the list of countries/regions/territories depends on the reporting period and the selected substance.
 Regions and territories associated with parties are always included in the list.
 
 Please also note that HFC's cannot be selected in the trade with non-parties form until 2033, according to article IV para 2 of the Kigali Amendment.
 
 .. hint::
-  When there are both imports and exports with a non-party to be reported for the same substance/blend, please add only one row in the table,
+  When there are both imports and exports with a non-party to be reported for the same substance/mixture, please add only one row in the table,
   select the exporting/destination country and fill-in both `Quantity of imports` and `Quantity of exports` columns.
 
 Emissions
@@ -206,6 +206,8 @@ Please read carefully the available |icon-tooltip| tooltips and the overall |ico
 
 Reporing amounts for columns 2-5 are optional, but in case you decide to enter them, the total amount generated (2) must be greater or equal to 
 the amount generated and captured for all uses (3a). added with amouont used for feedstock (4), amount destroyed (5) and amount of generated emissions (6).
+
+.. _Art7Workflow:
 
 The submission workflow for Article 7 data reporting
 ====================================================
