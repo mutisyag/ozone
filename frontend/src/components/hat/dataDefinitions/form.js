@@ -10,13 +10,15 @@ const getFormHat = ($gettext) => {
         'initialData.countryOptions',
         'initialData.countryOptionsSubInfo',
         'initialData.substances',
+        'initialData.reportingChannel',
         'initialData.blends',
         'current_submission',
         'initialData.display.substances',
         'initialData.display.blends',
         'initialData.display.countries',
         'currentUser',
-        'permissions.form'
+        'permissions.form',
+        'submissionDefaultValues.reporting_channel'
       ],
       comments_default_properties: {
         'hat_imports_remarks_party': '',

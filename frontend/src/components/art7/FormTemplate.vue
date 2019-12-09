@@ -497,7 +497,7 @@
             <span
               style="cursor:pointer;"
               class="substance-blend-cell"
-              v-b-tooltip.hover="'Click to expand/collapse blend'"
+              v-b-tooltip.hover="'Click to expand/collapse mixture'"
               @click.stop="cell.toggleDetails"
             >
               <i :class="`fa fa-caret-${expandedStatus(cell.item._showDetails)}`"></i>

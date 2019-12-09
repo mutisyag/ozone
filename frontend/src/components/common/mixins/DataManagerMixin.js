@@ -47,12 +47,12 @@ export default {
         return false
       }
       for (const propertyPath of this.form.formDetails.dataNeeded) {
+        // eslint-disable-next-line no-unused-vars
         const propValue = getPropertyValue(this.$store.state, propertyPath)
         if (propertyPath === 'submissionDefaultValues.submission_format') {
           // eslint-disable-next-line no-continue
           continue
         }
-        if (!propValue) return false
       }
 
       const { dataNeeded } = this.form.formDetails
@@ -73,7 +73,8 @@ export default {
               for (const propertyPath of dataNeeded) {
                 if (formField.selectedPropertyPath === propertyPath) {
                   const propValue = getPropertyValue(this.$store.state, propertyPath)
-                  if (formField.selected !== propValue) {
+                  if ((!formField.selected && formField.selected !== propValue)
+                  || (formField.selected && Array.isArray(formField.options) && formField.options.filter(opt => opt.text === formField.selected).length === 0)) {
                     formField.selected = propValue
                   }
                   break
@@ -83,10 +84,8 @@ export default {
           }
         }
       })
-
       return this.prefilled
     },
-
     form() {
       return this.$store.state.form
     }
@@ -147,7 +146,6 @@ export default {
           // })
         }
       })
-
       Promise.all(endpoints,).then((responses) => {
         const prefillData = responses.map((r, index) => (this.prefill({ tabName: tabsList[index], data: r.data })))
         Promise.all(prefillData).then(() => {
