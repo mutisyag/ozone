@@ -38,24 +38,23 @@ The data entry forms
 
 This section describes actions and entry forms elements which are common to all forms.
 
-Submission info
----------------
+Submission information
+----------------------
 
-All forms have a :guilabel:`Submission Info` tab:
+All forms have a :guilabel:`Submission Information` tab:
+
 .. image:: images/form_submission_info.png
 
 This section is automatically filled by the system with data from the latest submission, when available.
 You must fill-in at least the mandatory fields (``Name of reporting officer`` and ``E-mail``) before saving the submission.
 The ``Reporting channel`` and ``Submission format`` fields are reserved for the Secretariat.
 
-
-
 After a report is submitted, a new field becomes visible (read-only), automatically filled by the system with the actual 
 date when the :guilabel:`Submit` action has been completed.
 
 .. image:: images/form_date_of_submission.png
 
-On the right side of the `Submission Info` tab there is a section which depends on the type of submission.
+On the right side of the `Submission Information` tab there is a section which depends on the type of submission.
 For Article 7 data reporting, this section contains ``Flags``, ``Annex groups reported in full`` and ``Submission status``:
 
 .. image:: images/form_submission_info2.png
@@ -105,7 +104,7 @@ At any time you can |icon-delete| remove or |icon-download| download uploaded fi
 .. |icon-download| image:: images/icon-download.png
 
 .. caution::
-  Before removing a file, a confirmation dialog will be shown. After pressing :guilabel:`Ok` in the confirmation dialog,
+  Before removing a file, a confirmation dialog will be shown. After pressing :guilabel:`OK` in the confirmation dialog,
   the file is immediately deleted from the server, *without being necessary to press* the :guilabel:`Save and continue` button.
 
 .. _Adding substances:
@@ -198,27 +197,89 @@ The buttons allow to save, delete, submit or close the data entry screen, plus s
 
 For more specific details of each form, see the detailed sections of each main reporting obligation.
 
-
-.. index:: Calculated production, Calculated consumption
-
-Calculated production and consumption
-=====================================
-
-.. warning:: TODO
-
 .. index:: Lookup tables
 
 Lookup tables
 =============
 
-.. warning:: TODO
+The left hand menu is visible at all times and can be used to access additional information available, such as lookup tables and reports.
+Each table from this section allows sorting and filtering by certain columns.
+
+Controlled substances
+---------------------
+
+The `Controlled substances` table shows all substances organized by annex group.
+
+.. image:: images/lookup_substances.png
+
+
+Mixtures
+--------
+
+The `Mixtures` table shows all mixtures and their composition, allowing free-text search by all visible columns:
+
+.. image:: images/lookup_mixtures.png
+
+It is also possible to filter the list of mixtures by one or more components. Only the mixtures containing all selected substances are displayed:
+
+.. image:: images/lookup_mixtures_2.png
+
+The :guilabel:`Sort` button allows ordering the filtered list of mixtures by percentage of a selected component:
+
+.. image:: images/lookup_mixtures_3.png
+
+
+Parties
+-------
+
+The `Parties` table shows ratification dates and other relevant details for parties of the Vienna Convention and the Montreal protocol, such as EU membership status, Article 5 status and countries operating under the high‑ambient‑temperature exemption as per decision XXVIII/2.
+The heading of the ratification columns shows the total number of parties who have ratified each treaty and amendment.
+Similar to other tables, it allows free-text search and sorting by any column.
+
+.. image:: images/lookup_parties.png
+
+
+.. index:: Calculated production, Calculated consumption
+
+Calculated consumption and production
+=====================================
+
+The `Consumption/production` table shows the annual calculated levels of consumption and production, for all parties and annex groups. The table is organised in four sections:
+
+- Party, Annex/Group, Reporting period - which can also be used to filter the results
+- Production (baseline, calculated level for the selected year and applicable limit)
+- Consumption (baseline, calculated level for the selected year and applicable limit)
+- Production allowance for basic domestic needs of Article 5 parties (calculated level for the selected year and applicable allowance)
+
+.. image:: images/lookup_prodcons.png
+
+This table is automatically updated when parties submit their Article 7 reports or revise their previous submissions.
 
 .. index:: Reports
 
 Reports
 =======
 
-.. warning:: TODO
+Various reports can be generated online, as PDF files, using the `Reports` section from the main menu:
+
+.. image:: images/reports_1.png
+
+
+The current list comprises of:
+
+- Raw data reported (detailed Article 7 submissions)
+- Calculated levels of production and consumption by various criteria
+- Reporting accounting framework for essential uses other than laboratory and analytical applications and for critical uses of methyl bromide
+- Laboratory and analytical uses
+- Import and export of new and recovered substances
+- other reports, available as they are implemented.
+
+When generating a report, one or more reporting periods can be selected. A single PDF file is produced, containing all selected periods in descending order.
+
+.. image:: images/reports_2.png
+
+.. note::
+  Data is generally pre-filtered by party (parties see only their own data), with the exception of some aggregated reports, such as the calculated consumption and production levels. Only the Ozone Secretariat can access consolidated reports for all parties.
 
 
 .. _List of reporting obligations:
@@ -227,7 +288,7 @@ List of reporting obligations
 =============================
 
 - Article 7 - Data Reporting
-    Description here
+    Annual data reporting under Article 7 (reported annually)
 
 - Article 9 - Research, development, public awareness and exchange of information
     Summary of activities, reported every two years.
@@ -260,4 +321,5 @@ List of reporting obligations
     - Decision V/15: Information relevant to international halon bank management (reported once).
     - Decision V/25 and VI/14A: Parties supplying controlled substances to Article 5 parties to provide annually summary of requests from importing parties (reported annually).
     - Decisions X/8 and IX/24: New ozone-depleting substances reported by the parties (reported when new substances emerge).
-    - Decision XX/7, paragraph 5: Strategies on environmentally sound management of banks of ozone-depleting substances (reported once, updated as required).
+    - Decision VI/19, paragraph 4: reclamation facilities and their capacities available in their countries.
+    - Decision XX/7, paragraph 5: further improvements in national and/or regional strategies relating to venting, leakage or emission of ozone-depleting substances and the management of banks including measures to combat illegal trade (reported once, updated as required).

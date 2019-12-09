@@ -39,7 +39,7 @@ const getFormRaf = ($gettext) => {
       sub_info: {
         ...getTabSubInfo($gettext),
         hideInfoButton: true,
-        detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'),
+        detailsHtml: $gettext('Respondents are requested to read the guidelines for reporting accounting framework of essential uses other than laboratory and analytical applications before proceeding and to refer to them as necessary when completing the data forms'),
         filterOut: ['submission_format']
       },
       ...setTabFiles($gettext),
