@@ -2,9 +2,7 @@ from django.utils.translation import gettext_lazy as _
 
 import xworkflows
 
-from .base import BaseWorkflow
-from .emails import notify_workflow_transitioned
-from ...exceptions import TransitionFailed
+from .base import BaseStateDescription, BaseWorkflow
 
 
 __all__ = [
@@ -12,7 +10,7 @@ __all__ = [
 ]
 
 
-class DefaultExemptionWorkflowStateDescription(xworkflows.Workflow):
+class DefaultExemptionWorkflowStateDescription(BaseStateDescription):
     """
     These are the default submission states and transitions
     for Exemption workflow.
@@ -68,7 +66,3 @@ class DefaultExemptionWorkflow(BaseWorkflow):
     def submit(self):
         if self.model_instance.is_submitted_at_automatically_filled(self.user):
             self.model_instance.set_submitted()
-
-    @xworkflows.on_enter_state(*[s.name for s in state.states])
-    def notify_by_email(self, *args, **kwargs):
-        notify_workflow_transitioned(self)

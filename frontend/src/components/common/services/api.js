@@ -265,6 +265,8 @@ const sendEmail = (submissionId, mailData) => post(`submissions/${submissionId}/
 
 const getReports = () => fetch('reports/')
 
+const getReportingChannel = () => fetch('get-reporting-channels/')
+
 const getControlledGroups = (party, period) => fetch(`parties/${party}/report_groups/?period=${period}`)
 
 const getApprovedExemptionsList = (partyId, period) => fetch(`parties/${partyId}/approved_exemptions/?period=${period}`)
@@ -317,6 +319,7 @@ export {
   getControlledGroups,
   getApprovedExemptionsList,
   getReports,
+  getReportingChannel,
   getEmailTemplates,
   getEmails,
   sendEmail,

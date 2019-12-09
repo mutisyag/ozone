@@ -42,20 +42,17 @@ class SubmissionReportingChannelTests(BaseTests):
         ReportingChannelFactory.create(
             name='Web form',
             is_default_party=True,
-            is_default_secretariat=False,
-            is_default_for_cloning=True
+            is_default_secretariat=False
         )
         ReportingChannelFactory.create(
             name='Email',
             is_default_party=False,
-            is_default_secretariat=True,
-            is_default_for_cloning=False
+            is_default_secretariat=True
         )
         ReportingChannelFactory.create(
             name='API',
             is_default_party=False,
-            is_default_secretariat=False,
-            is_default_for_cloning=False
+            is_default_secretariat=False
         )
         SubmissionFormatFactory()
 

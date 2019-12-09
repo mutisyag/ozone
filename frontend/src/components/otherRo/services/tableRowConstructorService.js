@@ -27,6 +27,10 @@ export default {
           selected: null,
           type: 'nonInput'
         },
+        decision: {
+          selected: null,
+          type: 'nonInput'
+        },
         makeup_quantity: {
           selected: null,
           type: 'nonInput'
