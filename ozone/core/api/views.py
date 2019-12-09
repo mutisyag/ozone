@@ -85,6 +85,7 @@ from ..models import (
     IllegalTrade,
     ORMReport,
     MultilateralFund,
+    eu_party_id,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -632,7 +633,7 @@ class AggregationMTViewFilterSet(BaseAggregationViewFilterSet):
     )
 
 
-def filter_eu_items(field, items_list, exclude_eu_and_members, eu_party_id):
+def filter_eu_items(field, items_list, exclude_eu_and_members):
     def is_consumption_field(field_name):
         if field_name.startswith('import_') or field_name.startswith('export_'):
             return True
@@ -657,14 +658,14 @@ def filter_eu_items(field, items_list, exclude_eu_and_members, eu_party_id):
                 if item['is_eu_member'] is False:
                     yield item
             elif is_production_field(field):
-                if item['party'] != eu_party_id:
+                if item['party'] != eu_party_id():
                     yield item
             else:
                 yield item
 
 
 def populate_aggregation(
-        aggregation, fields, to_add, exclude_eu_and_members, eu_party_id
+        aggregation, fields, to_add, exclude_eu_and_members
     ):
     """
     Helper function to populate an aggregation dictionary's fields based on a
@@ -685,7 +686,7 @@ def populate_aggregation(
         else:
             filtered_to_add = list(
                 filter_eu_items(
-                    field, to_add, exclude_eu_and_members, eu_party_id
+                    field, to_add, exclude_eu_and_members
                 )
             )
             aggregation[field] = (
@@ -813,10 +814,8 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
 
         if 'party' in aggregates:
             exclude_eu_and_members = True
-            eu_party_id = Party.objects.get(abbr='EU').id
         else:
             exclude_eu_and_members = False
-            eu_party_id = None
 
         # Now iterate over all periods and produce the data
         for period in periods:
@@ -846,8 +845,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         **params_dict
                     })
                     populate_aggregation(
-                        aggregation, fields, to_add,
-                        exclude_eu_and_members, eu_party_id
+                        aggregation, fields, to_add, exclude_eu_and_members
                     )
                     values.append(aggregation)
                 elif 'party' in aggregates:
@@ -865,7 +863,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                             })
                             populate_aggregation(
                                 aggregation, fields, entries,
-                                exclude_eu_and_members, eu_party_id
+                                exclude_eu_and_members
                             )
                             values.append(aggregation)
                 elif 'group' in aggregates:
@@ -882,7 +880,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                             })
                             populate_aggregation(
                                 aggregation, fields, entries[party],
-                                exclude_eu_and_members, eu_party_id
+                                exclude_eu_and_members
                             )
                             values.append(aggregation)
                 elif substance_to_group is True:
@@ -912,7 +910,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                                 populate_aggregation(
                                     aggregation, fields,
                                     entries[(party, group)],
-                                    exclude_eu_and_members, eu_party_id
+                                    exclude_eu_and_members
                                 )
                                 values.append(aggregation)
 
@@ -1069,10 +1067,8 @@ class AggregationDestructionViewSet(AggregationViewSet):
 
         if 'party' in aggregates:
             exclude_eu_and_members = True
-            eu_party_id = Party.objects.get(abbr='EU').id
         else:
             exclude_eu_and_members = False
-            eu_party_id = None
 
         # List of values that will be returned
         values = []
@@ -1108,7 +1104,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
                     })
                     populate_aggregation(
                         aggregation, ['destroyed',], to_add,
-                        exclude_eu_and_members, eu_party_id
+                        exclude_eu_and_members
                     )
                     values.append(aggregation)
                 else:
@@ -1137,7 +1133,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
                             })
                             populate_aggregation(
                                 aggregation, ['destroyed',], entries,
-                                exclude_eu_and_members, eu_party_id
+                                exclude_eu_and_members
                             )
                             values.append(aggregation)
 
