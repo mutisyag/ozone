@@ -2,8 +2,7 @@ from django.utils.translation import gettext_lazy as _
 
 import xworkflows
 
-from .base import BaseWorkflow
-from .emails import notify_workflow_transitioned
+from .base import BaseStateDescription, BaseWorkflow
 from ...exceptions import TransitionFailed
 
 
@@ -12,7 +11,7 @@ __all__ = [
 ]
 
 
-class AcceleratedExemptionWorkflowStateDescription(xworkflows.Workflow):
+class AcceleratedExemptionWorkflowStateDescription(BaseStateDescription):
     """
     These are the submission states and transitions
     for the accelerated Exemption workflow.
@@ -69,7 +68,3 @@ class AcceleratedExemptionWorkflow(BaseWorkflow):
                     'approved substance.'
                 )
             )
-
-    @xworkflows.on_enter_state(*[s.name for s in state.states])
-    def notify_by_email(self, *args, **kwargs):
-        notify_workflow_transitioned(self)

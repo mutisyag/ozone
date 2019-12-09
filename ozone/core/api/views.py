@@ -721,6 +721,16 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
             'party__subregion__region'
         )
 
+    @action(methods=["get",], detail=False)
+    def last_updated(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.exclude(updated_at=None)
+        updated = None if not queryset else queryset.latest(
+            'updated_at'
+        ).updated_at
+
+        return Response({'last_updated': updated})
+
     def list_aggregated_data(
         self, queryset, aggregates, groupings, substance_to_group=False
     ):
@@ -1050,6 +1060,15 @@ class AggregationDestructionViewSet(AggregationViewSet):
                             if value['party'] == party
                         ]
                         if entries:
+                            if not groupings:
+                                # If there is no grouping, since the only
+                                # aggregation performed here is by group,
+                                # it is OK to use the values found
+                                # in the first entry for article5, eu_member
+                                # and region.
+                                for key in params_dict.keys():
+                                    value = entries[0][grouping_mapping[key]]
+                                    params_dict[key] = value
                             aggregation = dict({
                                 'party': party,
                                 'reporting_period': period,
@@ -2084,7 +2103,8 @@ class UploadHookViewSet(viewsets.ViewSet):
          - a `filename` field is present in `MetaData`
         """
         log.info(f'UPLOAD pre-create: {request.data}')
-        meta_data = request.data.get('MetaData', {})
+        upload = request.data.get('Upload', {})
+        meta_data = upload.get('MetaData', {})
         tok = meta_data.get('token', '')
         filename = meta_data.get('filename')
         try:
@@ -2155,11 +2175,12 @@ class UploadHookViewSet(viewsets.ViewSet):
         Sets the newly issued tus ID on the token.
         """
         log.info(f'UPLOAD post-create: {request.data}')
-        meta_data = request.data.get('MetaData', {})
+        upload = request.data.get('Upload', {})
+        meta_data = upload.get('MetaData', {})
         tok = meta_data.get('token', '')
         try:
             token = UploadToken.objects.get(token=tok)
-            token.tus_id = request.data.get('ID')
+            token.tus_id = upload.get('ID')
             token.save()
         except UploadToken.DoesNotExist:
             log.error('UPLOAD denied: INVALID TOKEN')
@@ -2177,7 +2198,8 @@ class UploadHookViewSet(viewsets.ViewSet):
         underlying file on disk if one with the same name exists.
         """
         log.info(f'UPLOAD post-finish: {request.data}')
-        meta_data = request.data.get('MetaData', {})
+        upload = request.data.get('Upload', {})
+        meta_data = upload.get('MetaData', {})
         tok = meta_data.get('token', '')
         description = meta_data.get('description', '')
         # filename presence was enforced during pre-create
@@ -2193,7 +2215,7 @@ class UploadHookViewSet(viewsets.ViewSet):
                     status=status.HTTP_403_FORBIDDEN
                 )
 
-            upload_id = request.data.get('ID')
+            upload_id = upload.get('ID')
 
             submission_file = SubmissionFile.objects.create(
                 submission=token.submission,
@@ -2206,7 +2228,7 @@ class UploadHookViewSet(viewsets.ViewSet):
 
             file_path = os.path.join(
                 settings.TUSD_UPLOADS_DIR,
-                f'{upload_id}.bin'
+                upload_id
             )
             file_info_path = os.path.join(
                 settings.TUSD_UPLOADS_DIR,
@@ -2258,7 +2280,8 @@ class UploadHookViewSet(viewsets.ViewSet):
         Deletes the token issued for the upload.
         """
         log.info(f'UPLOAD post-terminate: {request.data}')
-        meta_data = request.data.get('MetaData', {})
+        upload = request.data.get('Upload', {})
+        meta_data = upload.get('MetaData', {})
         tok = meta_data.get('token', '')
         try:
             token = UploadToken.objects.get(token=tok)
@@ -2835,6 +2858,16 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
             'submission__party', 'submission__reporting_period',
             'substance__group', 'submission__party__subregion__region'
         )
+
+    @action(methods=["get",], detail=False)
+    def last_updated(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.exclude(submission__submitted_at=None)
+        updated = None if not queryset else queryset.latest(
+            'submission__submitted_at'
+        ).submission.submitted_at
+
+        return Response({'last_updated': updated})
 
     def list(self, request, *args, **kwargs):
         # First filter queryset according to params

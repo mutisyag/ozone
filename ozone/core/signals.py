@@ -46,10 +46,8 @@ def clear_country_profile_cache(sender, instance, **kwargs):
     """
     try:
         invalidate_party_cache(instance.party_id)
-    except Exception as e:
-        logger.error(
-            'Error while invalidating country profile cache. ', e
-        )
+    except Exception:
+        logger.exception('Error while invalidating country profile cache.')
 
 
 country_profile_models = [

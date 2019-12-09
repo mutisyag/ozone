@@ -1,9 +1,7 @@
-{% load i18n %}
-{% autoescape off %}
+{% load i18n %}{% autoescape off %}
 {% blocktrans %}{{ intro_text }} {{ obligation }} for {{ reporting_period }} - this being submission number {{ version }}.{% endblocktrans %}
 
 {% blocktrans %}{{new_state_verb}} by {{ user }} {{ data_entry_by }}.{% endblocktrans %}
 
 {% blocktrans %}The {{ site_name }} team{% endblocktrans %}
-
 {% endautoescape %}

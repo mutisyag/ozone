@@ -224,6 +224,8 @@ class BaseProdCons(models.Model):
         null=True, blank=True, default=None
     )
 
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
     @classmethod
     def decimal_fields(cls):
         return [
@@ -743,6 +745,15 @@ class ProdConsMT(BaseProdCons):
         At each save, we need to recalculate the totals.
         """
         self.calculate_totals()
+
+        # Fill article5 and EU flags.
+        ph = PartyHistory.objects.filter(
+            party=self.party,
+            reporting_period=self.reporting_period
+        ).first()
+        self.is_article5 = ph.is_article5 if ph else None
+        self.is_eu_member = ph.is_eu_member if ph else None
+
         super().save(*args, **kwargs)
 
     class Meta(BaseProdCons.Meta):
