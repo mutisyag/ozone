@@ -632,7 +632,40 @@ class AggregationMTViewFilterSet(BaseAggregationViewFilterSet):
     )
 
 
-def populate_aggregation(aggregation, fields, to_add):
+def filter_eu_items(field, items_list, exclude_eu_and_members, eu_party_id):
+    def is_consumption_field(field_name):
+        if field_name.startswith('import_') or field_name.startswith('export_'):
+            return True
+        return False
+
+    def is_production_field(field_name):
+        if (
+            field_name.startswith('production_')
+            or field_name.startswith('destroyed')
+        ):
+            return True
+        return False
+
+    if not exclude_eu_and_members:
+        # No filtering to perform, just yield everything
+        yield from items_list
+    else:
+        for item in items_list:
+            if is_consumption_field(field):
+                # Ignore EU members when aggregating consumption-related
+                # fields.
+                if item['is_eu_member'] is False:
+                    yield item
+            elif is_production_field(field):
+                if item['party'] != eu_party_id:
+                    yield item
+            else:
+                yield item
+
+
+def populate_aggregation(
+        aggregation, fields, to_add, exclude_eu_and_members, eu_party_id
+    ):
     """
     Helper function to populate an aggregation dictionary's fields based on a
     list of dictionaries containing key-value pairs for those fields.
@@ -650,10 +683,15 @@ def populate_aggregation(aggregation, fields, to_add):
                 )
             )
         else:
+            filtered_to_add = list(
+                filter_eu_items(
+                    field, to_add, exclude_eu_and_members, eu_party_id
+                )
+            )
             aggregation[field] = (
-                None if all([a[field] is None for a in to_add]) else
+                None if all([a[field] is None for a in filtered_to_add]) else
                 round_decimal_half_up(
-                    sum([a[field] or Decimal(0) for a in to_add]),
+                    sum([a[field] or Decimal(0) for a in filtered_to_add]),
                     2
                 )
             )
@@ -773,6 +811,13 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         for value in all_values:
             values_dict[value['reporting_period']].append(value)
 
+        if 'party' in aggregates:
+            exclude_eu_and_members = True
+            eu_party_id = Party.objects.get(abbr='EU').id
+        else:
+            exclude_eu_and_members = False
+            eu_party_id = None
+
         # Now iterate over all periods and produce the data
         for period in periods:
             values_for_period = values_dict.get(period, [])
@@ -801,7 +846,8 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         **params_dict
                     })
                     populate_aggregation(
-                        aggregation, fields, to_add
+                        aggregation, fields, to_add,
+                        exclude_eu_and_members, eu_party_id
                     )
                     values.append(aggregation)
                 elif 'party' in aggregates:
@@ -817,7 +863,10 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                                 'party': None,
                                 **params_dict
                             })
-                            populate_aggregation(aggregation, fields, entries)
+                            populate_aggregation(
+                                aggregation, fields, entries,
+                                exclude_eu_and_members, eu_party_id
+                            )
                             values.append(aggregation)
                 elif 'group' in aggregates:
                     entries = {party: [] for party in parties}
@@ -832,7 +881,8 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                                 **params_dict
                             })
                             populate_aggregation(
-                                aggregation, fields, entries[party]
+                                aggregation, fields, entries[party],
+                                exclude_eu_and_members, eu_party_id
                             )
                             values.append(aggregation)
                 elif substance_to_group is True:
@@ -860,7 +910,9 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                                     **params_dict
                                 })
                                 populate_aggregation(
-                                    aggregation, fields, entries[(party, group)]
+                                    aggregation, fields,
+                                    entries[(party, group)],
+                                    exclude_eu_and_members, eu_party_id
                                 )
                                 values.append(aggregation)
 
@@ -883,8 +935,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         groupings = groupings.split(',') if groupings else []
         if aggregates:
             return self.list_aggregated_data(
-                queryset, aggregates, groupings,
-                substance_to_group=False
+                queryset, aggregates, groupings,  substance_to_group=False
             )
 
         page = self.paginate_queryset(queryset)
@@ -1016,6 +1067,13 @@ class AggregationDestructionViewSet(AggregationViewSet):
         for value in all_values:
             values_dict[value['reporting_period']].append(value)
 
+        if 'party' in aggregates:
+            exclude_eu_and_members = True
+            eu_party_id = Party.objects.get(abbr='EU').id
+        else:
+            exclude_eu_and_members = False
+            eu_party_id = None
+
         # List of values that will be returned
         values = []
         for period in periods:
@@ -1048,7 +1106,10 @@ class AggregationDestructionViewSet(AggregationViewSet):
                         'group': None,
                         **params_dict
                     })
-                    populate_aggregation(aggregation, ['destroyed',], to_add)
+                    populate_aggregation(
+                        aggregation, ['destroyed',], to_add,
+                        exclude_eu_and_members, eu_party_id
+                    )
                     values.append(aggregation)
                 else:
                     # Sum values for all groups/substances for this reporting
@@ -1075,7 +1136,8 @@ class AggregationDestructionViewSet(AggregationViewSet):
                                 **params_dict
                             })
                             populate_aggregation(
-                                aggregation, ['destroyed',], entries
+                                aggregation, ['destroyed',], entries,
+                                exclude_eu_and_members, eu_party_id
                             )
                             values.append(aggregation)
 
