@@ -49,7 +49,7 @@ class ProdImpExpTable:
         self.submission_map = Submission.latest_submitted_for_parties(art7, self.period, self.parties)
 
         self.normalize = data.ValueNormalizer()
-        self.format = data.ValueFormatter(round_baseline=0)
+        self.format = data.ValueFormatter(round_prodcons=0, round_baseline=0)
         self.builder = self.begin_table()
         self.fields = ['prod', 'imp', 'exp']
 
@@ -131,7 +131,7 @@ class ProdImpExpTable:
 
     def begin_table(self):
         styles = list(DOUBLE_HEADER_TABLE_STYLES + TABLE_CUSTOM_STYLES)
-        column_widths = col_widths([6, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5])
+        column_widths = col_widths([4, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7])
         builder = TableBuilder(styles, column_widths)
         builder.add_row([
             "",

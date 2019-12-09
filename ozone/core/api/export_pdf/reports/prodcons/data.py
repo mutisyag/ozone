@@ -85,7 +85,8 @@ class ValueNormalizer:
 
 class ValueFormatter:
 
-    def __init__(self, round_baseline=None):
+    def __init__(self, round_prodcons=None, round_baseline=None):
+        self.round_prodcons = round_prodcons
         self.round_baseline = round_baseline
 
     def prodcons(self, value):
@@ -94,6 +95,9 @@ class ValueFormatter:
 
         if value is value_missing:
             return 'N.R.'
+
+        if self.round_baseline is not None:
+            value = round_decimal_half_up(value, self.round_prodcons)
 
         return format_decimal(value)
 
