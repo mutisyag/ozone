@@ -1002,9 +1002,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
 
         # When performing aggregations by party, do not use data reported
         # the European Union "party".
-        # Since grouping is also a form of aggregation, also exclude data
-        # European Union data in that case.
-        if (aggregates and 'party' in aggregates) or grouping_fields:
+        if (aggregates and 'party' in aggregates):
             queryset = queryset.exclude(party__abbr='EU')
 
         # Using `distinct()` does not work because this queryset is
