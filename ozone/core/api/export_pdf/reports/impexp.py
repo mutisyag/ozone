@@ -150,8 +150,7 @@ class RecoveredImportExportTable:
 def get_rec_subst_flowables(periods):
     for period in periods:
         yield Paragraph(
-            f"Recovered ODSs Imported and Exported by "
-            f"the Parties in {period.name} (Tonnes)",
+            f"Recovered imports and exports in {period.name} (Tonnes)",
             h1_style,
         )
         table = RecoveredImportExportTable(period)
@@ -246,8 +245,8 @@ class NewRecoveredImportExportAggregateTable:
 def get_impexp_new_rec_agg_flowables(periods):
     for period in periods:
         yield Paragraph(
-            f"Import and Export of New and Recovered ODSs "
-            f"in {period.name} (ODP Tonnes)",
+            f"{period.name} import and export of new and recovered substances "
+            f"(in ODP tonnes for annexes A,B,C,E and CO2-equivalent tonnes for annex F)",
             h1_style,
         )
         table = NewRecoveredImportExportAggregateTable(period)
