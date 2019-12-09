@@ -49,7 +49,7 @@ class ProdImpExpTable:
         self.submission_map = Submission.latest_submitted_for_parties(art7, self.period, self.parties)
 
         self.normalize = data.ValueNormalizer()
-        self.format = data.ValueFormatter()
+        self.format = data.ValueFormatter(round_baseline=0)
         self.builder = self.begin_table()
         self.fields = ['prod', 'imp', 'exp']
 
