@@ -58,25 +58,35 @@ class RecoveredImportExportTable:
 
         self.group_map = {g.pk: g for g in Group.objects.all()}
 
-        imports_queryset = (
-            Article7Import.objects
-            .filter(submission__in=self.submissions.values())
-            .filter(blend_item_id__isnull=True)
-            .prefetch_related('substance', 'blend')
-        )
-        self.imports_by_submission = defaultdict(list)
-        for i in imports_queryset:
-            self.imports_by_submission[i.submission_id].append(i)
+        import_data = self.aggregates_by_submission_and_substance(Article7Import)
+        export_data = self.aggregates_by_submission_and_substance(Article7Export)
 
-        exports_queryset = (
-            Article7Export.objects
+        self.impexp_rows = defaultdict(dict)
+        for party in main_parties:
+            party_imports = import_data.get(party, {})
+            party_exports = export_data.get(party, {})
+            for substance in set(party_imports) | set(party_exports):
+                self.impexp_rows[party][substance] = {
+                    'import': party_imports.get(substance),
+                    'export': party_exports.get(substance),
+                }
+
+    def aggregates_by_submission_and_substance(self, model):
+        rv = defaultdict(lambda: defaultdict(Decimal))
+        imports_queryset = (
+            model.objects
             .filter(submission__in=self.submissions.values())
             .filter(blend_item_id__isnull=True)
-            .prefetch_related('substance', 'blend')
+            .prefetch_related('substance', 'blend', 'submission', 'submission__party')
         )
-        self.exports_by_submission = defaultdict(list)
-        for i in exports_queryset:
-            self.exports_by_submission[i.submission_id].append(i)
+
+        for i in imports_queryset:
+            value = i.quantity_total_recovered
+            if value:
+                substance = i.substance or i.blend
+                rv[i.submission.party][substance] += value
+
+        return rv
 
     def get_parties(self, is_article5):
         histories = (
@@ -116,33 +126,16 @@ class RecoveredImportExportTable:
         self.builder.styles += [('SPAN', (0, current_row), (1, current_row))]
 
     def render_party(self, party):
-        submission = self.submissions.get(party)
-        if not submission:
-            return
-
-        rows_by_substance = defaultdict(dict)
-
-        for i in self.imports_by_submission[submission.pk]:
-            value = i.quantity_total_recovered
-            if value:
-                substance = i.substance or i.blend
-                rows_by_substance[substance]['recovered_import'] = value
-
-        for i in self.exports_by_submission[submission.pk]:
-            value = i.quantity_total_recovered
-            if value:
-                substance = i.substance or i.blend
-                rows_by_substance[substance]['recovered_export'] = value
-
-        if not rows_by_substance:
+        party_impexp_rows = self.impexp_rows.get(party)
+        if not party_impexp_rows:
             return
 
         self.builder.add_heading(party.name)
 
         sums = Sums()
 
-        for substance in sorted(rows_by_substance, key=lambda s: s.sort_order):
-            row = rows_by_substance[substance]
+        for substance in sorted(party_impexp_rows, key=lambda s: s.sort_order):
+            impexp = party_impexp_rows[substance]
 
             if isinstance(substance, Substance):
                 substance_txt = str(substance)
@@ -154,14 +147,11 @@ class RecoveredImportExportTable:
             self.builder.add_row([
                 substance_txt,
                 group_txt,
-                sm_r(self.format_value(row.get('recovered_import'))),
-                sm_r(self.format_value(row.get('recovered_export'))),
+                sm_r(self.format_value(impexp.get('import'))),
+                sm_r(self.format_value(impexp.get('export'))),
             ])
 
-            sums.add({
-                'import': row.get('recovered_import'),
-                'export': row.get('recovered_export'),
-            })
+            sums.add(impexp)
 
         self.render_sums(f"{nbsp*4}Sub-total {party.name}", sums)
         self.builder.add_heading("")
