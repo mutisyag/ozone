@@ -2612,11 +2612,15 @@ class ReportsViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["get"])
     def prod_imp_exp(self, request):
+        parties = self._get_parties(request)
         periods = self._get_periods(request)
-        params = "_".join(p.name for p in periods)
+        params = "%s_%s" % (
+            "_".join(p.abbr for p in parties),
+            "_".join(p.name for p in periods),
+        )
         return self._response_pdf(
             f'prod_imp_exp{params}',
-            export_prod_imp_exp(periods=periods)
+            export_prod_imp_exp(periods=periods, parties=parties)
         )
 
     @action(detail=False, methods=["get"])

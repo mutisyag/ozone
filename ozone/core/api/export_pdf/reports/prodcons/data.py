@@ -85,12 +85,19 @@ class ValueNormalizer:
 
 class ValueFormatter:
 
+    def __init__(self, round_prodcons=None, round_baseline=None):
+        self.round_prodcons = round_prodcons
+        self.round_baseline = round_baseline
+
     def prodcons(self, value):
         if value is value_not_required:
             return '-'
 
         if value is value_missing:
             return 'N.R.'
+
+        if self.round_baseline is not None:
+            value = round_decimal_half_up(value, self.round_prodcons)
 
         return format_decimal(value)
 
@@ -105,6 +112,8 @@ class ValueFormatter:
         if actual is value_not_required:
             return '-'
 
+        if self.round_baseline is not None:
+            baseline = round_decimal_half_up(baseline, self.round_baseline)
         return format_decimal(baseline)
 
     def limit(self, limit):

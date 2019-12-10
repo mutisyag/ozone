@@ -179,11 +179,11 @@ def export_impexp_new_rec(periods, parties):
     return buff
 
 
-def export_prod_imp_exp(periods):
+def export_prod_imp_exp(periods, parties):
     buff, doc = get_doc_template(landscape=False)
 
     doc.build(
-        list(get_prod_imp_exp_flowables(periods)),
+        list(get_prod_imp_exp_flowables(periods, parties)),
         onFirstPage=add_page_footer,
         onLaterPages=add_page_footer
     )
