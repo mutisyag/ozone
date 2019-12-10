@@ -20,12 +20,25 @@ from ozone.core.models.utils import round_decimal_half_up
 from ..util import h1_style
 from ..util import sm_r
 from ..util import smb_r
+from ..util import smb_l
+from ..util import nbsp
 from ..util import SINGLE_HEADER_TABLE_STYLES
 from ..util import DOUBLE_HEADER_TABLE_STYLES
 from ..util import col_widths
 from ..util import TableBuilder
 from ..util import format_decimal
 from ..util import bold_centered_paragraph_style
+
+
+class Sums(defaultdict):
+
+    def __init__(self):
+        super().__init__(Decimal)
+
+    def add(self, other):
+        for key, value in other.items():
+            if value is not None:
+                self[key] += value
 
 
 class RecoveredImportExportTable:
@@ -92,6 +105,16 @@ class RecoveredImportExportTable:
             return ""
         return format_decimal(value)
 
+    def render_sums(self, heading, sums):
+        self.builder.add_row([
+            smb_l(heading),
+            "",
+            smb_r(self.format_value(sums.get('import'))),
+            smb_r(self.format_value(sums.get('export'))),
+        ])
+        current_row = self.builder.current_row
+        self.builder.styles += [('SPAN', (0, current_row), (1, current_row))]
+
     def render_party(self, party):
         submission = self.submissions.get(party)
         if not submission:
@@ -116,6 +139,8 @@ class RecoveredImportExportTable:
 
         self.builder.add_heading(party.name)
 
+        sums = Sums()
+
         for substance in sorted(rows_by_substance, key=lambda s: s.sort_order):
             row = rows_by_substance[substance]
 
@@ -133,16 +158,38 @@ class RecoveredImportExportTable:
                 sm_r(self.format_value(row.get('recovered_export'))),
             ])
 
+            sums.add({
+                'import': row.get('recovered_import'),
+                'export': row.get('recovered_export'),
+            })
+
+        self.render_sums(f"{nbsp*4}Sub-total {party.name}", sums)
+        self.builder.add_heading("")
+
+        return sums
+
+    def render_parties(self, heading, parties):
+        self.builder.add_heading(heading, style=bold_centered_paragraph_style)
+
+        group_sums = Sums()
+        for party in parties:
+            sums = self.render_party(party)
+            if sums:
+                group_sums.add(sums)
+
+        self.render_sums(f"Sub-total {heading}", group_sums)
+        self.builder.add_heading("")
+
+        return group_sums
+
     def render(self):
         self.builder = self.begin_table()
 
-        self.builder.add_heading("Article 5 parties", style=bold_centered_paragraph_style)
-        for party in self.get_parties(is_article5=True):
-            self.render_party(party)
+        sums = Sums()
+        sums.add(self.render_parties("Article 5 parties", self.get_parties(is_article5=True)))
+        sums.add(self.render_parties("Non-Article 5 parties", self.get_parties(is_article5=False)))
 
-        self.builder.add_heading("Non-Article 5 parties", style=bold_centered_paragraph_style)
-        for party in self.get_parties(is_article5=False):
-            self.render_party(party)
+        self.render_sums(f"Total for {self.period.name}", sums)
 
         return self.builder.done()
 
@@ -168,7 +215,7 @@ class NewRecoveredImportExportAggregateTable:
             ('SPAN', (0, 0), (1, 1)),  # group
             ('SPAN', (2, 0), (3, 0)),  # imports
             ('SPAN', (4, 0), (5, 0)),  # exports
-            ('ALIGN', (2, 2), (-1, -1), 'RIGHT'), # values
+            ('ALIGN', (2, 2), (-1, -1), 'RIGHT'),  # values
         ]
         column_widths = col_widths([1, 7, 2.5, 2.5, 2.5, 2.5])
         builder = TableBuilder(styles, column_widths)

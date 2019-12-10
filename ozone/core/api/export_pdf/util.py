@@ -177,6 +177,8 @@ smbi_c = partial(Paragraph, style=small_bold_italic_centered_paragraph_style)
 p_bullet = partial(Paragraph, style=bullet_paragraph_style)
 page_title = partial(Paragraph, style=page_title_style)
 
+nbsp = "\xa0"  # non-breaking space
+
 
 def col_widths(w_list):
     return list(map(lambda x: x * cm, w_list))
