@@ -69,6 +69,7 @@
 
 <script>
 
+import * as Sentry from '@sentry/browser'
 import { getNav } from '@/_nav'
 import {
   Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav
@@ -140,6 +141,15 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('getMyCurrentUser')
+      .then(() => {
+        if (process.env.NODE_ENV !== 'development') {
+          Sentry.configureScope((scope) => {
+            const username = this.$store.state.currentUser ? this.$store.state.currentUser.username : undefined
+            scope.setUser({ 'username': username })
+          })
+        }
+      })
     loadPollyfills()
     api.interceptors.request.use((config) => {
       if (!config.hideLoader) {
