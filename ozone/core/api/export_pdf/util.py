@@ -4,8 +4,10 @@ from copy import deepcopy
 from collections import OrderedDict
 from decimal import Decimal
 from functools import partial
+from datetime import datetime
 
 from django.utils.translation import gettext_lazy as _
+from django.http import HttpResponse
 from reportlab.platypus import SimpleDocTemplate
 from reportlab.platypus import ListFlowable
 from reportlab.platypus import ListItem
@@ -21,6 +23,10 @@ from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.lib.units import mm
+
+from ozone.core.models import Party
+from ozone.core.models import ReportingPeriod
+from ozone.core.models import Submission
 
 
 __all__ = [
@@ -544,3 +550,45 @@ def get_doc_template(landscape=False):
             bottomMargin=1 * cm,
         )
     return buff, doc
+
+
+def get_parties(request):
+    parties = request.GET.getlist(key='party')
+    if request.user.is_secretariat:
+        qs = Party.get_main_parties()
+        if parties:
+            qs = qs.filter(pk__in=parties)
+    else:
+        qs = Party.objects.filter(
+            pk=request.user.party_id
+        )
+    return qs.order_by('name')
+
+
+def get_periods(request):
+    reporting_periods = request.GET.getlist(key='period')
+    qs = ReportingPeriod.get_past_periods()
+    if reporting_periods:
+        qs = qs.filter(pk__in=reporting_periods)
+    return qs.order_by('-start_date')
+
+
+def get_submissions(obligation, periods, parties):
+    submissions = list()
+    for period in periods:
+        for party in parties:
+            sub = Submission.latest_submitted(
+                obligation, party, period
+            )
+            if sub:
+                submissions.append(sub)
+    return submissions
+
+
+def response_pdf(base_name, buf_pdf):
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    filename = f'{base_name}_{timestamp}.pdf'
+    resp = HttpResponse(buf_pdf, content_type='application/pdf')
+    resp['Content-Disposition'] = f'attachment; filename="{filename}"'
+    resp['Access-Control-Expose-Headers'] = 'Content-Disposition'
+    return resp
