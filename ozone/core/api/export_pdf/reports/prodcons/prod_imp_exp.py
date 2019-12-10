@@ -36,7 +36,7 @@ TABLE_CUSTOM_STYLES = (
 
 class ProdImpExpTable:
 
-    def __init__(self, period):
+    def __init__(self, period, parties):
         self.period = period
 
         self.all_groups = list(Group.objects.all())
@@ -44,7 +44,7 @@ class ProdImpExpTable:
         histories = PartyHistory.objects.filter(reporting_period=period)
         self.history_map = {h.party: h for h in histories}
         self.prodcons_map = self.get_prodcons_map()
-        self.parties = Party.get_main_parties()
+        self.parties = parties
         art7 = Obligation.objects.get(_obligation_type=ObligationTypes.ART7.value)
         self.submission_map = Submission.latest_submitted_for_parties(art7, self.period, self.parties)
 
@@ -221,7 +221,7 @@ def render_header(period):
     return Paragraph(title, style=h2_style)
 
 
-def get_prod_imp_exp_flowables(periods):
+def get_prod_imp_exp_flowables(periods, parties):
     all_groups = data.get_all_groups()
     groups_description = list(render.get_groups_description(all_groups))
 
@@ -229,7 +229,7 @@ def get_prod_imp_exp_flowables(periods):
         yield render_header(period)
         yield from groups_description
 
-        table = ProdImpExpTable(period)
+        table = ProdImpExpTable(period, parties)
         table.render_parties()
         yield table.done()
 
