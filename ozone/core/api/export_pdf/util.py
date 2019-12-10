@@ -1,17 +1,19 @@
 import re
-
+from io import BytesIO
 from copy import deepcopy
 from collections import OrderedDict
 from decimal import Decimal
-from django.utils.translation import gettext_lazy as _
 from functools import partial
 
+from django.utils.translation import gettext_lazy as _
+from reportlab.platypus import SimpleDocTemplate
 from reportlab.platypus import ListFlowable
 from reportlab.platypus import ListItem
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Spacer
 from reportlab.platypus import Table
 from reportlab.platypus.flowables import HRFlowable
+from reportlab.lib import pagesizes
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.enums import TA_RIGHT
@@ -504,3 +506,41 @@ class TableBuilder:
             kwargs['repeatRows'] = self.repeat_rows
 
         return Table(self.rows, **kwargs)
+
+
+def add_page_footer(canvas, doc, footnote=None):
+    canvas.saveState()
+    if footnote:
+        footer = Paragraph(footnote, left_paragraph_style)
+        w, h = footer.wrap(doc.width, doc.bottomMargin)
+        footer.drawOn(canvas, doc.rightMargin, h / 2)
+
+    footer = Paragraph('%s %d' % (_('Page'), canvas._pageNumber), right_paragraph_style)
+    w, h = footer.wrap(doc.width, doc.bottomMargin)
+    footer.drawOn(canvas, doc.rightMargin, h)
+
+    canvas.restoreState()
+
+
+def get_doc_template(landscape=False):
+    buff = BytesIO()
+    # A4 size is 21cm x 29.7cm
+    if landscape:
+        doc = SimpleDocTemplate(
+            buff,
+            pagesize=pagesizes.landscape(pagesizes.A4),
+            leftMargin=1 * cm,
+            rightMargin=1 * cm,
+            topMargin=1 * cm,
+            bottomMargin=1 * cm,
+        )
+    else:
+        doc = SimpleDocTemplate(
+            buff,
+            pagesize=pagesizes.A4,
+            leftMargin=0.8 * cm,
+            rightMargin=0.8 * cm,
+            topMargin=1 * cm,
+            bottomMargin=1 * cm,
+        )
+    return buff, doc
