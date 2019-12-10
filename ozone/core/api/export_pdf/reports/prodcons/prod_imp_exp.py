@@ -17,6 +17,7 @@ from ozone.core.api.export_pdf.util import col_widths
 from ozone.core.api.export_pdf.util import TableBuilder
 from ozone.core.api.export_pdf.util import get_date_of_reporting_str
 from ozone.core.api.export_pdf.util import format_decimal
+from ozone.core.api.export_pdf.util import Report
 
 from . import data
 from . import render
@@ -217,16 +218,22 @@ def render_header(period):
     return Paragraph(title, style=h2_style)
 
 
-def get_prod_imp_exp_flowables(periods, parties):
-    all_groups = data.get_all_groups()
-    groups_description = list(render.get_groups_description(all_groups))
+class ProdImpExpReport(Report):
 
-    for period in periods:
-        yield render_header(period)
-        yield from groups_description
+    name = "prod_imp_exp"
+    has_party_param = True
+    has_period_param = True
 
-        table = ProdImpExpTable(period, parties)
-        table.render_parties()
-        yield table.done()
+    def get_flowables(self):
+        all_groups = data.get_all_groups()
+        groups_description = list(render.get_groups_description(all_groups))
 
-        yield PageBreak()
+        for period in self.periods:
+            yield render_header(period)
+            yield from groups_description
+
+            table = ProdImpExpTable(period, self.parties)
+            table.render_parties()
+            yield table.done()
+
+            yield PageBreak()

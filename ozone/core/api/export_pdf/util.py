@@ -592,3 +592,52 @@ def response_pdf(base_name, buf_pdf):
     resp['Content-Disposition'] = f'attachment; filename="{filename}"'
     resp['Access-Control-Expose-Headers'] = 'Content-Disposition'
     return resp
+
+
+class Report:
+
+    has_party_param = False
+    has_period_param = False
+    name = None  # must be defined in subclasses
+
+    @classmethod
+    def from_request(cls, request):
+        kwargs = {}
+        if cls.has_party_param:
+            kwargs['parties'] = get_parties(request)
+        if cls.has_period_param:
+            kwargs['periods'] = get_periods(request)
+        return cls(**kwargs)
+
+    def __init__(self, **kwargs):
+        if self.has_party_param:
+            self.parties = kwargs.pop('parties')
+        if self.has_period_param:
+            self.periods = kwargs.pop('periods')
+        assert not kwargs, f"Unexpected parameters: {kwargs!r}"
+
+    def render_to_response(self):
+        base_name = self.name
+        if self.has_party_param:
+            base_name += "_" + "_".join(p.abbr for p in self.parties)
+        if self.has_period_param:
+            base_name += "_" + "_".join(p.name for p in self.periods)
+
+        pdf_buf = self.render()
+
+        return response_pdf(base_name, pdf_buf)
+
+    def render(self):
+        buff, doc = get_doc_template(landscape=False)
+
+        doc.build(
+            list(self.get_flowables()),
+            onFirstPage=add_page_footer,
+            onLaterPages=add_page_footer
+        )
+
+        buff.seek(0)
+        return buff
+
+    def get_flowables(self):
+        raise NotImplementedError
