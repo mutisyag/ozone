@@ -104,17 +104,26 @@ small_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZ
 small_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL)
 small_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL)
 
-small_bold_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
-small_bold_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
-small_bold_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
+small_bold_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL,
+                                                fontName='Helvetica-Bold')
+small_bold_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL,
+                                            fontName='Helvetica-Bold')
+small_bold_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL,
+                                             fontName='Helvetica-Bold')
 
-small_italic_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Oblique')
-small_italic_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Oblique')
-small_italic_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Oblique')
+small_italic_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL,
+                                                  fontName='Helvetica-Oblique')
+small_italic_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL,
+                                              fontName='Helvetica-Oblique')
+small_italic_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL,
+                                               fontName='Helvetica-Oblique')
 
-small_bold_italic_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-BoldOblique')
-small_bold_italic_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-BoldOblique')
-small_bold_italic_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL, fontName='Helvetica-BoldOblique')
+small_bold_italic_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL,
+                                                   fontName='Helvetica-BoldOblique')
+small_bold_italic_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL,
+                                                    fontName='Helvetica-BoldOblique')
+small_bold_italic_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL,
+                                                       fontName='Helvetica-BoldOblique')
 
 bullet_paragraph_style = _bodytext(alignment=TA_LEFT)
 no_spacing_style = _bodytext(alignment=TA_LEFT, spaceBefore=0)
@@ -124,21 +133,21 @@ sm_no_spacing_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, spac
 h1_style = _style(
     'Heading1',
     alignment=TA_CENTER,
-    fontSize=FONTSIZE_DEFAULT+6,
+    fontSize=FONTSIZE_DEFAULT + 6,
     fontName='Helvetica-Bold',
 )
 
 h2_style = _style(
     'Heading2',
     alignment=TA_LEFT,
-    fontSize=FONTSIZE_DEFAULT+4,
+    fontSize=FONTSIZE_DEFAULT + 4,
     fontName='Helvetica-Bold',
 )
 
 h3_style = _style(
     'Heading3',
     alignment=TA_LEFT,
-    fontSize=FONTSIZE_DEFAULT+2,
+    fontSize=FONTSIZE_DEFAULT + 2,
     fontName='Helvetica-Bold',
     spaceBefore=0
 )
@@ -224,7 +233,7 @@ def to_precision(nr, decimals):
         s_nr = get_big_float(nr)
 
         # Getting the first non-zero digitindex
-        p = re.compile('(?=\d)(?=[^0])')
+        p = re.compile(r'(?=\d)(?=[^0])')
 
         m = p.search(s_nr)
         f_nonzero = m.span()[0]
@@ -264,7 +273,7 @@ def to_precision(nr, decimals):
                     add_with = '1'
                 else:
                     # Rounding with the correct value depending of the decimals
-                    add_with = '0.' + '0' * len(n[n.find('.') + 1: -1])+'1'
+                    add_with = '0.' + '0' * len(n[n.find('.') + 1: -1]) + '1'
 
                 n = str(round(float(n) + float(add_with), 10))
 
@@ -397,7 +406,7 @@ def table_from_data(
     # Spanning all columns for the blend components rows
     if isBlend:
         rows = len(data) + repeatRows
-        for row_idx in range(repeatRows+1, rows, 2):
+        for row_idx in range(repeatRows + 1, rows, 2):
             style += (
                 ('SPAN', (0, row_idx), (-1, row_idx)),
                 ('ALIGN', (0, row_idx), (-1, row_idx), 'CENTER')
@@ -423,13 +432,11 @@ def table_with_blends(blends, grouping, make_component, header, style, widths):
         data = tuple(map(row_comp, blend.blend.components.all()))
 
         result.append(blend_row)
-        result.append(
-            (
-                (Spacer(7, mm),
-                 Table(header + data, style=style, colWidths=widths),
-                 Spacer(7, mm)),
-                )
-        )
+        result.append(((
+            Spacer(7, mm),
+            Table(header + data, style=style, colWidths=widths),
+            Spacer(7, mm),
+        )))
 
     return result
 

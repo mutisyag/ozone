@@ -1,15 +1,12 @@
 from decimal import Decimal
 from collections import defaultdict
 
-from django.db.models import Avg
-
 from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
 
 from ozone.core.models import Group
 from ozone.core.models import Obligation
 from ozone.core.models import ObligationTypes
-from ozone.core.models import Party
 from ozone.core.models import PartyHistory
 from ozone.core.models import ProdCons
 from ozone.core.models import Submission
@@ -127,7 +124,6 @@ class ProdImpExpTable:
                 for field in self.fields
             }
             yield g['F'], f_baseline
-
 
     def begin_table(self):
         styles = list(DOUBLE_HEADER_TABLE_STYLES + TABLE_CUSTOM_STYLES)
