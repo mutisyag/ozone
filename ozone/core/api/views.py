@@ -812,7 +812,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         for value in all_values:
             values_dict[value['reporting_period']].append(value)
 
-        if 'party' in aggregates:
+        if aggregates and 'party' in aggregates:
             exclude_eu_and_members = True
         else:
             exclude_eu_and_members = False
@@ -1065,7 +1065,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
         for value in all_values:
             values_dict[value['reporting_period']].append(value)
 
-        if 'party' in aggregates:
+        if aggregates and 'party' in aggregates:
             exclude_eu_and_members = True
         else:
             exclude_eu_and_members = False
