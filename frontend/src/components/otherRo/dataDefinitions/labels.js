@@ -16,6 +16,10 @@ const getLabels = ($gettext) => {
       reporting_period: $gettext('Reporting period'),
       is_basic_domestic_need: $gettext('Basic domestic need'),
       transfers_remarks_secretariat: $gettext('Comments (Secretariat)')
+    },
+    procagent: {
+      common: getCommonLabels($gettext),
+      pa_uses_reported_remarks_secretariat: $gettext('Comments (Secretariat)')
     }
   }
   return labels

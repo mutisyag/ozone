@@ -8,8 +8,7 @@
       "is_default_party": true,
       "is_default_secretariat": false,
       "is_party": true,
-      "is_secretariat": false,
-      "is_default_for_cloning": true
+      "is_secretariat": false
     }
   },
   {
@@ -21,8 +20,7 @@
       "is_default_party": false,
       "is_default_secretariat": true,
       "is_party": false,
-      "is_secretariat": true,
-      "is_default_for_cloning": false
+      "is_secretariat": true
     }
   },
   {
@@ -34,8 +32,7 @@
       "is_default_party": false,
       "is_default_secretariat": false,
       "is_party": false,
-      "is_secretariat": false,
-      "is_default_for_cloning": false
+      "is_secretariat": false
     }
   },
   {
@@ -47,8 +44,7 @@
       "is_default_party": false,
       "is_default_secretariat": false,
       "is_party": false,
-      "is_secretariat": true,
-      "is_default_for_cloning": false
+      "is_secretariat": true
     }
   },
   {
@@ -60,8 +56,7 @@
       "is_default_party": false,
       "is_default_secretariat": false,
       "is_party": false,
-      "is_secretariat": false,
-      "is_default_for_cloning": false
+      "is_secretariat": false
     }
   }
 ]

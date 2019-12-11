@@ -70,10 +70,10 @@
 <script>
 
 import * as Sentry from '@sentry/browser'
-import { getNav } from '@/_nav'
 import {
   Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav
 } from '@coreui/vue'
+import { getNav } from '@/_nav'
 import Header from '@/components/common/Header'
 import { api } from '@/components/common/services/api'
 import auth from '@/components/common/mixins/auth'
@@ -145,7 +145,8 @@ export default {
       .then(() => {
         if (process.env.NODE_ENV !== 'development') {
           Sentry.configureScope((scope) => {
-            scope.setUser({ 'username': this.$store.state.currentUser.username })
+            const username = this.$store.state.currentUser ? this.$store.state.currentUser.username : undefined
+            scope.setUser({ 'username': username })
           })
         }
       })

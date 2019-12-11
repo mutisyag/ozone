@@ -508,7 +508,6 @@ class ReportingChannelAdmin(admin.ModelAdmin):
         'name', 'description',
         'is_party', 'is_default_party',
         'is_secretariat', 'is_default_secretariat',
-        'is_default_for_cloning',
     )
 
 

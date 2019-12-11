@@ -101,7 +101,7 @@
 
 <script>
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
-import { getLabels } from '@/components/hat/dataDefinitions/labels'
+import { getLabels } from '@/components/otherRo/dataDefinitions/labels'
 
 export default {
   mixins: [FormTemplateMxin],
@@ -134,7 +134,7 @@ export default {
         const tableRow = {}
         Object.keys(form_field).forEach(key => {
           if (key === 'application') {
-            tableRow[key] = form_field[key].selected + (form_field.decision.selected ? ` (${form_field.decision.selected})` : '') 
+            tableRow[key] = form_field[key].selected + (form_field.decision.selected ? ` (${form_field.decision.selected})` : '')
           } else if (key === 'substance') {
             tableRow[key] = this.$store.state.initialData.display.substances[form_field[key].selected]
           } else if (key === 'source_party' || key === 'destination_party') {

@@ -28,10 +28,8 @@ const getFormRaf = ($gettext) => {
         'initialData.criticalUseCategoryList'
       ],
       comments_default_properties: {
-        'hat_imports_remarks_party': '',
-        'hat_imports_remarks_secretariat': '',
-        'hat_production_remarks_party': '',
-        'hat_production_remarks_secretariat': ''
+        'raf_remarks_party': '',
+        'raf_remarks_secretariat': ''
       },
       comments_endpoint_url: 'submission_remarks'
     },
@@ -39,7 +37,7 @@ const getFormRaf = ($gettext) => {
       sub_info: {
         ...getTabSubInfo($gettext),
         hideInfoButton: true,
-        detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'),
+        detailsHtml: $gettext('Respondents are requested to read the guidelines for reporting accounting framework of essential uses other than laboratory and analytical applications before proceeding and to refer to them as necessary when completing the data forms'),
         filterOut: ['submission_format']
       },
       ...setTabFiles($gettext),
@@ -193,13 +191,13 @@ const getFormRaf = ($gettext) => {
         }
         ],
         comments: {
-          hat_production_remarks_party: {
-            name: 'hat_production_remarks_party',
+          raf_remarks_party: {
+            name: 'raf_remarks_party',
             selected: '',
             type: 'textarea'
           },
-          hat_production_remarks_secretariat: {
-            name: 'hat_production_remarks_secretariat',
+          raf_remarks_secretariat: {
+            name: 'raf_remarks_secretariat',
             selected: '',
             type: 'textarea'
           }

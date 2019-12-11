@@ -85,6 +85,7 @@ from ..models import (
     IllegalTrade,
     ORMReport,
     MultilateralFund,
+    eu_party_id,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -181,7 +182,12 @@ from .export_pdf import (
     export_prodcons_a5_summary,
     export_prodcons_parties,
     export_impexp_new_rec,
+    export_impexp_rec_subst,
+    export_impexp_new_rec_agg,
     export_hfc_baseline,
+    export_baseline_prod_a5,
+    export_baseline_cons_a5,
+    export_baseline_prodcons_na5,
 )
 
 from ..models.utils import round_decimal_half_up
@@ -632,7 +638,40 @@ class AggregationMTViewFilterSet(BaseAggregationViewFilterSet):
     )
 
 
-def populate_aggregation(aggregation, fields, to_add):
+def filter_eu_items(field, items_list, exclude_eu_and_members):
+    def is_consumption_field(field_name):
+        if field_name.startswith('import_') or field_name.startswith('export_'):
+            return True
+        return False
+
+    def is_production_field(field_name):
+        if (
+            field_name.startswith('production_')
+            or field_name.startswith('destroyed')
+        ):
+            return True
+        return False
+
+    if not exclude_eu_and_members:
+        # No filtering to perform, just yield everything
+        yield from items_list
+    else:
+        for item in items_list:
+            if is_consumption_field(field):
+                # Ignore EU members when aggregating consumption-related
+                # fields.
+                if item['is_eu_member'] is False:
+                    yield item
+            elif is_production_field(field):
+                if item['party'] != eu_party_id():
+                    yield item
+            else:
+                yield item
+
+
+def populate_aggregation(
+        aggregation, fields, to_add, exclude_eu_and_members
+    ):
     """
     Helper function to populate an aggregation dictionary's fields based on a
     list of dictionaries containing key-value pairs for those fields.
@@ -650,10 +689,15 @@ def populate_aggregation(aggregation, fields, to_add):
                 )
             )
         else:
+            filtered_to_add = list(
+                filter_eu_items(
+                    field, to_add, exclude_eu_and_members
+                )
+            )
             aggregation[field] = (
-                None if all([a[field] is None for a in to_add]) else
+                None if all([a[field] is None for a in filtered_to_add]) else
                 round_decimal_half_up(
-                    sum([a[field] or Decimal(0) for a in to_add]),
+                    sum([a[field] or Decimal(0) for a in filtered_to_add]),
                     2
                 )
             )
@@ -773,6 +817,11 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         for value in all_values:
             values_dict[value['reporting_period']].append(value)
 
+        if aggregates and 'party' in aggregates:
+            exclude_eu_and_members = True
+        else:
+            exclude_eu_and_members = False
+
         # Now iterate over all periods and produce the data
         for period in periods:
             values_for_period = values_dict.get(period, [])
@@ -801,7 +850,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         **params_dict
                     })
                     populate_aggregation(
-                        aggregation, fields, to_add
+                        aggregation, fields, to_add, exclude_eu_and_members
                     )
                     values.append(aggregation)
                 elif 'party' in aggregates:
@@ -817,7 +866,10 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                                 'party': None,
                                 **params_dict
                             })
-                            populate_aggregation(aggregation, fields, entries)
+                            populate_aggregation(
+                                aggregation, fields, entries,
+                                exclude_eu_and_members
+                            )
                             values.append(aggregation)
                 elif 'group' in aggregates:
                     entries = {party: [] for party in parties}
@@ -832,7 +884,8 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                                 **params_dict
                             })
                             populate_aggregation(
-                                aggregation, fields, entries[party]
+                                aggregation, fields, entries[party],
+                                exclude_eu_and_members
                             )
                             values.append(aggregation)
                 elif substance_to_group is True:
@@ -860,7 +913,9 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                                     **params_dict
                                 })
                                 populate_aggregation(
-                                    aggregation, fields, entries[(party, group)]
+                                    aggregation, fields,
+                                    entries[(party, group)],
+                                    exclude_eu_and_members
                                 )
                                 values.append(aggregation)
 
@@ -883,8 +938,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         groupings = groupings.split(',') if groupings else []
         if aggregates:
             return self.list_aggregated_data(
-                queryset, aggregates, groupings,
-                substance_to_group=False
+                queryset, aggregates, groupings,  substance_to_group=False
             )
 
         page = self.paginate_queryset(queryset)
@@ -1016,6 +1070,11 @@ class AggregationDestructionViewSet(AggregationViewSet):
         for value in all_values:
             values_dict[value['reporting_period']].append(value)
 
+        if aggregates and 'party' in aggregates:
+            exclude_eu_and_members = True
+        else:
+            exclude_eu_and_members = False
+
         # List of values that will be returned
         values = []
         for period in periods:
@@ -1048,7 +1107,10 @@ class AggregationDestructionViewSet(AggregationViewSet):
                         'group': None,
                         **params_dict
                     })
-                    populate_aggregation(aggregation, ['destroyed',], to_add)
+                    populate_aggregation(
+                        aggregation, ['destroyed',], to_add,
+                        exclude_eu_and_members
+                    )
                     values.append(aggregation)
                 else:
                     # Sum values for all groups/substances for this reporting
@@ -1075,7 +1137,8 @@ class AggregationDestructionViewSet(AggregationViewSet):
                                 **params_dict
                             })
                             populate_aggregation(
-                                aggregation, ['destroyed',], entries
+                                aggregation, ['destroyed',], entries,
+                                exclude_eu_and_members
                             )
                             values.append(aggregation)
 
@@ -1393,7 +1456,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     Note historical states for other versions are not included.
     """
     queryset = Submission.objects.all().prefetch_related(
-        "reporting_period", "created_by", "party"
+        "reporting_period", "created_by", "party", "obligation"
     )
     filter_backends = (
         IsOwnerFilterBackend,
@@ -1406,14 +1469,15 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         "party__name", "obligation__name", "reporting_period__name"
     )
     ordering = (
-        "-reporting_period__start_date", "obligation__sort_order", "party__name", "-updated_at",
+        "-reporting_period__start_date", "obligation__sort_order",
+        "party__name", "-updated_at",
     )
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmission, )
     pagination_class = SubmissionPaginator
 
     def get_queryset(self):
         return Submission.objects.all().prefetch_related(
-            "reporting_period", "created_by", "party"
+            "reporting_period", "created_by", "party", "obligation"
         )
 
     def update(self, *args, **kwargs):
@@ -1604,7 +1668,7 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return SubmissionInfo.objects.filter(
             submission=self.kwargs['submission_pk']
-        )
+        ).select_related('submission__reporting_channel')
 
 
 class GetSubmissionFormatsViewSet(ReadOnlyMixin, generics.ListAPIView):
@@ -1741,7 +1805,11 @@ class Article7DestructionViewSet(
     def get_queryset(self):
         return Article7Destruction.objects.filter(
             submission=self.kwargs['submission_pk']
-        ).filter(blend_item__isnull=True)
+        ).filter(
+            blend_item__isnull=True
+        ).select_related(
+            'substance', 'substance__group'
+        )
 
     # Needed to ensure that serializer uses the correct submission
     def perform_create(self, serializer):
@@ -1762,6 +1830,8 @@ class Article7ProductionViewSet(
     def get_queryset(self):
         return Article7Production.objects.filter(
             submission=self.kwargs['submission_pk']
+        ).select_related(
+            'substance', 'substance__group'
         )
 
     def perform_create(self, serializer):
@@ -1782,7 +1852,11 @@ class Article7ExportViewSet(
     def get_queryset(self):
         return Article7Export.objects.filter(
             submission=self.kwargs['submission_pk']
-        ).filter(blend_item__isnull=True)
+        ).filter(
+            blend_item__isnull=True
+        ).select_related(
+            'substance', 'substance__group'
+        )
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
@@ -1802,7 +1876,11 @@ class Article7ImportViewSet(
     def get_queryset(self):
         return Article7Import.objects.filter(
             submission=self.kwargs['submission_pk']
-        ).filter(blend_item__isnull=True)
+        ).filter(
+            blend_item__isnull=True
+        ).select_related(
+            'substance', 'substance__group'
+        )
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
@@ -1822,7 +1900,11 @@ class Article7NonPartyTradeViewSet(
     def get_queryset(self):
         return Article7NonPartyTrade.objects.filter(
             submission=self.kwargs['submission_pk']
-        ).filter(blend_item__isnull=True)
+        ).filter(
+            blend_item__isnull=True
+        ).select_related(
+            'substance', 'substance__group'
+        )
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
@@ -2605,12 +2687,57 @@ class ReportsViewSet(viewsets.ViewSet):
         )
 
     @action(detail=False, methods=["get"])
+    def impexp_rec_subst(self, request):
+        periods = self._get_periods(request)
+        params = "_".join(p.name for p in periods)
+        return self._response_pdf(
+            f'impexp_rec_subst_{params}',
+            export_impexp_rec_subst(periods=periods)
+        )
+
+    @action(detail=False, methods=["get"])
+    def impexp_new_rec_agg(self, request):
+        periods = self._get_periods(request)
+        params = "_".join(p.name for p in periods)
+        return self._response_pdf(
+            f'impexp_rec_subst_{params}',
+            export_impexp_new_rec_agg(periods=periods)
+        )
+
+    @action(detail=False, methods=["get"])
     def hfc_baseline(self, request):
         parties = self._get_parties(request)
         params = "_".join(p.abbr for p in parties)
         return self._response_pdf(
             f'hfc_baseline_{params}',
             export_hfc_baseline(parties=parties)
+        )
+
+    @action(detail=False, methods=["get"])
+    def baseline_prod_a5(self, request):
+        parties = self._get_parties(request)
+        params = "_".join(p.abbr for p in parties)
+        return self._response_pdf(
+            f'baseline_prod_a5_{params}',
+            export_baseline_prod_a5(parties=parties)
+        )
+
+    @action(detail=False, methods=["get"])
+    def baseline_cons_a5(self, request):
+        parties = self._get_parties(request)
+        params = "_".join(p.abbr for p in parties)
+        return self._response_pdf(
+            f'baseline_cons_a5_{params}',
+            export_baseline_cons_a5(parties=parties)
+        )
+
+    @action(detail=False, methods=["get"])
+    def baseline_prodcons_na5(self, request):
+        parties = self._get_parties(request)
+        params = "_".join(p.abbr for p in parties)
+        return self._response_pdf(
+            f'baseline_cons_a5_{params}',
+            export_baseline_prodcons_na5(parties=parties)
         )
 
 

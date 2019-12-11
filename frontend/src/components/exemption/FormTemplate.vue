@@ -54,17 +54,19 @@
             v-slot:[`cell(${inputField})`]="cell"
           >
             <fieldGenerator
+              :icon="cell.item.originalObj[inputField].icon"
               :key="`${cell.item.index}_${inputField}_${tabName}`"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
               :field="cell.item.originalObj[inputField]"
               :disabled="!$store.getters.can_edit_data || readOnly"
+              @icon-clicked="createModalData(cell.item.originalObj, cell.item.index)"
             />
           </template>
 
           <template v-slot:cell(validation)="cell">
             <b-btn-group class="row-controls">
               <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
-               <i :class="{'fa-pencil-square-o': $store.getters.can_edit_data && !readOnly, 'fa-eye': !$store.getters.can_edit_data || readOnly}" class="fa fa-lg"  v-b-tooltip :title="$gettext('Edit')"></i>
+               <i :class="{'fa-pencil-square-o': $store.getters.can_edit_data && !readOnly, 'fa-eye': !$store.getters.can_edit_data || readOnly}" class="fa fa-lg"  v-b-tooltip :title="!$store.getters.can_edit_data || readOnly ? $gettext('View') : $gettext('Edit')"></i>
               </span>
               <span
                 v-if="$store.getters.can_edit_data && !readOnly"
@@ -162,6 +164,36 @@
             </b-col>
           </b-row>
         </div>
+        <div>
+          <div v-translate class="mb-2">Agreed critical use categories</div>
+          <b-row>
+            <b-col>
+              <addCategories
+                :index="modal_data.index"
+                :tabName="tabName"
+                v-if="$store.getters.can_edit_data"
+              ></addCategories>
+            </b-col>
+          </b-row>
+          <b-row
+              class="mb-2 special"
+              v-for="category in modal_data.field.approved_uses"
+              :key="category.critical_use_category"
+            >
+              <b-col cols="5">{{$store.state.initialData.display.criticalUseCategoryList[category.critical_use_category]}}</b-col>
+              <b-col>
+                <fieldGenerator
+                  :fieldInfo="{ index:modal_data.index,tabName: tabName, field: category, category: category.critical_use_category }"
+                  :field="category"
+                  :disabled="!$store.getters.can_edit_data"
+                />
+              </b-col>
+              <b-col cols="1" v-if="$store.getters.can_edit_data" class="d-flex align-items-center">
+                  <i class="fa fa-trash fa-lg cursor-pointer d-flex align-items-center" @click="$store.commit('removeFormField', { index: modal_data.index, tabName: tabName, fieldName: 'approved_uses', fieldIndex: modal_data.field.approved_uses.indexOf(category)})"></i>
+              </b-col>
+            </b-row>
+          <hr>
+        </div>
       </div>
       <div slot="modal-footer">
         <b-btn @click="$refs.edit_modal.hide()" variant="success">
@@ -177,11 +209,12 @@ import FormTemplateMixin from '@/components/common/mixins/FormTemplateMixin'
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import { getLabels } from '@/components/exemption/dataDefinitions/labels'
 import DefaultAside from '@/components/exemption/form-components/DefaultAside'
+import addCategories from '@/components/raf/AddCategories'
 
 export default {
   mixins: [FormTemplateMixin],
   components: {
-    ValidationLabel, DefaultAside
+    ValidationLabel, DefaultAside, addCategories
   },
   data() {
     return {
@@ -196,6 +229,34 @@ export default {
         return this.$gettext('This table shows substances and amounts once the secretariat processes your submission')
       }
       return this.$gettext('Please use the form on the right sidebar to add substances')
+    },
+    tableItems() {
+      const tableFields = []
+      this.tab_info.form_fields.forEach(form_field => {
+        const tableRow = {}
+        for (const key of Object.keys(form_field)) {
+          if (key === 'quantity_use_categories') continue
+          if (form_field.substance.selected) {
+            tableRow[key] = this.typeOfDisplayObj[key]
+              ? this.$store.state.initialData.display[
+                this.typeOfDisplayObj[key]
+              ][form_field[key].selected]
+              : (tableRow[key] = form_field[key].selected)
+          }
+        }
+        if (Object.keys(tableRow).length) {
+          tableRow.originalObj = form_field
+          tableRow.index = this.tab_info.form_fields.indexOf(form_field)
+          tableRow._showDetails = true
+          if (tableRow.originalObj.validation.selected.length) {
+            tableRow.validation = 'invalid'
+          } else {
+            tableRow.validation = 'valid'
+          }
+          tableFields.push(tableRow)
+        }
+      })
+      return tableFields
     }
   },
 
@@ -219,20 +280,21 @@ export default {
     },
     setTableRows() {
       const tableRows = []
-      this.tab_info.form_fields.forEach((element) => {
+      this.tab_info.form_fields.forEach((form_field) => {
         const tableRow = {}
-        Object.keys(element).forEach(key => {
-          if (element.substance.selected) {
+        for (const key of Object.keys(form_field)) {
+          if (key === 'quantity_use_categories') continue
+          if (form_field.substance.selected) {
             tableRow[key] = this.typeOfDisplayObj[key]
               ? this.$store.state.initialData.display[
                 this.typeOfDisplayObj[key]
-              ][element[key].selected]
-              : (tableRow[key] = element[key].selected)
+              ][form_field[key].selected]
+              : (tableRow[key] = form_field[key].selected)
           }
-        })
+        }
         if (Object.keys(tableRow).length) {
-          tableRow.originalObj = element
-          tableRow.index = this.tab_info.form_fields.indexOf(element)
+          tableRow.originalObj = form_field
+          tableRow.index = this.tab_info.form_fields.indexOf(form_field)
           if (tableRow.originalObj.validation.selected.length) {
             tableRow.validation = 'invalid'
           } else {
@@ -272,3 +334,14 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  table {
+    .multiselect__content-wrapper {
+      min-width: 300px;
+    }
+    td {
+      vertical-align: middle!important;
+    }
+  }
+</style>

@@ -22,7 +22,12 @@ class Reports(enum.Enum):
     PRODCONS_NA5_PARTIES = 'prodcons_na5_parties'
     RAF = 'raf'
     IMPEXP_NEW_REC = 'impexp_new_rec'
+    IMPEXP_REC_SUBST = 'impexp_rec_subst'
+    IMPEXP_NEW_REC_AGG = 'impexp_new_rec_agg'
     HFC_BASELINE = 'hfc_baseline'
+    BASELINE_PROD_A5 = 'baseline_prod_a5'
+    BASELINE_CONS_A5 = 'baseline_cons_a5'
+    BASELINE_PRODCONS_NA5 = 'baseline_prodcons_na5'
 
     @staticmethod
     def args(has_party_param=False, has_period_param=False):
@@ -152,6 +157,30 @@ class Reports(enum.Enum):
         }
 
     @staticmethod
+    def impexp_rec_subst_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Import and export of recovered substances",
+                "description": _(
+                    "Select one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def impexp_new_rec_agg_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Aggregate import and export of new and recovered substances",
+                "description": _(
+                    "Select one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
     def hfc_baseline_info():
         return {
             **Reports.args(has_party_param=True),
@@ -159,6 +188,42 @@ class Reports(enum.Enum):
                 "display_name": "HFC baseline",
                 "description": _(
                     "Select one or more parties and one reporting period"
+                )
+            },
+        }
+
+    @staticmethod
+    def baseline_prod_a5_info():
+        return {
+            **Reports.args(has_party_param=True),
+            **{
+                "display_name": "Baseline production - Art5 parties",
+                "description": _(
+                    "Select one or more parties, or leave blank for all"
+                )
+            },
+        }
+
+    @staticmethod
+    def baseline_cons_a5_info():
+        return {
+            **Reports.args(has_party_param=True),
+            **{
+                "display_name": "Baseline consumption - Art5 parties",
+                "description": _(
+                    "Select one or more parties, or leave blank for all"
+                )
+            },
+        }
+
+    @staticmethod
+    def baseline_prodcons_na5_info():
+        return {
+            **Reports.args(has_party_param=True),
+            **{
+                "display_name": "Baseline CI production and consumption - Non-Art5 parties",
+                "description": _(
+                    "Select one or more parties, or leave blank for all"
                 )
             },
         }

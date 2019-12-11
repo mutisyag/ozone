@@ -1,5 +1,6 @@
 import datetime
 import enum
+from functools import lru_cache
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
@@ -20,6 +21,7 @@ __all__ = [
     'PartyDeclaration',
     'PartyType',
     'Language',
+    'eu_party_id',
 ]
 
 
@@ -382,3 +384,8 @@ class Language(models.Model):
     class Meta:
         ordering = ('name',)
         db_table = 'language'
+
+
+@lru_cache(maxsize=1)
+def eu_party_id():
+    return Party.objects.get(abbr='EU').id

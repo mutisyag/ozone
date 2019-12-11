@@ -229,9 +229,6 @@ class ReportingChannel(models.Model):
     is_party = models.BooleanField(default=False)
     is_secretariat = models.BooleanField(default=False)
 
-    # True if this is the default channel set when cloning a submission
-    is_default_for_cloning = models.BooleanField(default=False)
-
     @classmethod
     def get_default(cls, user):
         """
@@ -243,15 +240,10 @@ class ReportingChannel(models.Model):
         if user.party is not None:
             return cls.objects.filter(is_default_party=True).first()
 
-    @classmethod
-    def get_cloning_default(cls):
-        return cls.objects.filter(is_default_for_cloning=True).first()
-
     def clean(self):
         unique_fields = {
             'is_default_party': 'party',
             'is_default_secretariat': 'secretariat',
-            'is_default_for_cloning': 'cloning',
         }
         for field in unique_fields.keys():
             queryset = ReportingChannel.objects.filter(**{field: True})
@@ -658,15 +650,15 @@ class Submission(models.Model):
 
     history = HistoricalRecords()
 
-    @property
+    @cached_property
     def is_versionable(self):
         return self.obligation.has_versions
 
-    @property
+    @cached_property
     def filled_by_secretariat(self):
         return self.created_by.is_secretariat
 
-    @property
+    @cached_property
     def workflow_class(self):
         """Just a getter so we can access the class"""
         return self._workflow_class
@@ -1234,9 +1226,7 @@ class Submission(models.Model):
     def clone(self, user):
         is_cloneable, e = self.check_cloning(user)
         if is_cloneable:
-            channel = ReportingChannel.objects.get(
-                is_default_for_cloning=True
-            )
+            channel = ReportingChannel.get_default(user)
             clone = Submission.objects.create(
                 party=self.party,
                 reporting_period=self.reporting_period,
@@ -1422,7 +1412,7 @@ class Submission(models.Model):
             party=self.party,
             reporting_period=self.reporting_period,
             obligation=self.obligation,
-        )
+        ).prefetch_related('created_by')
 
     def get_change_history(self):
         """

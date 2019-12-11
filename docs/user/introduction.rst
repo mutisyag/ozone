@@ -47,6 +47,12 @@ After login, you will see the main user interface, comprised of:
 - and the main content area in the middle.
 
 
+.. image:: images/user_menu.png
+  :align: right
+
+.. note::
+  The latest version of this document can be accessed online, at https://ors.ozone.unep.org/docs, or using the :guilabel:`Help` link from the top-right side user menu:
+
 .. hint::
   The user interface contains additional guidance and information. Check the |icon-tooltip| tooltip icons wherever available. 
   Also, the main data entry forms have detailed instructions, accessible by clicking on the |icon-info| info icon.

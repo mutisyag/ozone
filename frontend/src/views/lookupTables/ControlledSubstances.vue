@@ -95,6 +95,12 @@ export default {
           class: 'text-left'
         },
         {
+          key: 'description',
+          label: this.$gettext('Description'),
+          sortable: true,
+          class: 'text-left'
+        },
+        {
           key: 'odp',
           label: this.$gettext('ODP'),
           sortable: true,

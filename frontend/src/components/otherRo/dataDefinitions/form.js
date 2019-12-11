@@ -22,6 +22,10 @@ const getFormOtherRo = ($gettext, formName) => {
         'submissionDefaultValues.reporting_channel'
       ]
     },
+    comments_default_properties: {
+      pa_uses_reported_remarks_secretariat: ''
+    },
+    comments_endpoint_url: 'submission_remarks',
     tabs: {
       ...setTabFiles($gettext),
       sub_info: {
@@ -137,12 +141,18 @@ const getFormOtherRo = ($gettext, formName) => {
             class: 'text-left'
           }
         ],
-
+        comments: {
+          pa_uses_reported_remarks_secretariat: {
+            selected: '',
+            type: 'textarea'
+          }
+        },
         section_headers: [{
           label: '',
           colspan: 7
         }],
         default_properties: {
+          'pa_uses_reported_remarks_secretariat': '',
           'application_substance': '',
           'application': '',
           'decision': '',
