@@ -62,11 +62,15 @@ const mutations = {
       return
     }
     if (data.fieldInfo.category) {
-      formField.use_categories.find(i => i.critical_use_category === data.fieldInfo.category).quantity = data.value
+      if (formField.use_categories) {
+        formField.use_categories.find(i => i.critical_use_category === data.fieldInfo.category).quantity = data.value
+      }
+      if (formField.approved_uses) {
+        formField.approved_uses.find(i => i.critical_use_category === data.fieldInfo.category).quantity = data.value
+      }
       formField.quantity_use_categories = null
       return
     }
-
     if (data.fieldInfo.index === data.fieldInfo.field) {
       formField.selected = data.value
     } else {
@@ -76,7 +80,9 @@ const mutations = {
 
   removeFormField(state, { index, tabName, fieldName, fieldIndex }) {
     state.form.tabs[tabName].form_fields[index][fieldName].splice(fieldIndex, 1)
-    state.form.tabs[tabName].form_fields[index].quantity_use_categories = null
+    if (state.form.tabs[tabName].form_fields[index].quantity_use_categories) {
+      state.form.tabs[tabName].form_fields[index].quantity_use_categories = null
+    }
   },
 
   setSubmissionHistory(state, data) {
@@ -419,9 +425,17 @@ const mutations = {
 
   addCategoryEntry(state, { tabName, index, categoryList }) {
     categoryList.forEach(c => {
-      state.form.tabs[tabName].form_fields[index].use_categories.push({
-        critical_use_category: c, quantity: null
-      })
+      if (tabName === 'approved') {
+        if (state.form.tabs[tabName].form_fields[index].approved_uses.filter(approved => approved.critical_use_category === c).length === 0) {
+          state.form.tabs[tabName].form_fields[index].approved_uses.push({
+            critical_use_category: c, quantity: null
+          })
+        }
+      } else {
+        state.form.tabs[tabName].form_fields[index].use_categories.push({
+          critical_use_category: c, quantity: null
+        })
+      }
     })
   },
 

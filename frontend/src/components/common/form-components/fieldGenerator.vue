@@ -1,5 +1,5 @@
 <template>
-  <div v-if="field">
+  <div v-if="field" class="position-relative">
     <div
       v-if="field.type === 'text' || field.type === 'number' || field.type ==='email' || field.type === 'nonInput'"
     >
@@ -103,13 +103,14 @@
       v-model="currentTyping"
       type="text"
     >
+    <i v-if="icon" :class="[icon.fa, 'field-icon']" v-b-tooltip:hover="icon.tooltip" @click="$emit('icon-clicked')"></i>
   </div>
 </template>
 
 <script>
+import Datepicker from 'vuejs-datepicker'
 import Multiselect from '@/components/common/ModifiedMultiselect'
 import { fromExponential } from '@/components/common/services/utilsService'
-import Datepicker from 'vuejs-datepicker'
 
 export default {
 
@@ -117,7 +118,8 @@ export default {
     field: Object,
     disabled: { type: Boolean, default: () => false },
     fieldInfo: Object,
-    id: String
+    id: String,
+    icon: Object
   },
   components: {
     Multiselect,
@@ -210,3 +212,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .field-icon {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+</style>

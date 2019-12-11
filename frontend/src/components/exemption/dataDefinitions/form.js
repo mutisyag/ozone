@@ -16,7 +16,8 @@ const getFormExemption = ($gettext) => {
         'initialData.display.countries',
         'currentUser',
         'permissions.form',
-        'submissionDefaultValues.reporting_channel'
+        'submissionDefaultValues.reporting_channel',
+        'initialData.criticalUseCategoryList'
       ],
       comments_default_properties: {
         exemption_nomination_remarks_secretariat: '',
@@ -112,7 +113,8 @@ const getFormExemption = ($gettext) => {
           is_emergency: null,
           remarks_os: null,
           decision_approved: null,
-          approved_teap_amount: null
+          approved_teap_amount: null,
+          approved_uses: null
         }
       }
     }

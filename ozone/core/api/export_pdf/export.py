@@ -12,6 +12,7 @@ from .reports import (
     prodcons,
     raf,
     impexp_new_rec,
+    impexp,
     hfc_baseline,
 )
 from .reports.prodcons.prod_imp_exp import get_prod_imp_exp_flowables
@@ -182,6 +183,32 @@ def export_prod_imp_exp(periods, parties):
 
     doc.build(
         list(get_prod_imp_exp_flowables(periods, parties)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_impexp_rec_subst(periods):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(impexp.get_rec_subst_flowables(periods)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_impexp_new_rec_agg(periods):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(impexp.get_impexp_new_rec_agg_flowables(periods)),
         onFirstPage=add_page_footer,
         onLaterPages=add_page_footer
     )
