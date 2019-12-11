@@ -1442,8 +1442,7 @@ class SubmissionViewFilterSet(filters.FilterSet):
         ]
 
 
-class SubmissionViewSet\
-        (viewsets.ModelViewSet):
+class SubmissionViewSet(viewsets.ModelViewSet):
     """
     versions:
     Get a list of all submissions versions, including the one specified in the
