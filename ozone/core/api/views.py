@@ -1442,7 +1442,8 @@ class SubmissionViewFilterSet(filters.FilterSet):
         ]
 
 
-class SubmissionViewSet(viewsets.ModelViewSet):
+class SubmissionViewSet\
+        (viewsets.ModelViewSet):
     """
     versions:
     Get a list of all submissions versions, including the one specified in the
@@ -1920,8 +1921,6 @@ class Article7EmissionViewSet(
     def get_queryset(self):
         return Article7Emission.objects.filter(
             submission=self.kwargs['submission_pk']
-        ).select_related(
-            'substance', 'substance__group'
         )
 
     def perform_create(self, serializer):
