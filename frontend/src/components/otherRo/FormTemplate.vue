@@ -101,7 +101,7 @@
 
 <script>
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
-import { getLabels } from '@/components/hat/dataDefinitions/labels'
+import { getLabels } from '@/components/otherRo/dataDefinitions/labels'
 
 export default {
   mixins: [FormTemplateMxin],
