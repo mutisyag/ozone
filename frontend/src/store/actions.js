@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import {
   fetch,
   getSubmissionHistory,
@@ -294,8 +295,10 @@ const actions = {
 
   setAlert(context, data) {
     Object.keys(data.message).forEach(key => {
+      let message = data.message[key]
+      if (typeof message !== 'string') message = message.join('<br>')
+      message = message.replace(/\</g, '&lt;').replace(/\>/g, '&gt;')
       const labelValue = getLevel2PropertyValue(getLabels(data.$gettext), key)
-      const message = typeof (data.message[key]) !== 'string' ? data.message[key].join('<br>') : data.message[key]
       const displayMessage = `${labelValue ? `${labelValue}: ` : ''}${message}`
       context.commit('addAlertData', {
         displayMessage,
