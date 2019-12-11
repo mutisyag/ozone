@@ -26,11 +26,11 @@ from . import render
 
 
 TABLE_CUSTOM_STYLES = (
-    ('SPAN', (0, 0), (0, 1)),  # blank
-    ('SPAN', (1, 0), (3, 0)),  # production
-    ('SPAN', (4, 0), (6, 0)),  # imports
-    ('SPAN', (7, 0), (9, 0)),  # exports
-    ('ALIGN', (1, 2), (-1, -1), 'RIGHT'),
+    ('SPAN', (0, 0), (1, 1)),  # blank
+    ('SPAN', (2, 0), (4, 0)),  # production
+    ('SPAN', (5, 0), (7, 0)),  # imports
+    ('SPAN', (8, 0), (10, 0)),  # exports
+    ('ALIGN', (2, 2), (-1, -1), 'RIGHT'),
 )
 
 
@@ -131,16 +131,16 @@ class ProdImpExpTable:
 
     def begin_table(self):
         styles = list(DOUBLE_HEADER_TABLE_STYLES + TABLE_CUSTOM_STYLES)
-        column_widths = col_widths([4, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7, 1.7])
-        builder = TableBuilder(styles, column_widths)
+        column_widths = col_widths([0.7, 4.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5])
+        builder = TableBuilder(styles, column_widths, repeat_rows=2)
         builder.add_row([
-            "",
+            "", "",
             "PRODUCTION", "", "",
             "IMPORTS", "", "",
             "EXPORTS", "", "",
         ])
         builder.add_row([
-            "",
+            "", "",
             self.period.name, "Base", "% Chng",
             self.period.name, "Base", "% Chng",
             self.period.name, "Base", "% Chng",
@@ -196,7 +196,7 @@ class ProdImpExpTable:
 
             baselines = baselines_map.get(group, _blank_baseline)
 
-            row = [group.name]
+            row = [group.name, group.description]
             for name in self.fields:
                 row += self.format_comparison(
                     self.normalize.prodcons(values[name], group),
