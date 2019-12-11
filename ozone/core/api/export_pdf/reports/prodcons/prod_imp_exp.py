@@ -3,6 +3,7 @@ from collections import defaultdict
 
 from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
+from django.utils.translation import gettext_lazy as _
 
 from ozone.core.models import Group
 from ozone.core.models import Obligation
@@ -223,6 +224,9 @@ class ProdImpExpReport(Report):
     name = "prod_imp_exp"
     has_party_param = True
     has_period_param = True
+
+    display_name = "Production, import and export"
+    description = _("Select one or more reporting periods")
 
     def get_flowables(self):
         all_groups = data.get_all_groups()

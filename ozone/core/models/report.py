@@ -2,6 +2,8 @@ import enum
 
 from django.utils.translation import gettext_lazy as _
 
+from ozone.core.api.export_pdf import reports
+
 
 __all__ = ['Reports']
 
@@ -158,18 +160,6 @@ class Reports(enum.Enum):
         }
 
     @staticmethod
-    def prod_imp_exp_info():
-        return {
-            **Reports.args(has_party_param=True, has_period_param=True),
-            **{
-                "display_name": "Production, import and export",
-                "description": _(
-                    "Select one or more reporting periods"
-                )
-            },
-        }
-
-    @staticmethod
     def impexp_rec_subst_info():
         return {
             **Reports.args(has_period_param=True),
@@ -189,18 +179,6 @@ class Reports(enum.Enum):
                 "display_name": "Aggregate import and export of new and recovered substances",
                 "description": _(
                     "Select one or more reporting periods"
-                )
-            },
-        }
-
-    @staticmethod
-    def hfc_baseline_info():
-        return {
-            **Reports.args(has_party_param=True),
-            **{
-                "display_name": "HFC baseline",
-                "description": _(
-                    "Select one or more parties and one reporting period"
                 )
             },
         }
@@ -243,7 +221,10 @@ class Reports(enum.Enum):
 
     @staticmethod
     def items():
-        return [
+        rv = [
             {**{'name': e.value}, **getattr(Reports, e.value + "_info")()}
             for e in Reports
+            if e.value not in reports.by_name
         ]
+        rv += [r.api_description() for r in reports.registry]
+        return rv

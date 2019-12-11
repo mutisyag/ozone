@@ -160,6 +160,8 @@ class HFCBaselineReport(Report):
 
     name = "hfc_baseline"
     has_party_param = True
+    display_name = "HFC baseline"
+    description = _("Select one or more parties and one reporting period")
 
     def get_flowables(self):
         calculator = BaselineCalculator()

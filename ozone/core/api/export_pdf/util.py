@@ -596,9 +596,21 @@ def response_pdf(base_name, buf_pdf):
 
 class Report:
 
+    name = None  # must be defined in subclasses
+    display_name = None  # must be defined in subclasses
+    description = None  # must be defined in subclasses
     has_party_param = False
     has_period_param = False
-    name = None  # must be defined in subclasses
+
+    @classmethod
+    def api_description(cls):
+        return {
+            'name': cls.name,
+            'display_name': cls.display_name,
+            'description': cls.description,
+            'has_party_param': cls.has_party_param,
+            'has_period_param': cls.has_period_param,
+        }
 
     @classmethod
     def from_request(cls, request):
