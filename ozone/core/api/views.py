@@ -2468,6 +2468,14 @@ class ReportsViewSet(viewsets.ViewSet):
     def list(self, request):
         return Response(Reports.items())
 
+    def retrieve(self, request, pk):
+        try:
+            report = reports.by_name[pk]
+        except KeyError:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        return report.from_request(request).render_to_response()
+
     @action(detail=False, methods=["get"])
     def art7_raw(self, request):
         parties = get_parties(request)
@@ -2577,10 +2585,6 @@ class ReportsViewSet(viewsets.ViewSet):
         )
 
     @action(detail=False, methods=["get"])
-    def prod_imp_exp(self, request):
-        return reports.ProdImpExpReport.from_request(request).render_to_response()
-
-    @action(detail=False, methods=["get"])
     def impexp_rec_subst(self, request):
         periods = get_periods(request)
         params = "_".join(p.name for p in periods)
@@ -2597,10 +2601,6 @@ class ReportsViewSet(viewsets.ViewSet):
             f'impexp_rec_subst_{params}',
             export_impexp_new_rec_agg(periods=periods)
         )
-
-    @action(detail=False, methods=["get"])
-    def hfc_baseline(self, request):
-        return reports.HFCBaselineReport.from_request(request).render_to_response()
 
     @action(detail=False, methods=["get"])
     def baseline_prod_a5(self, request):

@@ -5,3 +5,5 @@ registry = [
     ProdImpExpReport,
     HFCBaselineReport,
 ]
+
+by_name = {r.name: r for r in registry}
