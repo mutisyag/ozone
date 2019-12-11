@@ -7,9 +7,18 @@ const valueConverter = (item) => {
   return parseFloat(item)
 }
 
+const createTooltip = (approved_use, section, $gettext, critical_use_categories) => {
+  let tooltip_title = ''
+  approved_use.forEach(category => {
+    tooltip_title += `${critical_use_categories[category.critical_use_category] || $gettext('Unspecified')} : ${fromExponential(category.quantity)}\n`
+  })
+  tooltip_title += `${$gettext('Click to edit or view critical uses categories')}`
+  return tooltip_title
+}
+
 export default {
   substanceRows({
-    $gettext, substance, group, prefillData
+    $gettext, substance, group, prefillData, section, critical_use_categories, has_critical_uses
   }) {
     const baseInnerFields = {
       checkForDelete: {
@@ -32,6 +41,7 @@ export default {
         selected: null,
         type: 'number'
       },
+      approved_uses: [],
       quantity: {
         type: 'number',
         selected: null
@@ -43,6 +53,14 @@ export default {
       remarks_os: {
         type: 'text',
         selected: ''
+      },
+      set quantity_use_categories(val) {
+        if (has_critical_uses) {
+          this.quantity.icon = {
+            tooltip: createTooltip(this.approved_uses, section, $gettext, critical_use_categories),
+            fa: 'fa fa-info-circle fa-lg'
+          }
+        }
       },
       get validation() {
         const errors = []
@@ -57,7 +75,6 @@ export default {
         return returnObj
       }
     }
-
     /* prefillData is used to populate rows from server response.
 
 		I think that when we create new rows prefillData shouldn't be null! It should be this.$store.state.form.tabs[this.tabName].default_properties
@@ -66,7 +83,9 @@ export default {
 
     if (prefillData) {
       Object.keys(prefillData).forEach((field) => {
-        if (baseInnerFields[field] && !baseInnerFields[field].selected) {
+        if (Array.isArray(prefillData[field]) && field === 'approved_uses') {
+          baseInnerFields[field] = prefillData[field]
+        } else if (baseInnerFields[field] && !baseInnerFields[field].selected) {
           if (isNumber(prefillData[field])) {
             baseInnerFields[field].selected = parseFloat(fromExponential(prefillData[field]))
           } else {
@@ -75,6 +94,7 @@ export default {
         }
       })
     }
+    baseInnerFields.quantity_use_categories = null
     return baseInnerFields
   }
 

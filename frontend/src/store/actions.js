@@ -404,7 +404,7 @@ const actions = {
         await context.dispatch('getControlledGroups', { party: context.state.current_submission.party, period: reporting_period })
         await context.dispatch('getNonParties', reporting_period)
       }
-      if (formName === 'essencrit') {
+      if (formName === 'essencrit' || formName === 'exemption') {
         await context.dispatch('getApprovedExemptionsList', { partyId: context.state.current_submission.party, period: reporting_period })
         await context.dispatch('getCriticalUseCategoryList')
       }

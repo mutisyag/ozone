@@ -154,37 +154,9 @@ export default {
       const ordered_selected_substance = this.selected_substance.options.filter(option => this.selected_substance.selected.includes(option.value)).map(s => s.value)
       this.updateGroup(ordered_selected_substance)
 
-      const willNotAdd = []
-
       for (const subst of ordered_selected_substance) {
-        const alreadyAdded = this.$store.state.form.tabs[this.tabName].form_fields.filter(field => (parseInt(field.substance.selected) === parseInt(subst)))
-        if (alreadyAdded.length === 2) {
-          willNotAdd.push(subst)
-        } else if (alreadyAdded.length === 1) {
-          // if both exemptions exist, check value of emergency in alreadyAdded and add the other one
-          if (alreadyAdded[0].is_emergency.selected) {
-            this.addSubstanceRaf(subst, { is_emergency: false })
-          } else {
-            this.addSubstanceRaf(subst, { is_emergency: true })
-          }
-        } else {
-          this.addSubstanceRaf(subst)
-        }
+        this.addSubstanceRaf(subst, { is_emergency: false })
       }
-
-      const willNotAddSubstanceNames = []
-      willNotAdd.length && willNotAdd.forEach(id => {
-        const { text } = this.substances.find(substanceDisplay => substanceDisplay.value === id)
-        if (text) {
-          willNotAddSubstanceNames.push(text)
-        }
-      })
-
-      willNotAddSubstanceNames.length && this.$store.dispatch('setAlert', {
-        $gettext: this.$gettext,
-        message: { __all__: [`${willNotAddSubstanceNames.join(', ')} ${this.$gettext('not added because two entries already exist.')}`] },
-        variant: 'danger'
-      })
       this.resetData()
     },
 

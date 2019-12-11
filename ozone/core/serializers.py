@@ -1,5 +1,4 @@
 from datetime import datetime
-from decimal import Decimal
 import mimetypes
 
 from django.conf import settings
@@ -76,7 +75,6 @@ from .models import (
     ORMReport,
     MultilateralFund,
 )
-from .models.utils import DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
 from .models.report import Reports
 from ozone.core.api import export_pdf
 
@@ -94,6 +92,7 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
     # These need to be set properly by each class that extends this
     # Fields in substance_blend_fields list are mutually exclusive (one DB entry
     # cannot have more that one of them not null (e.g. substance or blend))
+    # `unique_with` can be None, a list or a tuple.
     substance_blend_fields = None
     unique_with = None
 
@@ -121,7 +120,10 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
                 if self.unique_with is None:
                     field_value = entry.get(field, None)
                 else:
-                    field_value = (entry.get(field), entry.get(self.unique_with))
+                    field_value = (
+                        entry.get(field),
+                        *[entry.get(f) for f in self.unique_with]
+                    )
 
                 if entry.get(field, None) is None:
                     continue
@@ -139,7 +141,10 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
                 # Construct key to find existing_entry in validated_data
                 key = field_value
                 if self.unique_with is not None:
-                    key = (key, getattr(existing_entry, self.unique_with))
+                    key = (
+                        key,
+                        *[getattr(existing_entry, f) for f in self.unique_with]
+                    )
                 return key
         # Should never get here
         return None
@@ -613,7 +618,7 @@ class Article7ExportListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', 'blend']
-    unique_with = 'destination_party'
+    unique_with = ('destination_party',)
 
 
 class Article7ExportSerializer(
@@ -633,7 +638,7 @@ class Article7ImportListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', 'blend']
-    unique_with = 'source_party'
+    unique_with = ('source_party',)
 
 
 class Article7ImportSerializer(
@@ -653,7 +658,7 @@ class Article7NonPartyTradeListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', 'blend']
-    unique_with = 'trade_party'
+    unique_with = ('trade_party',)
 
 
 class Article7NonPartyTradeSerializer(
@@ -740,7 +745,7 @@ class ExemptionNominationListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
-    unique_with = 'is_emergency'
+    unique_with = ('is_emergency',)
 
 
 class ExemptionNominationSerializer(
@@ -766,7 +771,7 @@ class ExemptionApprovedListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
-    unique_with = 'is_emergency'
+    unique_with = ('is_emergency', 'decision_approved',)
 
     approved_uses = ApprovedCriticalUseSerializer(many=True, required=False)
 
@@ -877,7 +882,7 @@ class RAFListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
-    unique_with = 'is_emergency'
+    unique_with = ('is_emergency',)
 
     imports = RAFImportSerializer(many=True)
     use_categories = RAFReportUseCategorySerializer(many=True)
