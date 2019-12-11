@@ -1664,7 +1664,7 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return SubmissionInfo.objects.filter(
             submission=self.kwargs['submission_pk']
-        )
+        ).select_related('submission__reporting_channel')
 
 
 class GetSubmissionFormatsViewSet(ReadOnlyMixin, generics.ListAPIView):
@@ -1801,7 +1801,11 @@ class Article7DestructionViewSet(
     def get_queryset(self):
         return Article7Destruction.objects.filter(
             submission=self.kwargs['submission_pk']
-        ).filter(blend_item__isnull=True)
+        ).filter(
+            blend_item__isnull=True
+        ).select_related(
+            'substance', 'substance__group'
+        )
 
     # Needed to ensure that serializer uses the correct submission
     def perform_create(self, serializer):
@@ -1822,6 +1826,8 @@ class Article7ProductionViewSet(
     def get_queryset(self):
         return Article7Production.objects.filter(
             submission=self.kwargs['submission_pk']
+        ).select_related(
+            'substance', 'substance__group'
         )
 
     def perform_create(self, serializer):
@@ -1842,7 +1848,11 @@ class Article7ExportViewSet(
     def get_queryset(self):
         return Article7Export.objects.filter(
             submission=self.kwargs['submission_pk']
-        ).filter(blend_item__isnull=True)
+        ).filter(
+            blend_item__isnull=True
+        ).select_related(
+            'substance', 'substance__group'
+        )
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
@@ -1862,7 +1872,11 @@ class Article7ImportViewSet(
     def get_queryset(self):
         return Article7Import.objects.filter(
             submission=self.kwargs['submission_pk']
-        ).filter(blend_item__isnull=True)
+        ).filter(
+            blend_item__isnull=True
+        ).select_related(
+            'substance', 'substance__group'
+        )
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
@@ -1882,7 +1896,11 @@ class Article7NonPartyTradeViewSet(
     def get_queryset(self):
         return Article7NonPartyTrade.objects.filter(
             submission=self.kwargs['submission_pk']
-        ).filter(blend_item__isnull=True)
+        ).filter(
+            blend_item__isnull=True
+        ).select_related(
+            'substance', 'substance__group'
+        )
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
@@ -1902,6 +1920,8 @@ class Article7EmissionViewSet(
     def get_queryset(self):
         return Article7Emission.objects.filter(
             submission=self.kwargs['submission_pk']
+        ).select_related(
+            'substance', 'substance__group'
         )
 
     def perform_create(self, serializer):
