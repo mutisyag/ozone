@@ -1454,7 +1454,7 @@ class SubmissionViewSet\
     Note historical states for other versions are not included.
     """
     queryset = Submission.objects.all().prefetch_related(
-        "reporting_period", "created_by", "party"
+        "reporting_period", "created_by", "party", "obligation"
     )
     filter_backends = (
         IsOwnerFilterBackend,
@@ -1467,14 +1467,15 @@ class SubmissionViewSet\
         "party__name", "obligation__name", "reporting_period__name"
     )
     ordering = (
-        "-reporting_period__start_date", "obligation__sort_order", "party__name", "-updated_at",
+        "-reporting_period__start_date", "obligation__sort_order",
+        "party__name", "-updated_at",
     )
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmission, )
     pagination_class = SubmissionPaginator
 
     def get_queryset(self):
         return Submission.objects.all().prefetch_related(
-            "reporting_period", "created_by", "party"
+            "reporting_period", "created_by", "party", "obligation"
         )
 
     def update(self, *args, **kwargs):
