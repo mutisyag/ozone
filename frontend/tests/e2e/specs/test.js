@@ -219,6 +219,7 @@ module.exports = {
     addComment(browser, 'has_exports_tab', 'Hakuna Matata')
     saveSubmission(browser, ['Questionnaire', 'Exports'])
   },
+  /*
   BU_008: browser => {
     const row_values = {
       quantity_total_produced: 0.12
@@ -253,6 +254,7 @@ module.exports = {
     addComment(browser, 'has_produced_tab', 'Hakuna Matata')
     saveSubmission(browser, ['Questionnaire', 'Production'])
   },
+  */
   BU_009: browser => {
     const row_values = {
       quantity_destroyed: 0.12
