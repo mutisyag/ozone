@@ -79,6 +79,7 @@ from .models import (
 from .models.utils import DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
 from .models.report import Reports
 from ozone.core.api import export_pdf
+from ozone.core.api.export_pdf.reports import Art7RawdataReport
 
 User = get_user_model()
 
@@ -1850,7 +1851,7 @@ def generate_report(report, submission):
             _obligation_type=ObligationTypes.ART7.value)
         data = export_pdf.export_submissions(art7, [submission])
         return {
-            'title': Reports.art7_raw_info()['display_name'],
+            'title': Art7RawdataReport.display_name,
             'filename': filename,
             'data': data.getvalue(),
             'mime_type': 'application/pdf',
@@ -1948,7 +1949,7 @@ class EmailTemplateSerializer(serializers.ModelSerializer):
         {
             'id': Reports.ART7_RAW.value,
             'filename': 'art7raw_{party}_{period}.pdf',
-            'title': Reports.art7_raw_info()['display_name'],
+            'title': Art7RawdataReport.display_name,
             'source': 'generate_report',
         },
         {

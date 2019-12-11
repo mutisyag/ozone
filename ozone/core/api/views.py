@@ -2477,20 +2477,6 @@ class ReportsViewSet(viewsets.ViewSet):
         return report.from_request(request).render_to_response()
 
     @action(detail=False, methods=["get"])
-    def art7_raw(self, request):
-        parties = get_parties(request)
-        periods = get_periods(request)
-        params = "%s_%s" % (
-            "_".join(p.abbr for p in parties),
-            "_".join(p.name for p in periods),
-        )
-        art7 = Obligation.objects.get(_obligation_type=ObligationTypes.ART7.value)
-        return response_pdf(
-            f'art7raw_{params}',
-            export_submissions(art7, get_submissions(art7, periods, parties))
-        )
-
-    @action(detail=False, methods=["get"])
     def baseline_hfc_raw(self, request):
         parties = get_parties(request)
         params = "_".join(p.abbr for p in parties)

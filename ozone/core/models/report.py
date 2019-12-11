@@ -100,18 +100,6 @@ class Reports(enum.Enum):
         }
 
     @staticmethod
-    def art7_raw_info():
-        return {
-            **Reports.args(has_party_param=True, has_period_param=True),
-            **{
-                "display_name": "Raw data reported - Article 7",
-                "description": _(
-                    "Select one or more parties and one or more reporting periods"
-                )
-            },
-        }
-
-    @staticmethod
     def baseline_hfc_raw_info():
         return {
             **Reports.args(has_party_param=True),

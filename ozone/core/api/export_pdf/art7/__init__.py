@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import PageBreak
 
 from ozone.core.models import Blend
@@ -21,6 +22,8 @@ from .labuse_report import export_labuse_report
 
 from ..util import exclude_blend_items
 from ..util import filter_lab_uses
+from ..util import Report
+from ..util import get_submissions
 
 __all__ = [
     'export_submissions',
@@ -71,6 +74,20 @@ def export_submissions(submissions):
         )
 
         yield PageBreak()
+
+
+class Art7RawdataReport(Report):
+
+    name = "art7_raw"
+    has_party_param = True
+    has_period_param = True
+    display_name = "Raw data reported - Article 7"
+    description = _("Select one or more parties and one or more reporting periods")
+    landscape = True
+
+    def get_flowables(self):
+        art7 = Obligation.objects.get(_obligation_type=ObligationTypes.ART7.value)
+        yield from export_submissions(get_submissions(art7, self.periods, self.parties))
 
 
 class SubstanceFilter:

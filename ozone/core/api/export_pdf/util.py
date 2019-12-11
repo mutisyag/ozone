@@ -601,6 +601,7 @@ class Report:
     description = None  # must be defined in subclasses
     has_party_param = False
     has_period_param = False
+    landscape = False
 
     @classmethod
     def api_description(cls):
@@ -640,7 +641,7 @@ class Report:
         return response_pdf(base_name, pdf_buf)
 
     def render(self):
-        buff, doc = get_doc_template(landscape=False)
+        buff, doc = get_doc_template(landscape=self.landscape)
 
         doc.build(
             list(self.get_flowables()),
