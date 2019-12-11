@@ -140,7 +140,10 @@ class RecoveredImportExportTable:
 
             if isinstance(substance, Substance):
                 substance_txt = str(substance)
-                group_txt = self.group_map[substance.group_id].name
+                if substance.group_id:
+                    group_txt = self.group_map[substance.group_id].name
+                else:
+                    group_txt = ""
             else:
                 substance_txt = f"{substance} ({substance.composition})"
                 group_txt = ""
