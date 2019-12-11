@@ -382,6 +382,7 @@ const mutations = {
     // the "state.form.tabs.flags &&" verification prvents hard failure for those forms
     state.form.tabs.flags && Object.keys(state.form.tabs.flags.form_fields).forEach(key => {
       if (data.includes(key)) state.form.tabs.flags.form_fields[key].disabled = false
+      else state.form.tabs.flags.form_fields[key].disabled = true
     })
   },
 
