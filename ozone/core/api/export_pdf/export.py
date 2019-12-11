@@ -14,6 +14,7 @@ from .reports import (
     impexp_new_rec,
     impexp,
     hfc_baseline,
+    baseline_prod_cons,
 )
 
 from ozone.core.models import (
@@ -208,6 +209,45 @@ def export_hfc_baseline(parties):
 
     doc.build(
         list(hfc_baseline.get_flowables(parties)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_baseline_prod_a5(parties):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(baseline_prod_cons.get_prod_a5_flowables(parties)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_baseline_cons_a5(parties):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(baseline_prod_cons.get_cons_a5_flowables(parties)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_baseline_prodcons_na5(parties):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(baseline_prod_cons.get_prodcons_na5_flowables(parties)),
         onFirstPage=add_page_footer,
         onLaterPages=add_page_footer
     )
