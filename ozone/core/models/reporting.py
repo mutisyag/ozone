@@ -650,15 +650,15 @@ class Submission(models.Model):
 
     history = HistoricalRecords()
 
-    @property
+    @cached_property
     def is_versionable(self):
         return self.obligation.has_versions
 
-    @property
+    @cached_property
     def filled_by_secretariat(self):
         return self.created_by.is_secretariat
 
-    @property
+    @cached_property
     def workflow_class(self):
         """Just a getter so we can access the class"""
         return self._workflow_class
@@ -1412,7 +1412,7 @@ class Submission(models.Model):
             party=self.party,
             reporting_period=self.reporting_period,
             obligation=self.obligation,
-        )
+        ).prefetch_related('created_by')
 
     def get_change_history(self):
         """
