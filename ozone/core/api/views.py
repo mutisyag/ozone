@@ -183,7 +183,6 @@ from .export_pdf import (
     export_impexp_new_rec,
     export_impexp_rec_subst,
     export_impexp_new_rec_agg,
-    export_hfc_baseline,
     export_baseline_prod_a5,
     export_baseline_cons_a5,
     export_baseline_prodcons_na5,
@@ -191,6 +190,7 @@ from .export_pdf import (
 
 from ..models.utils import round_decimal_half_up
 
+from ozone.core.api.export_pdf import reports
 from ozone.core.api.export_pdf.util import get_parties
 from ozone.core.api.export_pdf.util import get_periods
 from ozone.core.api.export_pdf.util import get_submissions
@@ -2578,8 +2578,7 @@ class ReportsViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["get"])
     def prod_imp_exp(self, request):
-        from ozone.core.api.export_pdf.reports import ProdImpExpReport
-        return ProdImpExpReport.from_request(request).render_to_response()
+        return reports.ProdImpExpReport.from_request(request).render_to_response()
 
     @action(detail=False, methods=["get"])
     def impexp_rec_subst(self, request):
@@ -2601,12 +2600,7 @@ class ReportsViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["get"])
     def hfc_baseline(self, request):
-        parties = get_parties(request)
-        params = "_".join(p.abbr for p in parties)
-        return response_pdf(
-            f'hfc_baseline_{params}',
-            export_hfc_baseline(parties=parties)
-        )
+        return reports.HFCBaselineReport.from_request(request).render_to_response()
 
     @action(detail=False, methods=["get"])
     def baseline_prod_a5(self, request):
