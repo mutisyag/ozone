@@ -164,7 +164,7 @@
             </b-col>
           </b-row>
         </div>
-        <div>
+        <div v-if="tabName === 'approved'">
           <div v-translate class="mb-2">Agreed critical use categories</div>
           <b-row>
             <b-col>
