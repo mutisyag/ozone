@@ -150,6 +150,14 @@ export default {
           })
         }
       })
+      .catch(error => {
+        auth.logout()
+        this.$store.dispatch('setAlert', {
+          $gettext: this.$gettext,
+          message: { ...error.response.data },
+          variant: 'danger'
+        })
+      })
     loadPollyfills()
     api.interceptors.request.use((config) => {
       if (!config.hideLoader) {
