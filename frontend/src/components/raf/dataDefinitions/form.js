@@ -28,10 +28,8 @@ const getFormRaf = ($gettext) => {
         'initialData.criticalUseCategoryList'
       ],
       comments_default_properties: {
-        'hat_imports_remarks_party': '',
-        'hat_imports_remarks_secretariat': '',
-        'hat_production_remarks_party': '',
-        'hat_production_remarks_secretariat': ''
+        'raf_remarks_party': '',
+        'raf_remarks_secretariat': ''
       },
       comments_endpoint_url: 'submission_remarks'
     },
@@ -54,7 +52,7 @@ const getFormRaf = ($gettext) => {
         formNumber: 2,
         title: $gettext('Essential and critical uses'),
         titleHtml: `<b>${$gettext('Reporting Accounting Framework')}</b><br><small>${$gettext('for essential and critical uses other than laboratory and analytical applications')}</small>`,
-        detailsHtml: `${$gettext('')}`,
+        detailsHtml: '',
         isInvalid: false,
         form_fields: [],
         blend_substance_headers: ['substance', 'percent', 'quantity_msac', 'quantity_sdac', 'quantity_dcpac'],
@@ -193,13 +191,13 @@ const getFormRaf = ($gettext) => {
         }
         ],
         comments: {
-          hat_production_remarks_party: {
-            name: 'hat_production_remarks_party',
+          raf_remarks_party: {
+            name: 'raf_remarks_party',
             selected: '',
             type: 'textarea'
           },
-          hat_production_remarks_secretariat: {
-            name: 'hat_production_remarks_secretariat',
+          raf_remarks_secretariat: {
+            name: 'raf_remarks_secretariat',
             selected: '',
             type: 'textarea'
           }
