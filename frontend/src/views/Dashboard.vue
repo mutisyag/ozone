@@ -317,6 +317,9 @@ export default {
   },
 
   async created() {
+    if (this.currentUser.party) {
+      this.$store.commit('setCurrentUserPartyInDashboard', this.currentUser.party)
+    }
     document.querySelector('body').classList.remove('aside-menu-lg-show')
     this.$store.dispatch('getDashboardParties')
     this.$store.dispatch('getDashboardObligations')
@@ -688,7 +691,6 @@ export default {
     },
     'tableOptions.filters': {
       handler() {
-        console.log(this.dataLoaded)
         if (this.dataLoaded) {
           if (this.tableOptions.currentPage !== 1) {
             this.tableOptions.currentPage = 1
