@@ -1499,7 +1499,10 @@ html:not([dir="rtl"]) .aside-menu {
   @extend .form-control;
   min-height: 35px!important;
   min-width: 100px;
-  padding: .4rem;  
+  padding: .4rem;
+  &.disabled {
+    background: #f0f3f5;
+  }
 }
 
 
