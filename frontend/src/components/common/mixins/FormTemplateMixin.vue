@@ -1,6 +1,6 @@
 <script>
-import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import { Aside as AppAside } from '@coreui/vue'
+import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
 import Multiselect from '@/components/common/ModifiedMultiselect'
 
