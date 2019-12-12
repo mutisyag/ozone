@@ -52,7 +52,7 @@ const getFormRaf = ($gettext) => {
         formNumber: 2,
         title: $gettext('Essential and critical uses'),
         titleHtml: `<b>${$gettext('Reporting Accounting Framework')}</b><br><small>${$gettext('for essential and critical uses other than laboratory and analytical applications')}</small>`,
-        detailsHtml: `${$gettext('')}`,
+        detailsHtml: '',
         isInvalid: false,
         form_fields: [],
         blend_substance_headers: ['substance', 'percent', 'quantity_msac', 'quantity_sdac', 'quantity_dcpac'],
