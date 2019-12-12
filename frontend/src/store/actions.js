@@ -31,7 +31,8 @@ import {
 } from '@/components/common/services/api'
 
 import {
-  getLevel2PropertyValue
+  getLevel2PropertyValue,
+  escapeHTML
 } from '@/components/common/services/utilsService.js'
 
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
@@ -296,8 +297,11 @@ const actions = {
   setAlert(context, data) {
     Object.keys(data.message).forEach(key => {
       let message = data.message[key]
-      if (typeof message !== 'string') message = message.join('<br>')
-      message = message.replace(/\</g, '&lt;').replace(/\>/g, '&gt;')
+      if (Array.isArray(message)) {
+        message = message.map(text => escapeHTML(text)).join('<br>')
+      } else if (typeof message === 'string') {
+        message = escapeHTML(message)
+      }
       const labelValue = getLevel2PropertyValue(getLabels(data.$gettext), key)
       const displayMessage = `${labelValue ? `${labelValue}: ` : ''}${message}`
       context.commit('addAlertData', {

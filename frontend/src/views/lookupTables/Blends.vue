@@ -244,6 +244,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('getDashboardParties')
     // No need to filter by party here, the API will list all
     // the available blends for this user
     const body = document.querySelector('body')

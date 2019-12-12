@@ -1322,6 +1322,8 @@ class RAFReportUseCategory(ModifyPreventionMixin, models.Model):
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
+    remarks = models.CharField(max_length=9999, blank=True)
+
     tracker = FieldTracker()
 
     @property

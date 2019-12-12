@@ -3,10 +3,11 @@ from base64 import b64encode
 from collections import OrderedDict
 from copy import deepcopy
 from pathlib import Path
+from decimal import Decimal
+from functools import partial
 import logging
 import urllib.parse
 import os
-from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -670,12 +671,19 @@ def filter_eu_items(field, items_list, exclude_eu_and_members):
 
 
 def populate_aggregation(
-        aggregation, fields, to_add, exclude_eu_and_members
+        aggregation, mt, fields, to_add, exclude_eu_and_members
     ):
     """
     Helper function to populate an aggregation dictionary's fields based on a
     list of dictionaries containing key-value pairs for those fields.
     """
+    if mt:
+        # Do not round metric tons values when populating MT aggregations
+        rounding_method = lambda x: x
+    else:
+        # ODP tons values should be rounded
+        rounding_method = partial(round_decimal_half_up, decimals=2)
+
     for field in fields:
         # A null value in any limit field means that the sum of all
         # values for that field across an aggregation should be null
@@ -683,10 +691,7 @@ def populate_aggregation(
         if field.startswith('limit_'):
             aggregation[field] = (
                 None if any([a[field] is None for a in to_add]) else
-                round_decimal_half_up(
-                    sum([a[field] for a in to_add]),
-                    2
-                )
+                rounding_method(sum([a[field] for a in to_add]))
             )
         else:
             filtered_to_add = list(
@@ -696,9 +701,8 @@ def populate_aggregation(
             )
             aggregation[field] = (
                 None if all([a[field] is None for a in filtered_to_add]) else
-                round_decimal_half_up(
-                    sum([a[field] or Decimal(0) for a in filtered_to_add]),
-                    2
+                rounding_method(
+                    sum([a[field] or Decimal(0) for a in filtered_to_add])
                 )
             )
 
@@ -756,6 +760,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     # work properly in subclasses
     model_class = ProdCons
     group_field = 'group'
+    mt = False
 
     def get_queryset(self):
         return ProdCons.objects.filter(
@@ -850,7 +855,8 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         **params_dict
                     })
                     populate_aggregation(
-                        aggregation, fields, to_add, exclude_eu_and_members
+                        aggregation, self.mt, fields, to_add,
+                        exclude_eu_and_members
                     )
                     values.append(aggregation)
                 elif 'party' in aggregates:
@@ -867,7 +873,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                                 **params_dict
                             })
                             populate_aggregation(
-                                aggregation, fields, entries,
+                                aggregation, self.mt, fields, entries,
                                 exclude_eu_and_members
                             )
                             values.append(aggregation)
@@ -884,7 +890,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                                 **params_dict
                             })
                             populate_aggregation(
-                                aggregation, fields, entries[party],
+                                aggregation, self.mt, fields, entries[party],
                                 exclude_eu_and_members
                             )
                             values.append(aggregation)
@@ -913,8 +919,8 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                                     **params_dict
                                 })
                                 populate_aggregation(
-                                    aggregation, fields,
-                                    entries[(party, group)],
+                                    aggregation, self.mt,
+                                    fields, entries[(party, group)],
                                     exclude_eu_and_members
                                 )
                                 values.append(aggregation)
@@ -974,6 +980,7 @@ class AggregationMTViewSet(AggregationViewSet):
     # work properly in subclasses
     model_class = ProdConsMT
     group_field = 'substance__group'
+    mt = True
 
     def get_queryset(self):
         return ProdConsMT.objects.filter(party=F('party__parent_party'))
@@ -1022,6 +1029,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
     # Custom class attribute needed for our custom list() implementation to
     # work properly in subclasses
     group_or_substance = 'group'
+    mt = False
 
     def list(self, request, *args, **kwargs):
         """
@@ -1108,7 +1116,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
                         **params_dict
                     })
                     populate_aggregation(
-                        aggregation, ['destroyed',], to_add,
+                        aggregation, self.mt, ['destroyed',], to_add,
                         exclude_eu_and_members
                     )
                     values.append(aggregation)
@@ -1137,7 +1145,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
                                 **params_dict
                             })
                             populate_aggregation(
-                                aggregation, ['destroyed',], entries,
+                                aggregation, self.mt, ['destroyed',], entries,
                                 exclude_eu_and_members
                             )
                             values.append(aggregation)
@@ -1164,6 +1172,7 @@ class AggregationDestructionMTViewSet(AggregationDestructionViewSet):
     # Custom class attribute needed for our custom list() implementation
     # (from AggregationDestructionViewSet) to work properly in this subclass.
     group_or_substance = 'substance'
+    mt = True
 
     def get_queryset(self):
         return ProdConsMT.objects.filter(party=F('party__parent_party'))
