@@ -31,6 +31,8 @@
               <multiselect
                 :placeholder="$gettext('Select option')"
                 trackBy="value"
+                :clear-on-select="true"
+                :close-on-select="false"
                 :hide-selected="true"
                 :multiple="true"
                 label="text"
@@ -43,6 +45,8 @@
               <multiselect
                 :placeholder="$gettext('Select option')"
                 trackBy="value"
+                :clear-on-select="true"
+                :close-on-select="false"
                 label="text"
                 :multiple="true"
                 :hide-selected="true"

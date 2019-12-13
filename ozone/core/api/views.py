@@ -2916,13 +2916,20 @@ def populate_essencrit_aggregation(aggregation, to_add, odp_tons):
     Helper function to populate an aggregation's fields based on a list
     of dictionaries containing key-value pairs for those fields.
     """
+    if odp_tons:
+        # ODP tons values should be rounded
+        rounding_method = partial(round_decimal_half_up, decimals=2)
+    else:
+        # Do not round metric tons values when populating MT aggregations
+        rounding_method = lambda x: x
+
     essential_use_quantities = [
         (a['quantity'] or Decimal(0)) * (a['substance__odp'] if odp_tons else Decimal(1))
         for a in to_add
         if not a['substance__has_critical_uses']
     ]
-    aggregation['quantity_essential'] = round_decimal_half_up(
-        sum(essential_use_quantities), 2
+    aggregation['quantity_essential'] = rounding_method(
+        sum(essential_use_quantities)
     ) if essential_use_quantities else None
 
     critical_use_quantities = [
@@ -2930,8 +2937,8 @@ def populate_essencrit_aggregation(aggregation, to_add, odp_tons):
         for a in to_add
         if a['substance__has_critical_uses']
     ]
-    aggregation['quantity_critical'] = round_decimal_half_up(
-        sum(critical_use_quantities), 2
+    aggregation['quantity_critical'] = rounding_method(
+        sum(critical_use_quantities)
     ) if critical_use_quantities else None
 
 

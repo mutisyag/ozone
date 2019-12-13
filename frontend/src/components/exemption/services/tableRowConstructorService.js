@@ -55,7 +55,7 @@ export default {
         selected: ''
       },
       set quantity_use_categories(val) {
-        if (has_critical_uses) {
+        if (has_critical_uses && section === 'approved') {
           this.quantity.icon = {
             tooltip: createTooltip(this.approved_uses, section, $gettext, critical_use_categories),
             fa: 'fa fa-info-circle fa-lg'
