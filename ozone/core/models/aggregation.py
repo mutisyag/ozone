@@ -310,7 +310,7 @@ class BaseProdCons(models.Model):
 
     @cached_property
     def is_european_union(self):
-        return self.id == eu_party_id()
+        return self.party.id == eu_party_id()
 
     @cached_property
     def is_after_2010(self):
