@@ -310,7 +310,7 @@ class BaseProdCons(models.Model):
 
     @cached_property
     def is_european_union(self):
-        return self.party.abbr == "EU"
+        return self.party.abbr == 'EU'
 
     @cached_property
     def is_after_2010(self):
@@ -711,15 +711,9 @@ class ProdConsMT(BaseProdCons):
         """
         Returns fields that should be rounded after all calculations are
         performed, together with the number of decimals to be rounded to.
+        MT aggregations should not be rounded.
         """
-        return {
-            'calculated_production': self.decimals,
-            'calculated_consumption': self.decimals,
-            'calculated_qps_production': self.decimals,
-            'calculated_qps_consumption': self.decimals,
-            'calculated_laboratory_production': 5,
-            'calculated_laboratory_consumption': 5,
-        }
+        return {}
 
     objects = ProdConsMTManager()
 
