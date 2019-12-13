@@ -7,7 +7,7 @@ from django.db import models
 from django.utils.functional import cached_property
 
 from .legal import ReportingPeriod
-from .party import Party, PartyHistory, eu_party_id
+from .party import Party, PartyHistory
 from .substance import Group, Substance
 from .utils import round_decimal_half_up, DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
 from .control import Limit, LimitTypes, Baseline
@@ -310,7 +310,7 @@ class BaseProdCons(models.Model):
 
     @cached_property
     def is_european_union(self):
-        return self.party.id == eu_party_id()
+        return self.party.abbr == 'EU'
 
     @cached_property
     def is_after_2010(self):
