@@ -150,16 +150,24 @@
 
           <template v-for="inputField in getTabInputFields" v-slot:[`cell(${inputField})`]="cell">
               <span
-                v-if="cell.item.originalObj[inputField].type === 'nonInput'"
+                v-if="cell.item.originalObj[inputField].type === 'nonInput' && cell.item.originalObj[inputField].tooltip"
                 class="edit-trigger"
                 :key="`${cell.item.index}_${inputField}_${tabName}`"
-                v-b-tooltip.hover="cell.item.originalObj[inputField].tooltip ? true : false"
+                v-b-tooltip.hover
                 :title="cell.item.originalObj[inputField].tooltip"
                 @click="createModalData(cell.item.originalObj, cell.item.index)"
               >
               <span class="input text-right">
                 {{(cell.item[inputField])}}
-                <i v-if="cell.item[inputField]" class="fa fa-info-circle fa-lg"></i>
+                <i v-if="cell.item[inputField] && cell.item.originalObj[inputField].tooltip" class="fa fa-info-circle fa-lg"></i>
+              </span>
+            </span>
+            <span
+                v-else-if="cell.item.originalObj[inputField].type === 'nonInput'"
+                :key="`${cell.item.index}_${inputField}_${tabName}`"
+              >
+              <span class="input disabled text-right">
+                {{(cell.item[inputField])}}
               </span>
             </span>
             <fieldGenerator
