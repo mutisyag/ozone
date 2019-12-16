@@ -297,18 +297,18 @@ class AggregationMixin:
                 reporting_period=submission.reporting_period,
                 group=group
             ).first()
-            if aggregation is None or aggregation.is_empty():
+            if aggregation is None:
                 continue
 
-            # Set all aggregation fields coming from this model to zero
-            for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
-                setattr(aggregation, aggr_field, Decimal('0.0'))
+            if not aggregation.is_empty():
+                # Set all aggregation fields coming from this model to zero
+                for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
+                    setattr(aggregation, aggr_field, Decimal('0.0'))
+                aggregation.save(invalidate_cache=invalidate_cache)
 
-            # If this has left the aggregation empty, delete it; else save
+            # If this has left the aggregation empty, delete it
             if aggregation.is_empty():
                 aggregation.delete(invalidate_cache=invalidate_cache)
-            else:
-                aggregation.save(invalidate_cache=invalidate_cache)
 
     @classmethod
     def clear_aggregated_mt_data(cls, submission, queryset):
@@ -334,12 +334,11 @@ class AggregationMixin:
                 submissions_set = set(aggregation.submissions[obligation_type])
                 submissions_set.remove(submission.id)
                 aggregation.submissions[obligation_type] = list(submissions_set)
+            aggregation.save()
 
             # If this has left the aggregation empty, delete it; else save
             if aggregation.is_empty():
                 aggregation.delete()
-            else:
-                aggregation.save()
 
     @classmethod
     def get_aggregated_data(

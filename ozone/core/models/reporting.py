@@ -1316,20 +1316,25 @@ class Submission(models.Model):
     def make_current(self):
         # Avoid race conditions
         with transaction.atomic():
-            # Find all other non-editable versions and make them superseded
-            versions = (
+            # Find all non-superseded (current) versions and make them
+            # superseded, also purging any aggregated data they generated
+            # (there should actually be at most one such version, but erring
+            # on the safe side).
+            current_versions = (
                 Submission.objects.select_for_update()
                 .filter(
                     party=self.party,
                     reporting_period=self.reporting_period,
                     obligation=self.obligation,
+                    flag_superseded=False
                 )
                 .exclude(pk=self.pk)
                 .exclude(_current_state__in=self.editable_states)
             )
-            for version in versions:
+            for version in current_versions:
                 version.flag_superseded = True
                 version.save(update_fields=('flag_superseded',))
+                version.purge_aggregated_data(invalidate_cache=False)
             self.flag_superseded = False
             self.save(update_fields=('flag_superseded',))
 
@@ -1560,9 +1565,6 @@ class Submission(models.Model):
         """
         if not self.obligation.is_aggregateable:
             return
-
-        # Cleanup aggregated data that's become stale
-        self.purge_aggregated_data(invalidate_cache=False)
 
         groups = self.get_reported_groups()
 
