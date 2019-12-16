@@ -22,6 +22,7 @@ class Reports(enum.Enum):
     PRODCONS_NA5_PARTIES = 'prodcons_na5_parties'
     RAF = 'raf'
     IMPEXP_NEW_REC = 'impexp_new_rec'
+    PROD_IMP_EXP = 'prod_imp_exp'
     IMPEXP_REC_SUBST = 'impexp_rec_subst'
     IMPEXP_NEW_REC_AGG = 'impexp_new_rec_agg'
     HFC_BASELINE = 'hfc_baseline'
@@ -152,6 +153,18 @@ class Reports(enum.Enum):
                 "display_name": "Import and export of new and recovered substances",
                 "description": _(
                     "Select one or more parties and one reporting period"
+                )
+            },
+        }
+
+    @staticmethod
+    def prod_imp_exp_info():
+        return {
+            **Reports.args(has_party_param=True, has_period_param=True),
+            **{
+                "display_name": "Production, import and export",
+                "description": _(
+                    "Select one or more reporting periods"
                 )
             },
         }

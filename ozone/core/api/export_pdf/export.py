@@ -16,6 +16,7 @@ from .reports import (
     hfc_baseline,
     baseline_prod_cons,
 )
+from .reports.prodcons.prod_imp_exp import get_prod_imp_exp_flowables
 
 from ozone.core.models import (
     ObligationTypes,
@@ -170,6 +171,19 @@ def export_impexp_new_rec(periods, parties):
 
     doc.build(
         list(impexp_new_rec.get_flowables(periods, parties)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_prod_imp_exp(periods, parties):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(get_prod_imp_exp_flowables(periods, parties)),
         onFirstPage=add_page_footer,
         onLaterPages=add_page_footer
     )
