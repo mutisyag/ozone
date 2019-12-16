@@ -2,7 +2,7 @@
 Introduction
 ************
 
-The Online Reporting Tool is provided by the Secretariat for the Vienna Convention for the Protection of the Ozone Layer
+The Online Reporting System is provided by the Secretariat for the Vienna Convention for the Protection of the Ozone Layer
 and for the Montreal Protocol on Substances that Deplete the Ozone Layer.
 
 | United Nations Environment Programme
