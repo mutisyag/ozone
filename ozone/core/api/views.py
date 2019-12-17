@@ -778,7 +778,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
             'updated_at'
         ).updated_at
 
-        return Response({'last_updated': str(updated)})
+        return Response({'last_updated': updated})
 
     def list_aggregated_data(
         self, queryset, aggregates, groupings, substance_to_group=False
