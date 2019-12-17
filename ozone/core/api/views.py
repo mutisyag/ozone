@@ -774,11 +774,11 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     def last_updated(self, request):
         queryset = self.filter_queryset(self.get_queryset())
         queryset = queryset.exclude(updated_at=None)
-        updated = None if not queryset else queryset.latest(
+        updated = None if not queryset.exists() else queryset.latest(
             'updated_at'
         ).updated_at
 
-        return Response({'last_updated': updated})
+        return Response({'last_updated': str(updated)})
 
     def list_aggregated_data(
         self, queryset, aggregates, groupings, substance_to_group=False
