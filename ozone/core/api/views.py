@@ -1162,9 +1162,14 @@ class AggregationDestructionMTViewSet(AggregationDestructionViewSet):
     Overrides the read-only AggregationDestructionViewSet to:
     - show only destruction-related information
     - ensure data is not broken down by substance
+
+    This view displays Metric Tons data for all annex groups
     """
-    # This view displays Metric Tons data for all annex groups
-    queryset = ProdConsMT.objects.filter(party=F('party__parent_party'))
+    # Exclude any non-controlled substances from queryset, they should not be
+    # taken into account.
+    queryset = ProdConsMT.objects.filter(
+        party=F('party__parent_party')
+    ).exclude(substance__group=None)
     serializer_class = AggregationDestructionMTSerializer
 
     filterset_class = AggregationDestructionViewFilterSet
@@ -1176,7 +1181,13 @@ class AggregationDestructionMTViewSet(AggregationDestructionViewSet):
     mt = True
 
     def get_queryset(self):
-        return ProdConsMT.objects.filter(party=F('party__parent_party'))
+        """
+        Exclude any non-controlled substances from queryset, they should not be
+        taken into account.
+        """
+        return ProdConsMT.objects.filter(
+            party=F('party__parent_party')
+        ).exclude(substance__group=None)
 
 
 class LimitPaginator(PageNumberPagination):
