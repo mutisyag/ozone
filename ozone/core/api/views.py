@@ -945,7 +945,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         groupings = groupings.split(',') if groupings else []
         if aggregates:
             return self.list_aggregated_data(
-                queryset, aggregates, groupings,  substance_to_group=False
+                queryset, aggregates, groupings, substance_to_group=False
             )
 
         page = self.paginate_queryset(queryset)
@@ -998,9 +998,18 @@ class AggregationMTViewSet(AggregationViewSet):
         aggregates = aggregates.split(',') if aggregates else []
         groupings = request.query_params.get('group_by', None)
         groupings = groupings.split(',') if groupings else []
-        return self.list_aggregated_data(
-            queryset, aggregates, groupings, substance_to_group=True
-        )
+        if aggregates:
+            return self.list_aggregated_data(
+                queryset, aggregates, groupings, substance_to_group=True
+            )
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class AggregationDestructionViewFilterSet(BaseAggregationViewFilterSet):
