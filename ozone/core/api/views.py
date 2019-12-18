@@ -805,6 +805,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         )
         parties = set(queryset.values_list('party', flat=True))
         all_values = queryset.values(
+            'id',
             *fields,
             'party', 'reporting_period', self.group_field,
             *grouping_mapping.values()
@@ -1072,6 +1073,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
         periods = set(queryset.values_list('reporting_period', flat=True))
         parties = set(queryset.values_list('party', flat=True))
         all_values = queryset.values(
+            'id',
             'destroyed', 'party', 'reporting_period',
             self.group_or_substance,
             *grouping_mapping.values()
@@ -3072,6 +3074,7 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
         groups = set(value[2] for value in values_list)
 
         all_values = queryset.values(
+            'id',
             'quantity', 'submission__party', 'submission__reporting_period',
             'substance_id', 'substance__odp', 'substance__group',
             'substance__has_critical_uses',
