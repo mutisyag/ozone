@@ -198,7 +198,7 @@ class AggregationMixin:
 
         fields_values = cls.objects.filter(
             submission=submission, substance__group__id=group.id
-        ).values(potential_field, *field_names)
+        ).values('id', potential_field, *field_names)
 
         return {
             field_name: sum(
@@ -592,7 +592,7 @@ class BaseImportExportReport(models.Model):
             blend__isnull=False
         )
         values = substance_entries.values(
-            'substance', party_field, *totals_fields, *quantity_fields
+            'id', 'substance', party_field, *totals_fields, *quantity_fields
         )
 
         for entry in values:
