@@ -965,6 +965,8 @@ class AggregationMTViewSet(AggregationViewSet):
         party=F('party__parent_party')
     ).prefetch_related(
         'substance__group'
+    ).exclude(
+        substance__group=None
     )
     # Actually, in all use cases of this ViewSet, everything will be serialized
     # through the AggregationSerializer. However, we need this here to avoid
@@ -984,7 +986,13 @@ class AggregationMTViewSet(AggregationViewSet):
     mt = True
 
     def get_queryset(self):
-        return ProdConsMT.objects.filter(party=F('party__parent_party'))
+        return ProdConsMT.objects.filter(
+            party=F('party__parent_party')
+        ).prefetch_related(
+            'substance__group'
+        ).exclude(
+            substance__group=None
+        )
 
     def list(self, request, *args, **kwargs):
         """
