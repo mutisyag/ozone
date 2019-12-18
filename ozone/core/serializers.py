@@ -1820,6 +1820,9 @@ class AggregationMTSerializer(serializers.ModelSerializer):
     region = serializers.PrimaryKeyRelatedField(
         source='party.subregion.region.id', read_only=True
     )
+    group = serializers.PrimaryKeyRelatedField(
+        source='substance.group', read_only=True
+    )
 
     class Meta:
         model = ProdConsMT
