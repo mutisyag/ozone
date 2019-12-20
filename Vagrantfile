@@ -14,9 +14,15 @@ Vagrant.configure("2") do |config|
   config.vm.provider :vmck do |vmck|
     vmck.image_path = "imgbuild-master.qcow2.tar.gz"
     vmck.vmck_url = ENV["VMCK_URL"]
-    vmck.memory = 8000
+    vmck.memory = 4000
     vmck.cpus = 2
     vmck.name = ENV["VMCK_NAME"] || "ozone"
+  end
+
+  config.vm.provider :virtualbox do |vb, override|
+    override.vm.box = "hashicorp/bionic64"
+    config.vm.network :forwarded_port, guest: 8000, host: 8000
+    vb.memory = 4000
   end
 
   config.vm.provision :shell, privileged: false, path: "utility/vagrant_provision.sh"

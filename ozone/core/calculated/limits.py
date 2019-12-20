@@ -367,7 +367,7 @@ def admin_view(request, context):
             raise RuntimeError(f"Unexpected step {step!r}")
 
     context['parties'] = Party.get_main_parties()
-    context['reporting_periods'] = ReportingPeriod.objects.all()
+    context['reporting_periods'] = ReportingPeriod.objects.order_by('-start_date').all()
     context['groups'] = Group.objects.all()
 
     return TemplateResponse(request, 'admin/ozone_tools/generate_limits.html', context)

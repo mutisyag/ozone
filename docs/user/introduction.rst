@@ -3,7 +3,7 @@ Introduction
 ************
 
 The Online Reporting System is provided by the Secretariat for the Vienna Convention for the Protection of the Ozone Layer
-and for the Montreal Protocol on Substances that Deplete the Ozone Layer.
+and for the Montreal Protocol on Substances that Deplete the Ozone Layer to facilitate the submission of data and information required under various reporting obligations.
 
 | United Nations Environment Programme
 | Nairobi, Kenya
@@ -15,15 +15,15 @@ Accessing the system
 
 .. index:: Login, Username, Password, Account, Forgot password
 
-The Online Reporting Tool is available online at https://ors.ozone.unep.org.
+The Online Reporting System is available online at https://ors.ozone.unep.org.
 
 You can request one or several user accounts by contacting the Secretariat.
 
 
 In case you do not remember the login credentials, you can set a new password 
-by accessing the `Forgotten your password or username?` link in the Login page.
+by accessing the "Forgotten your password or username?" link in the Login page.
 You will need to enter the e-mail address associated to your account.
-After pressing the :guilabel:`Reset my password` button, you will receive an e-mail
+After pressing the :guilabel:`"Reset my password"` button, you will receive an e-mail
 containing the username and an one-time link which allows entering a new password.
 
 

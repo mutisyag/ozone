@@ -1,6 +1,8 @@
 from decimal import Decimal
 
+from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import PageBreak
+from reportlab.platypus import Paragraph
 
 from ozone.core.models import Obligation
 from ozone.core.models import ObligationTypes
@@ -80,3 +82,17 @@ def export_labuse_report(periods):
 
         yield table.done()
         yield PageBreak()
+
+
+class LabUseReport(util.Report):
+
+    name = 'labuse'
+    has_period_param = True
+    display_name = "Laboratory and analytical uses"
+    description = _("Select one or more parties")
+
+    def get_flowables(self):
+        return (
+            list(export_labuse_report(self.periods)) or
+            [Paragraph('No data', util.left_paragraph_style)]
+        )
