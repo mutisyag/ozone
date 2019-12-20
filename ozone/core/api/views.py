@@ -68,11 +68,9 @@ from ..models import (
     ProdCons,
     ProdConsMT,
     Limit,
-    Reports,
     Email,
     EmailTemplate,
     CriticalUseCategory,
-    ObligationTypes,
     DeviationType,
     DeviationSource,
     PlanOfActionDecision,
@@ -173,25 +171,9 @@ from ..serializers import (
     EssentialCriticalMTSerializer,
 )
 
-
-from .export_pdf import (
-    export_submissions,
-    export_labuse,
-    export_baseline_hfc_raw,
-    export_prodcons,
-    export_prodcons_by_region,
-    export_prodcons_a5_summary,
-    export_prodcons_parties,
-    export_impexp_new_rec,
-    export_impexp_rec_subst,
-    export_impexp_new_rec_agg,
-    export_hfc_baseline,
-    export_baseline_prod_a5,
-    export_baseline_cons_a5,
-    export_baseline_prodcons_na5,
-)
-
 from ..models.utils import round_decimal_half_up
+
+from ozone.core.api.export_pdf import reports
 
 User = get_user_model()
 
@@ -773,7 +755,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     def last_updated(self, request):
         queryset = self.filter_queryset(self.get_queryset())
         queryset = queryset.exclude(updated_at=None)
-        updated = None if not queryset else queryset.latest(
+        updated = None if not queryset.exists() else queryset.latest(
             'updated_at'
         ).updated_at
 
@@ -804,6 +786,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         )
         parties = set(queryset.values_list('party', flat=True))
         all_values = queryset.values(
+            'id',
             *fields,
             'party', 'reporting_period', self.group_field,
             *grouping_mapping.values()
@@ -944,7 +927,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         groupings = groupings.split(',') if groupings else []
         if aggregates:
             return self.list_aggregated_data(
-                queryset, aggregates, groupings,  substance_to_group=False
+                queryset, aggregates, groupings, substance_to_group=False
             )
 
         page = self.paginate_queryset(queryset)
@@ -964,6 +947,8 @@ class AggregationMTViewSet(AggregationViewSet):
         party=F('party__parent_party')
     ).prefetch_related(
         'substance__group'
+    ).exclude(
+        substance__group=None
     )
     # Actually, in all use cases of this ViewSet, everything will be serialized
     # through the AggregationSerializer. However, we need this here to avoid
@@ -983,7 +968,13 @@ class AggregationMTViewSet(AggregationViewSet):
     mt = True
 
     def get_queryset(self):
-        return ProdConsMT.objects.filter(party=F('party__parent_party'))
+        return ProdConsMT.objects.filter(
+            party=F('party__parent_party')
+        ).prefetch_related(
+            'substance__group'
+        ).exclude(
+            substance__group=None
+        )
 
     def list(self, request, *args, **kwargs):
         """
@@ -997,9 +988,18 @@ class AggregationMTViewSet(AggregationViewSet):
         aggregates = aggregates.split(',') if aggregates else []
         groupings = request.query_params.get('group_by', None)
         groupings = groupings.split(',') if groupings else []
-        return self.list_aggregated_data(
-            queryset, aggregates, groupings, substance_to_group=True
-        )
+        if aggregates:
+            return self.list_aggregated_data(
+                queryset, aggregates, groupings, substance_to_group=True
+            )
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class AggregationDestructionViewFilterSet(BaseAggregationViewFilterSet):
@@ -1054,6 +1054,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
         periods = set(queryset.values_list('reporting_period', flat=True))
         parties = set(queryset.values_list('party', flat=True))
         all_values = queryset.values(
+            'id',
             'destroyed', 'party', 'reporting_period',
             self.group_or_substance,
             *grouping_mapping.values()
@@ -1161,9 +1162,14 @@ class AggregationDestructionMTViewSet(AggregationDestructionViewSet):
     Overrides the read-only AggregationDestructionViewSet to:
     - show only destruction-related information
     - ensure data is not broken down by substance
+
+    This view displays Metric Tons data for all annex groups
     """
-    # This view displays Metric Tons data for all annex groups
-    queryset = ProdConsMT.objects.filter(party=F('party__parent_party'))
+    # Exclude any non-controlled substances from queryset, they should not be
+    # taken into account.
+    queryset = ProdConsMT.objects.filter(
+        party=F('party__parent_party')
+    ).exclude(substance__group=None)
     serializer_class = AggregationDestructionMTSerializer
 
     filterset_class = AggregationDestructionViewFilterSet
@@ -1175,7 +1181,13 @@ class AggregationDestructionMTViewSet(AggregationDestructionViewSet):
     mt = True
 
     def get_queryset(self):
-        return ProdConsMT.objects.filter(party=F('party__parent_party'))
+        """
+        Exclude any non-controlled substances from queryset, they should not be
+        taken into account.
+        """
+        return ProdConsMT.objects.filter(
+            party=F('party__parent_party')
+        ).exclude(substance__group=None)
 
 
 class LimitPaginator(PageNumberPagination):
@@ -1584,25 +1596,23 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def export_pdf(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
-        timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')
         obligation = submission.obligation._obligation_type
-        filename = f'{obligation}_{pk}_{timestamp}.pdf'
-        buf_pdf = export_submissions(submission.obligation, [submission])
-        resp = HttpResponse(buf_pdf, content_type='application/pdf')
-        resp['Content-Disposition'] = f'attachment; filename="{filename}"'
-        resp['Access-Control-Expose-Headers'] = 'Content-Disposition'
-        return resp
+
+        if obligation == 'art7':
+            cls = reports.Art7RawdataReport
+        elif obligation == 'raf':
+            cls = reports.RafReport
+        else:
+            raise RuntimeError(f"Unknown obligation {obligation!r}")
+
+        report = cls.for_submission(submission)
+        return report.render_to_response()
 
     @action(detail=True, methods=["get"])
     def export_prodcons_pdf(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
-        timestamp = datetime.now().strftime('%Y-%m-%d')
-        filename = f'prodcons_{pk}_{timestamp}.pdf'
-        buf_pdf = export_prodcons(submission=submission, periods=None, parties=None)
-        resp = HttpResponse(buf_pdf, content_type='application/pdf')
-        resp['Content-Disposition'] = f'attachment; filename="{filename}"'
-        resp['Access-Control-Expose-Headers'] = 'Content-Disposition'
-        return resp
+        report = reports.ProdConsReport.for_submission(submission)
+        return report.render_to_response()
 
     @action(detail=True, methods=["get"])
     def aggregations(self, request, submission_pk=None, pk=None):
@@ -2547,207 +2557,15 @@ class ReportsViewSet(viewsets.ViewSet):
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
-        return Response(Reports.items())
+        return Response([r.api_description() for r in reports.registry])
 
-    def _response_pdf(self, base_name, buf_pdf):
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f'{base_name}_{timestamp}.pdf'
-        resp = HttpResponse(buf_pdf, content_type='application/pdf')
-        resp['Content-Disposition'] = f'attachment; filename="{filename}"'
-        resp['Access-Control-Expose-Headers'] = 'Content-Disposition'
-        return resp
+    def retrieve(self, request, pk):
+        try:
+            report = reports.by_name[pk]
+        except KeyError:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def _get_parties(self, request):
-        parties = request.GET.getlist(key='party')
-        if request.user.is_secretariat:
-            qs = Party.get_main_parties()
-            if parties:
-                qs = qs.filter(pk__in=parties)
-        else:
-            qs = Party.objects.filter(
-                pk=request.user.party_id
-            )
-        return qs.order_by('name')
-
-    def _get_periods(self, request):
-        reporting_periods = request.GET.getlist(key='period')
-        qs = ReportingPeriod.get_past_periods()
-        if reporting_periods:
-            qs = qs.filter(pk__in=reporting_periods)
-        return qs.order_by('-start_date')
-
-    def get_submissions(self, obligation, periods, parties):
-        submissions = list()
-        for period in periods:
-            for party in parties:
-                sub = Submission.latest_submitted(
-                    obligation, party, period
-                )
-                if sub:
-                    submissions.append(sub)
-        return submissions
-
-    @action(detail=False, methods=["get"])
-    def art7_raw(self, request):
-        parties = self._get_parties(request)
-        periods = self._get_periods(request)
-        params = "%s_%s" % (
-            "_".join(p.abbr for p in parties),
-            "_".join(p.name for p in periods),
-        )
-        art7 = Obligation.objects.get(_obligation_type=ObligationTypes.ART7.value)
-        return self._response_pdf(
-            f'art7raw_{params}',
-            export_submissions(art7, self.get_submissions(art7, periods, parties))
-        )
-
-    @action(detail=False, methods=["get"])
-    def baseline_hfc_raw(self, request):
-        parties = self._get_parties(request)
-        params = "_".join(p.abbr for p in parties)
-        return self._response_pdf(
-            f'art7raw_{params}',
-            export_baseline_hfc_raw(parties),
-        )
-
-    @action(detail=False, methods=["get"])
-    def labuse(self, request):
-        periods = self._get_periods(request)
-        params = "_".join(p.name for p in periods)
-        return self._response_pdf(
-            f'art7raw_{params}',
-            export_labuse(periods),
-        )
-
-    @action(detail=False, methods=["get"])
-    def prodcons(self, request):
-        parties = self._get_parties(request)
-        periods = self._get_periods(request)
-        params = "%s_%s" % (
-            "_".join(p.abbr for p in parties),
-            "_".join(p.name for p in periods),
-        )
-        return self._response_pdf(
-            f'prodcons_{params}',
-            export_prodcons(submission=None, periods=periods, parties=parties)
-        )
-
-    @action(detail=False, methods=["get"])
-    def prodcons_by_region(self, request):
-        periods = self._get_periods(request)
-        params = "_".join(p.name for p in periods)
-        return self._response_pdf(
-            f'prodcons_by_region_{params}',
-            export_prodcons_by_region(periods=periods),
-        )
-
-    @action(detail=False, methods=["get"])
-    def prodcons_a5_summary(self, request):
-        periods = self._get_periods(request)
-        params = "_".join(p.name for p in periods)
-        return self._response_pdf(
-            f'prodcons_a5_summary_{params}',
-            export_prodcons_a5_summary(periods=periods),
-        )
-
-    @action(detail=False, methods=["get"])
-    def prodcons_a5_parties(self, request):
-        periods = self._get_periods(request)
-        params = "_".join(p.name for p in periods)
-        return self._response_pdf(
-            f'prodcons_a5_parties_{params}',
-            export_prodcons_parties(periods=periods, is_article5=True),
-        )
-
-    @action(detail=False, methods=["get"])
-    def prodcons_na5_parties(self, request):
-        periods = self._get_periods(request)
-        params = "_".join(p.name for p in periods)
-        return self._response_pdf(
-            f'prodcons_na5_parties_{params}',
-            export_prodcons_parties(periods=periods, is_article5=False),
-        )
-
-    @action(detail=False, methods=["get"])
-    def raf(self, request):
-        parties = self._get_parties(request)
-        periods = self._get_periods(request)
-        params = "%s_%s" % (
-            "_".join(p.abbr for p in parties),
-            "_".join(p.name for p in periods),
-        )
-        raf = Obligation.objects.get(_obligation_type=ObligationTypes.ESSENCRIT.value)
-        return self._response_pdf(
-            f'raf_{params}',
-            export_submissions(raf, self.get_submissions(raf, periods, parties))
-        )
-
-    @action(detail=False, methods=["get"])
-    def impexp_new_rec(self, request):
-        parties = self._get_parties(request)
-        periods = self._get_periods(request)
-        params = "%s_%s" % (
-            "_".join(p.abbr for p in parties),
-            "_".join(p.name for p in periods),
-        )
-        return self._response_pdf(
-            f'impexp_new_rec_{params}',
-            export_impexp_new_rec(periods=periods, parties=parties)
-        )
-
-    @action(detail=False, methods=["get"])
-    def impexp_rec_subst(self, request):
-        periods = self._get_periods(request)
-        params = "_".join(p.name for p in periods)
-        return self._response_pdf(
-            f'impexp_rec_subst_{params}',
-            export_impexp_rec_subst(periods=periods)
-        )
-
-    @action(detail=False, methods=["get"])
-    def impexp_new_rec_agg(self, request):
-        periods = self._get_periods(request)
-        params = "_".join(p.name for p in periods)
-        return self._response_pdf(
-            f'impexp_rec_subst_{params}',
-            export_impexp_new_rec_agg(periods=periods)
-        )
-
-    @action(detail=False, methods=["get"])
-    def hfc_baseline(self, request):
-        parties = self._get_parties(request)
-        params = "_".join(p.abbr for p in parties)
-        return self._response_pdf(
-            f'hfc_baseline_{params}',
-            export_hfc_baseline(parties=parties)
-        )
-
-    @action(detail=False, methods=["get"])
-    def baseline_prod_a5(self, request):
-        parties = self._get_parties(request)
-        params = "_".join(p.abbr for p in parties)
-        return self._response_pdf(
-            f'baseline_prod_a5_{params}',
-            export_baseline_prod_a5(parties=parties)
-        )
-
-    @action(detail=False, methods=["get"])
-    def baseline_cons_a5(self, request):
-        parties = self._get_parties(request)
-        params = "_".join(p.abbr for p in parties)
-        return self._response_pdf(
-            f'baseline_cons_a5_{params}',
-            export_baseline_cons_a5(parties=parties)
-        )
-
-    @action(detail=False, methods=["get"])
-    def baseline_prodcons_na5(self, request):
-        parties = self._get_parties(request)
-        params = "_".join(p.abbr for p in parties)
-        return self._response_pdf(
-            f'baseline_cons_a5_{params}',
-            export_baseline_prodcons_na5(parties=parties)
-        )
+        return report.from_request(request).render_to_response()
 
 
 class CriticalUseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -3030,6 +2848,7 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
         groups = set(value[2] for value in values_list)
 
         all_values = queryset.values(
+            'id',
             'quantity', 'submission__party', 'submission__reporting_period',
             'substance_id', 'substance__odp', 'substance__group',
             'substance__has_critical_uses',

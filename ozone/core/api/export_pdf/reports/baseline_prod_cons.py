@@ -1,6 +1,7 @@
 from collections import defaultdict
 from decimal import Decimal
 
+from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 from reportlab.platypus import PageBreak
 
@@ -10,7 +11,6 @@ from ozone.core.models import Party
 from ozone.core.models import PartyHistory
 from ozone.core.models import ProdCons
 from ozone.core.models import ReportingPeriod
-from ozone.core.models.utils import round_decimal_half_up
 
 from ..util import h2_style
 from ..util import SINGLE_HEADER_TABLE_STYLES
@@ -20,6 +20,7 @@ from ..util import smb_l
 from ..util import smb_r
 from ..util import sm_r
 from ..util import format_decimal
+from ..util import Report
 
 from .prodcons.data import ValueNormalizer
 from .prodcons.data import ValueFormatter
@@ -283,35 +284,56 @@ def filter_by_art5(parties, is_article5):
     return list(Party.objects.filter(history__in=histories))
 
 
-def get_prod_a5_flowables(parties):
-    for group in Group.objects.filter(group_id__in=relevant_groups):
+class BaselineProdA5Report(Report):
+
+    name = "baseline_prod_a5"
+    has_party_param = True
+    display_name = "Baseline production - Art5 parties"
+    description = _("Select one or more parties, or leave blank for all")
+
+    def get_flowables(self):
+        for group in Group.objects.filter(group_id__in=relevant_groups):
+            yield Paragraph(
+                f"{group.group_id} ({group.description}) "
+                f"Production Baseline Data for Article 5 Parties (ODP tonnes)",
+                h2_style,
+            )
+            table = ProductionGroupTable(group, filter_by_art5(self.parties, True))
+            yield from table.render()
+
+
+class BaselineConsA5Report(Report):
+
+    name = "baseline_cons_a5"
+    has_party_param = True
+    display_name = "Baseline consumption - Art5 parties"
+    description = _("Select one or more parties, or leave blank for all")
+
+    def get_flowables(self):
+        for group in Group.objects.filter(group_id__in=relevant_groups):
+            yield Paragraph(
+                f"{group.group_id} ({group.description}) "
+                f"Consumption Baseline Data for Article 5 Parties (ODP tonnes)",
+                h2_style,
+            )
+            table = ConsumptionGroupTable(group, filter_by_art5(self.parties, True))
+            yield from table.render()
+
+
+class BaselineProdConsNA5Report(Report):
+
+    name = "baseline_prodcons_na5"
+    has_party_param = True
+    display_name = "Baseline C/I production and consumption - Non-Art5 parties"
+    description = _("Select one or more parties, or leave blank for all")
+
+    def get_flowables(self):
+        period = ReportingPeriod.objects.get(name="1989")
         yield Paragraph(
-            f"{group.group_id} ({group.description}) "
-            f"Production Baseline Data for Article 5 Parties (ODP tonnes)",
+            f"{period.name} Production and Consumption "
+            f"of CI substances for Non-Article 5 Parties",
             h2_style,
         )
-        table = ProductionGroupTable(group, filter_by_art5(parties, True))
-        yield from table.render()
 
-
-def get_cons_a5_flowables(parties):
-    for group in Group.objects.filter(group_id__in=relevant_groups):
-        yield Paragraph(
-            f"{group.group_id} ({group.description}) "
-            f"Consumption Baseline Data for Article 5 Parties (ODP tonnes)",
-            h2_style,
-        )
-        table = ConsumptionGroupTable(group, filter_by_art5(parties, True))
-        yield from table.render()
-
-
-def get_prodcons_na5_flowables(parties):
-    period = ReportingPeriod.objects.get(name="1989")
-    yield Paragraph(
-        f"{period.name} Production and Consumption "
-        f"of CI substances for Non-Article 5 Paties",
-        h2_style,
-    )
-
-    table = ProdConsBaselineTable(period, filter_by_art5(parties, False))
-    yield table.render()
+        table = ProdConsBaselineTable(period, filter_by_art5(self.parties, False))
+        yield table.render()

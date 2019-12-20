@@ -11,7 +11,6 @@ from .transfer import *
 from .legal import *
 from .file import *
 from .aggregation import *
-from .report import *
 from .email import *
 from .deviation import *
 from .plans_of_action import *

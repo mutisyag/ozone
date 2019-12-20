@@ -444,7 +444,11 @@ class BaseProdCons(models.Model):
                 self.production_laboratory_analytical_uses
 
         if self.is_eu_member:
-            self.calculated_laboratory_consumption = None
+            self.calculated_laboratory_consumption = \
+                self.production_laboratory_analytical_uses
+        elif self.is_european_union:
+            self.calculated_laboratory_consumption = \
+                self.import_laboratory_uses
         else:
             self.calculated_laboratory_consumption = (
                 self.import_laboratory_uses
