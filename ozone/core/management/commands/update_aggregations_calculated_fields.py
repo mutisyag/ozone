@@ -9,6 +9,7 @@ from ozone.core.models import (
     Party,
     ReportingPeriod,
 )
+from ozone.core.utils.cache import invalidate_party_cache
 
 logger = logging.getLogger(__name__)
 
@@ -92,7 +93,7 @@ class Command(BaseCommand):
             if options['confirm']:
                 logger.info(f"Recalculating ODP data for {a}")
                 # This triggers a recalculation of the totals
-                a.save()
+                a.save(invalidate_cache=False)
             else:
                 logger.debug(f"Found ODP aggregation {a.id}")
 
@@ -103,3 +104,7 @@ class Command(BaseCommand):
                 a.save()
             else:
                 logger.debug(f"Found MT aggregation {a.id}")
+
+        for party in set(prodcons_queryset.values_list('party_id', flat=True)):
+            logger.info(f'Invalidating cache for: {party}')
+            invalidate_party_cache(party)
