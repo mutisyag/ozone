@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import PageBreak
 
 from ozone.core.models import Blend
@@ -21,9 +22,11 @@ from .labuse_report import export_labuse_report
 
 from ..util import exclude_blend_items
 from ..util import filter_lab_uses
+from ..util import Report
+from ..util import ReportForSubmission
+from ..util import get_submissions
 
 __all__ = [
-    'export_submissions',
     'export_labuse_report',
 ]
 
@@ -71,6 +74,26 @@ def export_submissions(submissions):
         )
 
         yield PageBreak()
+
+
+class Art7RawdataReport(ReportForSubmission):
+
+    name = "art7_raw"
+    has_party_param = True
+    has_period_param = True
+    display_name = "Raw data reported - Article 7"
+    description = _("Select one or more parties and one or more reporting periods")
+    landscape = True
+
+    def get_flowables(self):
+        if self.submission:
+            submissions = [self.submission]
+
+        else:
+            art7 = Obligation.objects.get(_obligation_type=ObligationTypes.ART7.value)
+            submissions = get_submissions(art7, self.periods, self.parties)
+
+        yield from export_submissions(submissions)
 
 
 class SubstanceFilter:
@@ -175,3 +198,14 @@ def export_baseline_hfc_raw(parties):
                 raise RuntimeError(f"No art7 submission for {party} {period}")
 
             yield from baseline_hfc_raw_page(submission, substance_filter)
+
+
+class BaselineHfcRawReport(Report):
+
+    name = "baseline_hfc_raw"
+    has_party_param = True
+    display_name = "HFC baseline - raw data reported"
+    description = _("Select one or more parties")
+
+    def get_flowables(self):
+        yield from export_baseline_hfc_raw(self.parties)

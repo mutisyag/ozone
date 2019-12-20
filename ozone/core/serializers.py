@@ -20,7 +20,6 @@ from .models import (
     PartyHistory,
     ReportingPeriod,
     Obligation,
-    ObligationTypes,
     Substance,
     Group,
     BlendComponent,
@@ -75,8 +74,7 @@ from .models import (
     ORMReport,
     MultilateralFund,
 )
-from .models.report import Reports
-from ozone.core.api import export_pdf
+from ozone.core.api.export_pdf import reports
 
 User = get_user_model()
 
@@ -1850,35 +1848,26 @@ def guess_mimetype(filename, default='application/octet-stream'):
 def generate_report(report, submission):
     party = submission.party
     period = submission.reporting_period
-
     filename = f"{report}_{party.abbr}_{period.name}.pdf"
 
-    if report == Reports.ART7_RAW.value:
-        art7 = Obligation.objects.get(
-            _obligation_type=ObligationTypes.ART7.value)
-        data = export_pdf.export_submissions(art7, [submission])
-        return {
-            'title': Reports.art7_raw_info()['display_name'],
-            'filename': filename,
-            'data': data.getvalue(),
-            'mime_type': 'application/pdf',
-        }
+    if report == reports.Art7RawdataReport.name:
+        cls = reports.Art7RawdataReport
 
-    elif report == Reports.PRODCONS.value:
-        data = export_pdf.export_prodcons(
-            submission=submission,
-            periods=None,
-            parties=None,
-        )
-        return {
-            'title': Reports.prodcons_info()['display_name'],
-            'filename': filename,
-            'data': data.getvalue(),
-            'mime_type': 'application/pdf',
-        }
+    elif report == reports.ProdConsReport.name:
+        cls = reports.ProdConsReport
 
     else:
         raise ValueError(f"Unknown report type {report!r}")
+
+    report = cls.for_submission(submission)
+    data = report.render()
+    with open(f'/vagrant/tmp/{filename}', 'wb') as f: f.write(data.getvalue())
+    return {
+        'title': cls.display_name,
+        'filename': filename,
+        'data': data.getvalue(),
+        'mime_type': 'application/pdf',
+    }
 
 
 class EmailSerializer(serializers.ModelSerializer):
@@ -1954,15 +1943,15 @@ class EmailTemplateSerializer(serializers.ModelSerializer):
     attachments = EmailTemplateAttachmentSerializer(many=True, read_only=True)
     generated_attachments = serializers.ReadOnlyField(default=[
         {
-            'id': Reports.ART7_RAW.value,
+            'id': reports.Art7RawdataReport.name,
             'filename': 'art7raw_{party}_{period}.pdf',
-            'title': Reports.art7_raw_info()['display_name'],
+            'title': reports.Art7RawdataReport.display_name,
             'source': 'generate_report',
         },
         {
-            'id': Reports.PRODCONS.value,
+            'id': reports.ProdConsReport.name,
             'filename': 'prodcons_{party}_{period}.pdf',
-            'title': Reports.prodcons_info()['display_name'],
+            'title': reports.ProdConsReport.display_name,
             'source': 'generate_report',
         },
     ])

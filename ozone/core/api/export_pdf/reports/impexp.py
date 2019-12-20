@@ -1,6 +1,7 @@
 from collections import defaultdict
 from decimal import Decimal
 
+from django.utils.translation import gettext_lazy as _
 from django.db.models import Sum
 from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
@@ -29,6 +30,7 @@ from ..util import col_widths
 from ..util import TableBuilder
 from ..util import format_decimal
 from ..util import bold_centered_paragraph_style
+from ..util import Report
 
 
 class Sums(defaultdict):
@@ -188,15 +190,22 @@ class RecoveredImportExportTable:
         return self.builder.done()
 
 
-def get_rec_subst_flowables(periods):
-    for period in periods:
-        yield Paragraph(
-            f"Recovered imports and exports in {period.name} (Tonnes)",
-            h1_style,
-        )
-        table = RecoveredImportExportTable(period)
-        yield table.render()
-        yield PageBreak()
+class ImportExportRecoveredSubstancesReport(Report):
+
+    name = "impexp_rec_subst"
+    has_period_param = True
+    display_name = "Import and export of recovered substances - by party and substance"
+    description = _("Select one or more reporting periods")
+
+    def get_flowables(self):
+        for period in self.periods:
+            yield Paragraph(
+                f"Recovered imports and exports in {period.name} (Tonnes)",
+                h1_style,
+            )
+            table = RecoveredImportExportTable(period)
+            yield table.render()
+            yield PageBreak()
 
 
 class NewRecoveredImportExportAggregateTable:
@@ -283,16 +292,23 @@ class NewRecoveredImportExportAggregateTable:
         return self.builder.done()
 
 
-def get_impexp_new_rec_agg_flowables(periods):
-    for period in periods:
-        yield Paragraph(
-            f"{period.name} import and export of new and recovered substances ",
-            h1_style,
-        )
-        yield Paragraph(
-            f"(in ODP tonnes for annexes A,B,C,E and CO2-equivalent tonnes for annex F)",
-            centered_paragraph_style,
-        )
-        table = NewRecoveredImportExportAggregateTable(period)
-        yield table.render()
-        yield PageBreak()
+class ImportExportNewRecoveredAggregateReport(Report):
+
+    name = "impexp_new_rec_agg"
+    has_period_param = True
+    display_name = "Import and export of new and recovered substances - summary by Art5 status"
+    description = _("Select one or more reporting periods")
+
+    def get_flowables(self):
+        for period in self.periods:
+            yield Paragraph(
+                f"{period.name} import and export of new and recovered substances ",
+                h1_style,
+            )
+            yield Paragraph(
+                f"(in ODP tonnes for annexes A,B,C,E and CO2-equivalent tonnes for annex F)",
+                centered_paragraph_style,
+            )
+            table = NewRecoveredImportExportAggregateTable(period)
+            yield table.render()
+            yield PageBreak()

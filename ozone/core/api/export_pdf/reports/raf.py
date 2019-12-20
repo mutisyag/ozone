@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph, Table
 from reportlab.platypus import PageBreak
 
+from ozone.core.models import Obligation
+from ozone.core.models import ObligationTypes
 from ozone.core.models.utils import sum_decimals, subtract_decimals
 
 from ..util import (
@@ -13,11 +15,12 @@ from ..util import (
     TABLE_STYLES, grid_color,
     col_widths, format_decimal, get_remarks,
 )
+from ..util import ReportForSubmission
+from ..util import get_submissions
 
 
 __all__ = [
     'get_flowables',
-    'export_submissions',
 ]
 
 TABLE_CUSTOM_STYLES = (
@@ -226,7 +229,7 @@ def get_table_data_essen_crit(data, reporting_period, base_row_index, on_hand_fu
             span_columns = (*range(0, 4), *range(6, 16))
             styles.extend([
                 #  Vertical span of common columns for all exempted rows
-                ('SPAN', (col, row_index), (col, row_index+len(imports)))
+                ('SPAN', (col, row_index), (col, row_index + len(imports)))
                 for col in span_columns
             ])
 
@@ -275,7 +278,7 @@ def get_table_essen(submissions):
     rows = get_table_header_essen()
     num_header_rows = len(rows)
     for submission in submissions:
-        row_data, row_styles = get_table_data_essen(submission, len(rows)-1)
+        row_data, row_styles = get_table_data_essen(submission, len(rows) - 1)
         rows += row_data
         styles += row_styles
     widths = col_widths([0.9, 2.5, 1.5, 1.5, 1.3, 2.5, 1.5, 1.5, 1.5, 1.5, 1.8, 1.5, 1.3, 1.2, 0.8, 4.0])
@@ -289,7 +292,7 @@ def get_table_crit(submissions):
     rows = get_table_header_crit()
     num_header_rows = len(rows)
     for submission in submissions:
-        row_data, row_styles = get_table_data_crit(submission, len(rows)-1)
+        row_data, row_styles = get_table_data_crit(submission, len(rows) - 1)
         rows += row_data
         styles += row_styles
     widths = col_widths([0.9, 0, 1.5, 1.5, 1.3, 2.5, 1.5, 1.5, 1.5, 1.5, 1.8, 1.5, 1.3, 1.2, 0.8, 6.5])
@@ -380,3 +383,23 @@ def export_submissions(submissions):
     for party in sorted(data.keys()):
         flowables += get_flowables(party, data[party])
     return flowables
+
+
+class RafReport(ReportForSubmission):
+
+    name = "raf"
+    has_party_param = True
+    has_period_param = True
+    display_name = "Reporting accounting framework essential and critical uses"
+    description = _("Select one or more parties and one or more reporting periods")
+    landscape = True
+
+    def get_flowables(self):
+        if self.submission:
+            submissions = [self.submission]
+
+        else:
+            raf = Obligation.objects.get(_obligation_type=ObligationTypes.ESSENCRIT.value)
+            submissions = get_submissions(raf, self.periods, self.parties)
+
+        yield from export_submissions(submissions)

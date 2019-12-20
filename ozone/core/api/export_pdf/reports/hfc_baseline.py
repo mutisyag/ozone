@@ -10,6 +10,7 @@ from ..util import (
     h1_style, h2_style, sm_no_spacing_style,
     col_widths,
     SINGLE_HEADER_TABLE_STYLES,
+    Report,
 )
 
 NOT_REPORTED = object()
@@ -28,7 +29,7 @@ def decimal_value(value):
         return f"{round_decimal_half_up(value):,}"
 
 
-class Report:
+class ReportTable:
     header = [
         _('Annex'),
         _('Annex Group Name'),
@@ -155,14 +156,21 @@ def group_description(group):
     return Paragraph(text, sm_no_spacing_style)
 
 
-def get_flowables(parties):
-    calculator = BaselineCalculator()
-    current_period = ReportingPeriod.get_current_period()
-    yield Paragraph(_("HFC Baseline data (in CO2-equivalent tonnes)"), h1_style)
+class HFCBaselineReport(Report):
 
-    for group_id in ['CI', 'F']:
-        yield group_description(calculator.groups[group_id])
+    name = "hfc_baseline"
+    has_party_param = True
+    display_name = "HFC baseline - calculated"
+    description = _("Select one or more parties. The reporting period parameter is ignored.")
 
-    for party in parties:
-        yield Paragraph(party.name.upper(), h2_style)
-        yield Report(calculator, current_period, party).table()
+    def get_flowables(self):
+        calculator = BaselineCalculator()
+        current_period = ReportingPeriod.get_current_period()
+        yield Paragraph(_("HFC Baseline data (in CO2-equivalent tonnes)"), h1_style)
+
+        for group_id in ['CI', 'F']:
+            yield group_description(calculator.groups[group_id])
+
+        for party in self.parties:
+            yield Paragraph(party.name.upper(), h2_style)
+            yield ReportTable(calculator, current_period, party).table()

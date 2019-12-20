@@ -16,6 +16,7 @@ from ..util import (
     format_decimal,
     h1_style, sm_no_spacing_style,
     b_c, b_r, b_l, smb_c, smb_r, smb_l, smi_l, sm_r,
+    Report,
 )
 
 
@@ -38,18 +39,26 @@ TABLE_CUSTOM_KEEPTOGETHER_STYLES = (
 __all__ = ['get_flowables']
 
 
-def get_flowables(periods, parties):
-    data = get_data(periods, parties)
+class ImpExpNewRecReport(Report):
 
-    flowables = []
-    for period_data in data:
-        period = period_data['period']
-        parties = period_data['parties']
-        flowables.append(get_table(period, parties))
-        flowables.append(*get_footer())
-        flowables.append(Paragraph('', style=h1_style))
-        flowables += [PageBreak()]
-    return flowables
+    name = "impexp_new_rec"
+    has_party_param = True
+    has_period_param = True
+    display_name = "Import and export of new and recovered substances - by party and annex group"
+    description = _("Select one or more parties and one reporting period")
+
+    def get_flowables(self):
+        data = get_data(self.periods, self.parties)
+
+        flowables = []
+        for period_data in data:
+            period = period_data['period']
+            parties = period_data['parties']
+            flowables.append(get_table(period, parties))
+            flowables.append(*get_footer())
+            flowables.append(Paragraph('', style=h1_style))
+            flowables += [PageBreak()]
+        return flowables
 
 
 def get_data(periods, parties):

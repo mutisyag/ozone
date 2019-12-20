@@ -1,17 +1,21 @@
 import re
-
+from io import BytesIO
 from copy import deepcopy
 from collections import OrderedDict
 from decimal import Decimal
-from django.utils.translation import gettext_lazy as _
 from functools import partial
+from datetime import datetime
 
+from django.utils.translation import gettext_lazy as _
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate
 from reportlab.platypus import ListFlowable
 from reportlab.platypus import ListItem
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Spacer
 from reportlab.platypus import Table
 from reportlab.platypus.flowables import HRFlowable
+from reportlab.lib import pagesizes
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.enums import TA_RIGHT
@@ -19,6 +23,10 @@ from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.lib.units import mm
+
+from ozone.core.models import Party
+from ozone.core.models import ReportingPeriod
+from ozone.core.models import Submission
 
 
 __all__ = [
@@ -104,17 +112,26 @@ small_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZ
 small_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL)
 small_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL)
 
-small_bold_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
-small_bold_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
-small_bold_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
+small_bold_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL,
+                                                fontName='Helvetica-Bold')
+small_bold_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL,
+                                            fontName='Helvetica-Bold')
+small_bold_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL,
+                                             fontName='Helvetica-Bold')
 
-small_italic_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Oblique')
-small_italic_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Oblique')
-small_italic_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Oblique')
+small_italic_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL,
+                                                  fontName='Helvetica-Oblique')
+small_italic_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL,
+                                              fontName='Helvetica-Oblique')
+small_italic_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL,
+                                               fontName='Helvetica-Oblique')
 
-small_bold_italic_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-BoldOblique')
-small_bold_italic_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-BoldOblique')
-small_bold_italic_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL, fontName='Helvetica-BoldOblique')
+small_bold_italic_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL,
+                                                   fontName='Helvetica-BoldOblique')
+small_bold_italic_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL,
+                                                    fontName='Helvetica-BoldOblique')
+small_bold_italic_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL,
+                                                       fontName='Helvetica-BoldOblique')
 
 bullet_paragraph_style = _bodytext(alignment=TA_LEFT)
 no_spacing_style = _bodytext(alignment=TA_LEFT, spaceBefore=0)
@@ -124,21 +141,21 @@ sm_no_spacing_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, spac
 h1_style = _style(
     'Heading1',
     alignment=TA_CENTER,
-    fontSize=FONTSIZE_DEFAULT+6,
+    fontSize=FONTSIZE_DEFAULT + 6,
     fontName='Helvetica-Bold',
 )
 
 h2_style = _style(
     'Heading2',
     alignment=TA_LEFT,
-    fontSize=FONTSIZE_DEFAULT+4,
+    fontSize=FONTSIZE_DEFAULT + 4,
     fontName='Helvetica-Bold',
 )
 
 h3_style = _style(
     'Heading3',
     alignment=TA_LEFT,
-    fontSize=FONTSIZE_DEFAULT+2,
+    fontSize=FONTSIZE_DEFAULT + 2,
     fontName='Helvetica-Bold',
     spaceBefore=0
 )
@@ -224,7 +241,7 @@ def to_precision(nr, decimals):
         s_nr = get_big_float(nr)
 
         # Getting the first non-zero digitindex
-        p = re.compile('(?=\d)(?=[^0])')
+        p = re.compile(r'(?=\d)(?=[^0])')
 
         m = p.search(s_nr)
         f_nonzero = m.span()[0]
@@ -264,7 +281,7 @@ def to_precision(nr, decimals):
                     add_with = '1'
                 else:
                     # Rounding with the correct value depending of the decimals
-                    add_with = '0.' + '0' * len(n[n.find('.') + 1: -1])+'1'
+                    add_with = '0.' + '0' * len(n[n.find('.') + 1: -1]) + '1'
 
                 n = str(round(float(n) + float(add_with), 10))
 
@@ -397,7 +414,7 @@ def table_from_data(
     # Spanning all columns for the blend components rows
     if isBlend:
         rows = len(data) + repeatRows
-        for row_idx in range(repeatRows+1, rows, 2):
+        for row_idx in range(repeatRows + 1, rows, 2):
             style += (
                 ('SPAN', (0, row_idx), (-1, row_idx)),
                 ('ALIGN', (0, row_idx), (-1, row_idx), 'CENTER')
@@ -423,13 +440,11 @@ def table_with_blends(blends, grouping, make_component, header, style, widths):
         data = tuple(map(row_comp, blend.blend.components.all()))
 
         result.append(blend_row)
-        result.append(
-            (
-                (Spacer(7, mm),
-                 Table(header + data, style=style, colWidths=widths),
-                 Spacer(7, mm)),
-                )
-        )
+        result.append(((
+            Spacer(7, mm),
+            Table(header + data, style=style, colWidths=widths),
+            Spacer(7, mm),
+        )))
 
     return result
 
@@ -497,3 +512,165 @@ class TableBuilder:
             kwargs['repeatRows'] = self.repeat_rows
 
         return Table(self.rows, **kwargs)
+
+
+def add_page_footer(canvas, doc, footnote=None):
+    canvas.saveState()
+    if footnote:
+        footer = Paragraph(footnote, left_paragraph_style)
+        w, h = footer.wrap(doc.width, doc.bottomMargin)
+        footer.drawOn(canvas, doc.rightMargin, h / 2)
+
+    footer = Paragraph('%s %d' % (_('Page'), canvas._pageNumber), right_paragraph_style)
+    w, h = footer.wrap(doc.width, doc.bottomMargin)
+    footer.drawOn(canvas, doc.rightMargin, h)
+
+    canvas.restoreState()
+
+
+def get_doc_template(landscape=False):
+    buff = BytesIO()
+    # A4 size is 21cm x 29.7cm
+    if landscape:
+        doc = SimpleDocTemplate(
+            buff,
+            pagesize=pagesizes.landscape(pagesizes.A4),
+            leftMargin=1 * cm,
+            rightMargin=1 * cm,
+            topMargin=1 * cm,
+            bottomMargin=1 * cm,
+        )
+    else:
+        doc = SimpleDocTemplate(
+            buff,
+            pagesize=pagesizes.A4,
+            leftMargin=0.8 * cm,
+            rightMargin=0.8 * cm,
+            topMargin=1 * cm,
+            bottomMargin=1 * cm,
+        )
+    return buff, doc
+
+
+def get_parties(request):
+    parties = request.GET.getlist(key='party')
+    if request.user.is_secretariat:
+        qs = Party.get_main_parties()
+        if parties:
+            qs = qs.filter(pk__in=parties)
+    else:
+        qs = Party.objects.filter(
+            pk=request.user.party_id
+        )
+    return qs.order_by('name')
+
+
+def get_periods(request):
+    reporting_periods = request.GET.getlist(key='period')
+    qs = ReportingPeriod.get_past_periods()
+    if reporting_periods:
+        qs = qs.filter(pk__in=reporting_periods)
+    return qs.order_by('-start_date')
+
+
+def get_submissions(obligation, periods, parties):
+    submissions = list()
+    for period in periods:
+        for party in parties:
+            sub = Submission.latest_submitted(
+                obligation, party, period
+            )
+            if sub:
+                submissions.append(sub)
+    return submissions
+
+
+def response_pdf(base_name, buf_pdf):
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    filename = f'{base_name}_{timestamp}.pdf'
+    resp = HttpResponse(buf_pdf, content_type='application/pdf')
+    resp['Content-Disposition'] = f'attachment; filename="{filename}"'
+    resp['Access-Control-Expose-Headers'] = 'Content-Disposition'
+    return resp
+
+
+class Report:
+
+    name = None  # must be defined in subclasses
+    display_name = None  # must be defined in subclasses
+    description = None  # must be defined in subclasses
+    has_party_param = False
+    has_period_param = False
+    landscape = False
+
+    @classmethod
+    def api_description(cls):
+        return {
+            'name': cls.name,
+            'display_name': cls.display_name,
+            'description': cls.description,
+            'has_party_param': cls.has_party_param,
+            'has_period_param': cls.has_period_param,
+        }
+
+    @classmethod
+    def from_request(cls, request):
+        kwargs = {}
+        if cls.has_party_param:
+            kwargs['parties'] = get_parties(request)
+        if cls.has_period_param:
+            kwargs['periods'] = get_periods(request)
+        return cls(**kwargs)
+
+    def __init__(self, **kwargs):
+        if self.has_party_param:
+            self.parties = kwargs.pop('parties')
+        if self.has_period_param:
+            self.periods = kwargs.pop('periods')
+        assert not kwargs, f"Unexpected parameters: {kwargs!r}"
+
+    def get_basename(self):
+        base_name = self.name
+        if self.has_party_param:
+            base_name += "_" + "_".join(p.abbr for p in self.parties)
+        if self.has_period_param:
+            base_name += "_" + "_".join(p.name for p in self.periods)
+        return base_name
+
+    def render_to_response(self):
+        base_name = self.get_basename()
+        pdf_buf = self.render()
+        return response_pdf(base_name, pdf_buf)
+
+    def render(self):
+        buff, doc = get_doc_template(landscape=self.landscape)
+
+        doc.build(
+            list(self.get_flowables()),
+            onFirstPage=add_page_footer,
+            onLaterPages=add_page_footer
+        )
+
+        buff.seek(0)
+        return buff
+
+    def get_flowables(self):
+        raise NotImplementedError
+
+
+class ReportForSubmission(Report):
+    """ A special report type that can be generated for a given submission """
+
+    submission = None
+
+    @classmethod
+    def for_submission(cls, submission):
+        self = cls(parties=[submission.party], periods=[submission.reporting_period])
+        self.submission = submission
+        return self
+
+    def get_basename(self):
+        if self.submission:
+            return f'{self.name}_{self.submission.pk}'
+        else:
+            return super().get_basename()
