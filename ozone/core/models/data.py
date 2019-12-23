@@ -402,7 +402,7 @@ class AggregationMixin:
             # the values for aggregation.is_article5 and is_eu_member are not
             # correct and need to be passed as parameters.
             if populate_baselines:
-                aggregation.populate_limits_and_baselines(is_article5)
+                aggregation.populate_limits_and_baselines(is_article5, is_eu_member)
             aggregation.calculate_totals(is_eu_member)
 
     @classmethod

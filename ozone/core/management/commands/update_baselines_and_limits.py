@@ -1,6 +1,7 @@
 import logging
 
 from django.core.management.base import BaseCommand
+from django.db.models import Q
 
 from ozone.core.models import (
     ProdCons,
@@ -24,6 +25,12 @@ class Command(BaseCommand):
             '--party',
             help="Party code (abbreviation), for limiting the calculation to a "
                  "single party."
+        )
+        parser.add_argument(
+            '--eu-only',
+            action='store_true',
+            default=False,
+            help="Only recalculate data for EU members and the EU itself."
         )
         parser.add_argument(
             '--period',
@@ -58,6 +65,10 @@ class Command(BaseCommand):
             period = ReportingPeriod.objects.get(name=options['period'])
             prodcons_queryset = prodcons_queryset.filter(
                 reporting_period=period
+            )
+        if options['eu_only']:
+            prodcons_queryset = prodcons_queryset.filter(
+                Q(is_eu_member=True) | Q(party__abbr='EU')
             )
 
         if not options['confirm']:

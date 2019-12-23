@@ -551,7 +551,7 @@ class ProdCons(BaseProdCons):
             getattr(self, 'party', None),
         )
 
-    def populate_limits_and_baselines(self, is_article5=None):
+    def populate_limits_and_baselines(self, is_article5=None, is_eu_member=None):
         """
         At save we fetch the limits/baselines from the corresponding tables.
         This assumes that said tables are pre-populated, which should happen
@@ -560,13 +560,15 @@ class ProdCons(BaseProdCons):
         We may also fetch the limits/baselines data without having first saved
         the instance. In this case the is_article5 parameter is used.
         """
-        # If this instance had already been saved, the is_article5 field should
-        # already be populated with a coherent value.
+        # If this instance had already been saved, fields is_article5
+        # and is_eu_member should already be populated with a coherent value.
         # If the instance has not been saved (as in the case of non-persistent
         # instances used to generate on-the-fly data), then use the
         # externally-provided parameter.
         if self.is_article5 is None:
             self.is_article5 = is_article5
+        if self.is_eu_member is None:
+            self.is_eu_member = is_eu_member
 
         # Reset baselines and limits to None, in case previous values exist
         self.limit_prod = self.limit_cons = self.limit_bdn = None
@@ -601,8 +603,11 @@ class ProdCons(BaseProdCons):
             group=self.group
         ).values('baseline_type__name', 'baseline'):
             if (baseline['baseline_type__name'] == prod_bt):
+                # In theory we should check self.is_european_union
+                # but production baselines are not persisted for EU
                 self.baseline_prod = baseline['baseline']
-            if (baseline['baseline_type__name'] == cons_bt):
+            if (baseline['baseline_type__name'] == cons_bt
+                    and not self.is_eu_member):
                 self.baseline_cons = baseline['baseline']
             # This is actually not correct for all cases - see below
             if (baseline['baseline_type__name'] == bdn_bt):
