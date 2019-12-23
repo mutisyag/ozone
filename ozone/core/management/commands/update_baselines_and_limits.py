@@ -3,11 +3,9 @@ import logging
 from django.core.management.base import BaseCommand
 
 from ozone.core.models import (
-    Submission,
     ProdCons,
     Party,
     ReportingPeriod,
-    ObligationTypes,
 )
 
 logger = logging.getLogger(__name__)
