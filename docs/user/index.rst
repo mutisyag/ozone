@@ -1,5 +1,5 @@
 ###################################
-Online Reporting Tool - User Manual
+Online Reporting System - User Manual
 ###################################
 
 .. toctree::
