@@ -45,7 +45,7 @@ source_suffix = {
 master_doc = "index"
 
 # General information about the project.
-project = "Online Reporting Tool"
+project = "Online Reporting System"
 copyright = """2019, Ozone Secretariat"""
 
 # The version info for the project you're documenting, acts as replacement for
@@ -201,7 +201,7 @@ latex_documents = [
     (
         "user/index",
         "ozone.tex",
-        "Online Reporting Tool - User Manual",
+        "Online Reporting System - User Manual",
         """United Nations Environment Programme""",
         "manual",
     )
@@ -236,7 +236,7 @@ man_pages = [
     (
         "index",
         "ozone",
-        "Online Reporting Tool Documentation",
+        "Online Reporting System Documentation",
         ["""Eau de Web"""],
         1,
     )
@@ -258,7 +258,7 @@ texinfo_documents = [
         "Ozone Documentation",
         """Eau de Web""",
         "Ozone",
-        """Reporting tool for Article 7 data""",
+        """Reporting system for Article 7 data""",
         "Miscellaneous",
     )
 ]

@@ -1,4 +1,4 @@
-# Online Reporting Tool - Administrator Manual
+# Online Reporting System - Administrator Manual
 
 ## Introduction
 
